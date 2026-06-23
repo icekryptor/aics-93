@@ -27,14 +27,47 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--color-bg);
 }
 
 body {
-  background: var(--color-bg);
+  background: transparent;
   color: var(--color-ink);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* animated parallelogram progress bar */
+.skew-track {
+  display: flex;
+  gap: 5px;
+}
+.skew-cell {
+  position: relative;
+  width: 15px;
+  height: 16px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-ink) 12%, transparent);
+  transform: skewX(-22deg);
+}
+.skew-cell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-ink);
+  opacity: 0;
+  animation: skewfill 2.8s linear infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes skewfill {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  82% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skew-cell::after { animation: none; opacity: 1; }
 }
 
 .font-display {
