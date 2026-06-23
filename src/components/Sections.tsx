@@ -17,15 +17,6 @@ const CUT = {
     "polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px)",
 };
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="tech-label inline-flex items-center gap-2 text-xs text-ink-soft">
-      <span className="size-1.5 rounded-full bg-accent" />
-      {children}
-    </span>
-  );
-}
-
 export function Intro() {
   const statements = [
     "Я мультидисциплинарный дизайнер с релевантным бизнес-опытом, навыками маркетинга и создания продуктов.",
@@ -352,107 +343,123 @@ export function About() {
 }
 
 export function Gantt() {
-  const maxDays = Math.max(...gantt.phases.map((p) => p.days));
+  const total = gantt.total;
   return (
-    <section className="bg-bg-soft/50 py-16 lg:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <Reveal>
-          <SectionLabel>прозрачная смета</SectionLabel>
-          <h2 className="mt-3 font-display text-[clamp(1.5rem,3.2vw,2.3rem)] font-semibold tracking-tight">
-            {gantt.title}
-          </h2>
-          <p className="mt-3 max-w-xl text-sm text-ink-soft">{gantt.project}</p>
-        </Reveal>
+    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+      <Reveal>
+        <h2 className="font-display text-[clamp(1.5rem,3.6vw,2.4rem)] font-semibold uppercase tracking-tight">
+          {gantt.title}
+        </h2>
+        <p className="mt-2 text-[15px] font-medium text-ink">{gantt.project}</p>
+      </Reveal>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-          <Reveal>
-            <div className="rounded-[var(--radius-card)] border border-line bg-bg p-6">
-              <div className="space-y-4">
-                {gantt.phases.map((p, i) => (
-                  <div key={p.name}>
-                    <div className="mb-1.5 flex items-center justify-between text-sm">
-                      <span className="font-medium">{p.name}</span>
-                      <span className="text-ink-soft">{p.days} дн.</span>
-                    </div>
-                    <div className="h-3 overflow-hidden rounded-full bg-bg-soft">
-                      <div
-                        className="h-full rounded-full bg-gradient-accent"
-                        style={{
-                          width: `${(p.days / maxDays) * 100}%`,
-                          marginLeft: `${(i * 12)}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <ul className="mt-6 space-y-2 border-t border-line pt-5 text-sm text-ink-soft">
-                {gantt.scope.map((s) => (
-                  <li key={s} className="flex gap-2">
-                    <span className="text-accent">→</span> {s}
-                  </li>
-                ))}
-              </ul>
+      {/* Gantt cascade */}
+      <Reveal delay={80} className="mt-10 space-y-6">
+        {gantt.phases.map((p) => (
+          <div key={p.name}>
+            <div className="mb-1.5 flex items-center justify-between text-[15px]">
+              <span className="font-medium">{p.name}</span>
+              <span className="text-ink-soft">{p.days} {p.days < 5 ? "дня" : "дней"}</span>
             </div>
-          </Reveal>
+            <div className="h-2 w-full rounded-full bg-bg-soft">
+              <div
+                className="h-full rounded-full"
+                style={{
+                  marginLeft: `${(p.start / total) * 100}%`,
+                  width: `${(p.days / total) * 100}%`,
+                  background: p.color,
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </Reveal>
 
-          <Reveal delay={100}>
-            <div className="flex h-full flex-col gap-4">
-              <div className="rounded-[var(--radius-card)] border border-line bg-bg p-6">
-                <p className="text-xs uppercase tracking-wide text-ink-soft">Состав команды</p>
-                <ul className="mt-3 space-y-3">
-                  {gantt.team.map((m) => (
-                    <li key={m.name} className="flex items-center justify-between text-sm">
-                      <span className="font-medium">{m.name}</span>
-                      <span className="text-ink-soft">{m.role}</span>
-                    </li>
-                  ))}
-                </ul>
+      {/* Card: requirements + budget | team */}
+      <Reveal delay={120} className="mt-10">
+        <div className="grid gap-10 rounded-[28px] border border-line bg-bg p-7 sm:p-9 lg:grid-cols-[1.3fr_1fr]">
+          <div>
+            <p className="font-semibold">Требования:</p>
+            <ul className="mt-4 space-y-2.5 text-[15px] text-ink-soft">
+              {gantt.scope.map((s) => (
+                <li key={s} className="flex gap-2.5">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
+                  {s}
+                </li>
+              ))}
+            </ul>
+            <dl className="mt-8 space-y-2.5 text-[15px]">
+              <div className="flex justify-between gap-4">
+                <dt className="text-ink-soft">Общая длительность разработки:</dt>
+                <dd className="font-medium">{gantt.duration}</dd>
               </div>
-              <div className="rounded-[var(--radius-card)] bg-dark p-6 text-bg">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-white/60">Длительность</span>
-                  <span className="font-semibold">{gantt.duration}</span>
-                </div>
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="text-white/60 text-sm">Бюджет</span>
-                  <span className="text-white/40 line-through">{gantt.budget}</span>
-                </div>
-                <div className="mt-1 flex items-center justify-between">
-                  <span className="text-sm">Со скидками</span>
-                  <span className="font-display text-2xl font-bold text-gradient">{gantt.budgetFinal}</span>
-                </div>
+              <div className="flex justify-between gap-4">
+                <dt className="text-ink-soft">Бюджет на разработку:</dt>
+                <dd className="font-medium">{gantt.budget}</dd>
               </div>
-            </div>
-          </Reveal>
+              <div className="flex justify-between gap-4">
+                <dt className="text-ink-soft">Бюджет со всеми скидками:</dt>
+                <dd className="font-semibold text-accent">{gantt.budgetFinal}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div>
+            <p className="font-semibold">Состав команды</p>
+            <ul className="mt-4 space-y-4">
+              {gantt.team.map((m) => (
+                <li key={m.name + m.role} className="flex items-center gap-3.5">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-full bg-ink font-display text-sm text-bg">
+                    {m.initial}
+                  </span>
+                  <span>
+                    <span className="block font-semibold">{m.name}</span>
+                    <span className="block text-sm text-ink-soft">{m.role}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
 
 export function Bio() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
-      <Reveal>
-        <div className="grid gap-6 sm:grid-cols-3">
-          {bio.big.map((b) => (
-            <div key={b.label}>
-              <p className="font-display text-[clamp(2.4rem,6vw,4rem)] font-bold leading-none text-gradient">
-                {b.value}
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">{b.label}</p>
-            </div>
+    <section className="relative overflow-hidden bg-dark py-16 text-bg lg:py-24">
+      {/* subtle marble sheen */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-60"
+        style={{
+          backgroundImage:
+            "radial-gradient(60% 80% at 80% 10%, rgba(139,103,255,0.16), transparent 60%), radial-gradient(50% 60% at 10% 90%, rgba(200,86,255,0.12), transparent 60%)",
+        }}
+      />
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
+        <Reveal>
+          <div className="grid gap-10 sm:grid-cols-3">
+            {bio.big.map((b) => (
+              <div key={b.label}>
+                <p className="font-display text-[clamp(2.6rem,6vw,4.2rem)] font-normal leading-none">
+                  {b.value}
+                </p>
+                <p className="mt-3 text-[13px] uppercase leading-relaxed tracking-wide text-white/55">
+                  {b.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+        <Reveal delay={100} className="mt-14 grid max-w-3xl gap-5">
+          {bio.paragraphs.map((p) => (
+            <p key={p} className="text-[15px] leading-relaxed text-white/75">
+              {p}
+            </p>
           ))}
-        </div>
-      </Reveal>
-      <Reveal delay={100} className="mt-12 grid max-w-3xl gap-5">
-        {bio.paragraphs.map((p) => (
-          <p key={p} className="text-[15px] leading-relaxed text-ink-soft">
-            {p}
-          </p>
-        ))}
-      </Reveal>
+        </Reveal>
+      </div>
     </section>
   );
 }

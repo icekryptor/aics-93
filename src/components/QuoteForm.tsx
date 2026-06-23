@@ -1,102 +1,111 @@
 "use client";
 
 import { useState } from "react";
-import { projectTypes } from "@/lib/content";
+import Image from "next/image";
+import { projectTypes, assets } from "@/lib/content";
 
 export default function QuoteForm() {
   const [done, setDone] = useState(false);
-  const [phone, setPhone] = useState("");
-  const [tg, setTg] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
+  const [form, setForm] = useState({ name: "", phone: "", email: "", about: "" });
 
   const toggle = (t: string) =>
     setSelected((s) => (s.includes(t) ? s.filter((x) => x !== t) : [...s, t]));
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((f) => ({ ...f, [k]: e.target.value }));
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    // STUB: backend not wired yet. Logs payload; replace with /api/lead later.
-    console.log("[lead]", { phone, tg, projectTypes: selected });
+    // STUB: backend not wired yet. Replace with POST /api/lead → Telegram.
+    console.log("[lead]", { ...form, projectTypes: selected });
     setDone(true);
   };
 
+  const inputCls =
+    "w-full rounded-2xl border border-white/15 bg-transparent px-5 py-4 text-sm outline-none transition-colors placeholder:text-white/35 focus:border-accent";
+
   return (
-    <section id="upgrade" className="scroll-mt-24 bg-dark py-16 text-bg lg:py-24">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <div className="text-center">
-          <span className="tech-label text-xs text-accent">контакты</span>
-          <h2 className="mt-3 font-display text-[clamp(1.7rem,4vw,2.8rem)] font-semibold tracking-tight">
-            Узнайте стоимость
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-white/60">
-            Свяжемся с вами в WhatsApp или Telegram и рассчитаем стоимость реализации вашей задачи
-            в течение 2 часов.
-          </p>
-        </div>
-
-        {done ? (
-          <div className="mt-10 rounded-[var(--radius-card)] border border-white/10 bg-white/[0.04] p-10 text-center">
-            <p className="font-display text-xl font-semibold">Заявка принята ✦</p>
-            <p className="mt-2 text-sm text-white/60">
-              Спасибо! Я свяжусь с вами в ближайшее время. (Форма работает в демо-режиме —
-              отправка пока не подключена.)
+    <section id="upgrade" className="relative scroll-mt-24 overflow-hidden bg-dark py-16 text-bg lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <h2 className="max-w-xl font-display text-[clamp(1.6rem,3.4vw,2.4rem)] font-medium leading-tight tracking-tight">
+              Пришлите данные о проекте, и мы свяжемся с вами для обсуждения в ближайшее время
+            </h2>
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-white/55">
+              Свяжемся в WhatsApp или Telegram и рассчитаем стоимость вашей задачи в течение 2 часов.
             </p>
-          </div>
-        ) : (
-          <form onSubmit={submit} className="mt-10 rounded-[var(--radius-card)] border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-            <p className="mb-3 text-sm font-medium">Какой тип проекта вы хотите заказать?</p>
-            <div className="flex flex-wrap gap-2">
-              {projectTypes.map((t) => (
+
+            {done ? (
+              <div className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.04] p-10 text-center">
+                <p className="font-display text-xl">Заявка принята ✦</p>
+                <p className="mt-2 text-sm text-white/55">
+                  Спасибо! Свяжусь с вами в ближайшее время. (Демо-режим — отправка пока не подключена.)
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={submit} className="mt-8">
+                <p className="mb-3 text-sm font-medium">Какой тип проекта вы хотите заказать?</p>
+                <div className="flex flex-wrap gap-2">
+                  {projectTypes.map((t) => (
+                    <button
+                      type="button"
+                      key={t}
+                      onClick={() => toggle(t)}
+                      aria-pressed={selected.includes(t)}
+                      className={`rounded-full border px-4 py-2 text-[13px] transition-colors ${
+                        selected.includes(t)
+                          ? "border-transparent bg-gradient-accent text-white"
+                          : "border-white/15 text-white/70 hover:border-white/40"
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="mt-5 grid gap-3">
+                  <textarea
+                    value={form.about}
+                    onChange={set("about")}
+                    rows={3}
+                    placeholder="Коротко о проекте и приблизительный бюджет"
+                    className={inputCls}
+                  />
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    <input value={form.name} onChange={set("name")} placeholder="Ваше имя" className={inputCls} />
+                    <input
+                      value={form.phone}
+                      onChange={set("phone")}
+                      required
+                      placeholder="Телефон или мессенджер"
+                      className={inputCls}
+                    />
+                    <input
+                      value={form.email}
+                      onChange={set("email")}
+                      type="email"
+                      placeholder="Ваша почта"
+                      className={inputCls}
+                    />
+                  </div>
+                </div>
+
                 <button
-                  type="button"
-                  key={t}
-                  onClick={() => toggle(t)}
-                  aria-pressed={selected.includes(t)}
-                  className={`rounded-full border px-4 py-2 text-[13px] transition-colors ${
-                    selected.includes(t)
-                      ? "border-transparent bg-gradient-accent text-bg"
-                      : "border-white/15 text-white/70 hover:border-white/40"
-                  }`}
+                  type="submit"
+                  className="mt-5 w-full rounded-2xl bg-gradient-accent py-4 text-sm font-semibold text-white transition-transform hover:scale-[1.01] sm:w-auto sm:px-16"
                 >
-                  {t}
+                  Обсудить проект
                 </button>
-              ))}
-            </div>
+              </form>
+            )}
+          </div>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <label className="block">
-                <span className="text-xs text-white/50">Ваш номер телефона</span>
-                <input
-                  type="tel"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+7 ___ ___-__-__"
-                  className="mt-1.5 w-full rounded-xl border border-white/15 bg-transparent px-4 py-3 text-sm outline-none transition-colors placeholder:text-white/30 focus:border-accent"
-                />
-              </label>
-              <label className="block">
-                <span className="text-xs text-white/50">Ваш Телеграм</span>
-                <input
-                  type="text"
-                  value={tg}
-                  onChange={(e) => setTg(e.target.value)}
-                  placeholder="@username"
-                  className="mt-1.5 w-full rounded-xl border border-white/15 bg-transparent px-4 py-3 text-sm outline-none transition-colors placeholder:text-white/30 focus:border-accent"
-                />
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              className="mt-6 w-full rounded-xl bg-gradient-accent py-3.5 text-sm font-semibold text-bg transition-transform hover:scale-[1.01]"
-            >
-              Узнать стоимость
-            </button>
-            <p className="mt-3 text-center text-[11px] text-white/40">
-              Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.
-            </p>
-          </form>
-        )}
+          {/* rocket */}
+          <div className="relative mx-auto hidden aspect-square w-full max-w-[420px] lg:block">
+            <Image src={assets.rocket} alt="" fill sizes="420px" className="object-contain" />
+          </div>
+        </div>
       </div>
     </section>
   );
