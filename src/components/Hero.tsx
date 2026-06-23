@@ -1,6 +1,7 @@
 import Image from "next/image";
 import HeroCube from "./HeroCube";
 import SkillBars from "./SkillBars";
+import LogoMark from "./LogoMark";
 import { assets, heroStats } from "@/lib/content";
 
 export default function Hero() {
@@ -10,7 +11,7 @@ export default function Hero() {
         {/* Left: headline + bars */}
         <div>
           <div className="mb-8 flex items-center gap-4">
-            <Image src={assets.gear} alt="" width={64} height={64} className="size-14 shrink-0" />
+            <LogoMark />
             <div>
               <Image src={assets.wordmark} alt="AICS-93" width={150} height={36} className="h-[26px] w-auto" />
               <p className="mt-1.5 text-[10px] leading-tight tracking-tight text-ink-soft">
@@ -48,7 +49,7 @@ export default function Hero() {
         </div>
 
         {/* Right: stats */}
-        <div className="space-y-9">
+        <div className="space-y-9 lg:self-center">
           {heroStats.map((s) => (
             <div key={s.big}>
               <p className="font-display text-[2.5rem] font-normal leading-none tracking-tight text-ink">{s.big}</p>

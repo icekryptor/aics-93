@@ -93,6 +93,25 @@ body {
   .skew-cell2::after { transition: none; }
 }
 
+/* animated logo: spinning gear + V/Λ chevrons converging into an X */
+@keyframes gearspin {
+  to { transform: rotate(360deg); }
+}
+@keyframes chevUp {
+  0%, 100% { transform: translateY(-6px); }
+  50% { transform: translateY(0); }
+}
+@keyframes chevDown {
+  0%, 100% { transform: translateY(6px); }
+  50% { transform: translateY(0); }
+}
+.logo-gear { animation: gearspin 16s linear infinite; transform-origin: 50% 50%; }
+.logo-chev-up { animation: chevUp 2.6s ease-in-out infinite; }
+.logo-chev-down { animation: chevDown 2.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .logo-gear, .logo-chev-up, .logo-chev-down { animation: none; }
+}
+
 .font-display {
   font-family: var(--font-display), system-ui, sans-serif;
 }
