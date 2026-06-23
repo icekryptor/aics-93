@@ -3,7 +3,6 @@ import GraphCanvas from "./GraphCanvas";
 import {
   frameworks,
   reasons,
-  salesEngine,
   aboutFacts,
   aboutStats,
   bio,
@@ -75,59 +74,176 @@ export function Frameworks() {
   );
 }
 
+function HexBadge({ n }: { n: string }) {
+  return (
+    <span className="relative grid size-16 shrink-0 place-items-center">
+      <svg viewBox="0 0 100 100" className="absolute inset-0 size-full" aria-hidden>
+        <polygon
+          points="25,4 75,4 96,50 75,96 25,96 4,50"
+          fill="none"
+          stroke="var(--color-ink)"
+          strokeWidth="3"
+        />
+      </svg>
+      <span className="font-display text-base font-normal text-ink">{n}</span>
+    </span>
+  );
+}
+
+function ReasonItem({
+  n,
+  title,
+  text,
+  align = "left",
+}: {
+  n: string;
+  title: string;
+  text: string;
+  align?: "left" | "right";
+}) {
+  return (
+    <div className={`max-w-[300px] ${align === "right" ? "text-right" : "text-left"}`}>
+      <div className={`flex items-start gap-3 ${align === "right" ? "flex-row-reverse" : ""}`}>
+        <HexBadge n={n} />
+        <h3 className="mt-1.5 text-lg font-semibold leading-tight tracking-tight">{title}</h3>
+      </div>
+      <p className="mt-3 text-[13px] leading-relaxed text-ink-soft">{text}</p>
+    </div>
+  );
+}
+
 export function Reasons() {
+  // order in data: 0→01 top, 1→02 up-left, 2→03 low-left, 3→04 bottom, 4→05 low-right, 5→06 up-right
+  const r = reasons;
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
-      <Reveal>
-        <SectionLabel>зачем это бизнесу</SectionLabel>
-        <h2 className="mt-3 font-display text-[clamp(1.6rem,3.5vw,2.6rem)] font-semibold tracking-tight">
-          6 весомых причин<br className="hidden sm:block" /> заняться брендингом
-        </h2>
-      </Reveal>
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {reasons.map((r, i) => (
-          <Reveal key={r.title} delay={i * 60}>
-            <article className="group flex h-full flex-col rounded-[var(--radius-card)] border border-line bg-bg p-6 transition-colors hover:border-accent/40">
-              <span className="grid size-10 place-items-center rounded-full bg-gradient-accent text-bg">
-                <span className="tech-label text-sm">0{i + 1}</span>
-              </span>
-              <h3 className="mt-5 font-display text-lg font-semibold leading-snug">{r.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-ink-soft">{r.text}</p>
-            </article>
-          </Reveal>
-        ))}
+      {/* Mobile / tablet: title + stacked list */}
+      <div className="lg:hidden">
+        <Reveal>
+          <h2 className="font-display text-[clamp(1.6rem,6vw,2.2rem)] font-normal leading-tight tracking-tight">
+            6 весомых причин заняться брендингом
+          </h2>
+        </Reveal>
+        <div className="mt-10 grid gap-8 sm:grid-cols-2">
+          {r.map((x, i) => (
+            <Reveal key={x.title} delay={(i % 2) * 70}>
+              <ReasonItem n={`0${i + 1}`} title={x.title} text={x.text} />
+            </Reveal>
+          ))}
+        </div>
       </div>
+
+      {/* Desktop: hexagon radial layout */}
+      <Reveal className="hidden lg:block">
+        <div className="relative mx-auto h-[820px] w-full max-w-[1080px]">
+          {/* central hexagon + title */}
+          <svg
+            viewBox="0 0 460 400"
+            className="absolute left-1/2 top-1/2 h-[420px] w-[500px] -translate-x-1/2 -translate-y-1/2"
+            aria-hidden
+          >
+            <polygon
+              points="138,6 322,6 454,200 322,394 138,394 6,200"
+              fill="none"
+              stroke="var(--color-ink)"
+              strokeWidth="1.5"
+            />
+          </svg>
+          <p className="absolute left-1/2 top-1/2 w-[280px] -translate-x-1/2 -translate-y-1/2 text-center font-display text-[1.7rem] font-normal leading-tight tracking-tight">
+            6 весомых причин заняться брендингом
+          </p>
+
+          {/* 01 top */}
+          <div className="absolute left-1/2 top-0 -translate-x-1/2">
+            <ReasonItem n="01" title={r[0].title} text={r[0].text} align="left" />
+          </div>
+          {/* 02 upper-left */}
+          <div className="absolute left-0 top-[28%]">
+            <ReasonItem n="02" title={r[1].title} text={r[1].text} align="right" />
+          </div>
+          {/* 03 lower-left */}
+          <div className="absolute left-0 top-[56%]">
+            <ReasonItem n="03" title={r[2].title} text={r[2].text} align="right" />
+          </div>
+          {/* 04 bottom */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
+            <ReasonItem n="04" title={r[3].title} text={r[3].text} align="left" />
+          </div>
+          {/* 05 lower-right */}
+          <div className="absolute right-0 top-[56%]">
+            <ReasonItem n="05" title={r[4].title} text={r[4].text} align="left" />
+          </div>
+          {/* 06 upper-right */}
+          <div className="absolute right-0 top-[28%]">
+            <ReasonItem n="06" title={r[5].title} text={r[5].text} align="left" />
+          </div>
+        </div>
+      </Reveal>
     </section>
   );
 }
 
+function gearPath(cx: number, cy: number, R: number, r: number, teeth: number) {
+  const step = (Math.PI * 2) / teeth;
+  const pts: string[] = [];
+  for (let i = 0; i < teeth; i++) {
+    const a = i * step;
+    const seq: [number, number][] = [
+      [a, r],
+      [a + step * 0.16, R],
+      [a + step * 0.34, R],
+      [a + step * 0.5, r],
+    ];
+    for (const [ang, rad] of seq) {
+      pts.push(`${(cx + Math.cos(ang) * rad).toFixed(1)},${(cy + Math.sin(ang) * rad).toFixed(1)}`);
+    }
+  }
+  return `M${pts.join(" L")} Z`;
+}
+
+type Gear = { cx: number; cy: number; R: number; teeth: number; lines: string[]; fontSize?: number };
+
 export function SalesEngine() {
+  const gears: Gear[] = [
+    { cx: 250, cy: 300, R: 122, teeth: 16, lines: ["Маркетинг-", "стратегия"] },
+    { cx: 432, cy: 432, R: 78, teeth: 12, lines: ["Брендбук"], fontSize: 15 },
+    { cx: 610, cy: 300, R: 112, teeth: 15, lines: ["Контент и", "реклама"] },
+    { cx: 712, cy: 478, R: 96, teeth: 13, lines: ["Собственный", "сайт"] },
+    { cx: 842, cy: 352, R: 92, teeth: 13, lines: ["Продакт-", "дизайн"] },
+    { cx: 948, cy: 232, R: 80, teeth: 12, lines: ["KPI, контроль"], fontSize: 14 },
+    { cx: 1092, cy: 332, R: 124, teeth: 16, lines: ["Удержание, LTV,", "повторные", "покупки"], fontSize: 15 },
+  ];
   return (
-    <section className="bg-dark py-16 text-bg lg:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <Reveal>
-          <p className="tech-label text-xs text-white/50">двигатель продаж бизнеса</p>
-          <h2 className="mt-3 max-w-2xl font-display text-[clamp(1.6rem,3.5vw,2.6rem)] font-semibold tracking-tight">
-            Всё работает на один результат — <span className="text-gradient">собственный сайт</span>
-          </h2>
-        </Reveal>
-        <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {salesEngine.nodes.map((n, i) => (
-            <Reveal key={n} delay={i * 50}>
-              <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                <span className="tech-label text-sm text-accent">0{i + 1}</span>
-                <span className="text-sm font-medium">{n}</span>
-              </div>
-            </Reveal>
+    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+      <Reveal>
+        <h2 className="font-display text-[clamp(1.5rem,4.2vw,2.6rem)] font-semibold uppercase tracking-tight">
+          Двигатель продаж бизнеса
+        </h2>
+      </Reveal>
+      <Reveal delay={120} className="mt-8">
+        <svg viewBox="0 0 1240 580" className="w-full" role="img" aria-label="Двигатель продаж: брендбук, маркетинг-стратегия, контент, собственный сайт, продакт-дизайн, KPI, удержание">
+          {gears.map((g, i) => (
+            <g key={i}>
+              <path d={gearPath(g.cx, g.cy, g.R, g.R * 0.86, g.teeth)} fill="none" stroke="var(--color-ink)" strokeWidth="1.5" strokeLinejoin="round" />
+              <circle cx={g.cx} cy={g.cy} r={g.R * 0.58} fill="none" stroke="var(--color-ink)" strokeWidth="1.5" />
+              <text
+                x={g.cx}
+                y={g.cy}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="fill-ink"
+                style={{ fontSize: g.fontSize ?? 16 }}
+              >
+                {g.lines.map((ln, j) => (
+                  <tspan key={j} x={g.cx} dy={j === 0 ? `${-(g.lines.length - 1) * 0.6}em` : "1.2em"}>
+                    {ln}
+                  </tspan>
+                ))}
+              </text>
+            </g>
           ))}
-        </div>
-        <Reveal className="mt-6">
-          <div className="rounded-2xl bg-gradient-accent p-6 text-center">
-            <p className="font-display text-xl font-semibold text-bg">{salesEngine.center}</p>
-            <p className="mt-1 text-sm text-bg/80">центр экосистемы, где вы управляете KPI</p>
-          </div>
-        </Reveal>
-      </div>
+        </svg>
+      </Reveal>
     </section>
   );
 }
