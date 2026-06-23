@@ -1,13 +1,21 @@
+import Image from "next/image";
 import Reveal from "./Reveal";
 import GraphCanvas from "./GraphCanvas";
 import {
+  assets,
   frameworks,
   reasons,
   aboutFacts,
   aboutStats,
+  aboutPhoto,
   bio,
   gantt,
 } from "@/lib/content";
+
+const CUT = {
+  clipPath:
+    "polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px)",
+};
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -248,30 +256,92 @@ export function SalesEngine() {
   );
 }
 
+function StatDeco({ kind }: { kind: "rings" | "dots" | "people" }) {
+  if (kind === "rings") {
+    return (
+      <svg viewBox="0 0 120 56" className="h-12 w-auto" aria-hidden>
+        <circle cx="28" cy="28" r="24" fill="none" stroke="var(--color-ink)" strokeWidth="2" />
+        <circle
+          cx="86"
+          cy="28"
+          r="24"
+          fill="none"
+          stroke="var(--color-ink)"
+          strokeWidth="2"
+          strokeDasharray="113"
+          strokeDashoffset="38"
+          transform="rotate(-90 86 28)"
+        />
+      </svg>
+    );
+  }
+  if (kind === "dots") {
+    return (
+      <div
+        className="h-12 w-full max-w-[220px]"
+        style={{
+          backgroundImage: "radial-gradient(var(--color-ink) 1.1px, transparent 1.2px)",
+          backgroundSize: "9px 9px",
+        }}
+      />
+    );
+  }
+  return (
+    <Image src={assets.crowd} alt="" width={220} height={40} className="h-9 w-auto opacity-90" />
+  );
+}
+
 export function About() {
   return (
     <section id="exp" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-16 sm:px-6 lg:py-24">
-      <div className="grid gap-12 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+      <div className="grid gap-10 lg:grid-cols-[1.55fr_1fr] lg:items-stretch">
+        {/* Cut-corner panel: facts + photo */}
         <Reveal>
-          <SectionLabel>кто я</SectionLabel>
-          <ul className="mt-6 space-y-5">
-            {aboutFacts.map((f) => (
-              <li key={f} className="flex gap-3 text-[15px] leading-relaxed">
-                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
-                <span>{f}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="relative bg-ink/30 p-px" style={CUT}>
+            <div className="relative h-full bg-bg p-6 sm:p-8" style={CUT}>
+              <div className="grid gap-6 md:grid-cols-[1fr_0.82fr] md:gap-8">
+                {/* facts */}
+                <div>
+                  <span className="inline-block rounded-md bg-ink px-4 py-1.5 font-display text-sm tracking-wide text-bg">
+                    КТО Я
+                  </span>
+                  <ul className="mt-6 space-y-5">
+                    {aboutFacts.map((f, i) => (
+                      <li key={i} className="border-l border-ink/25 pl-4 text-[15px] leading-relaxed">
+                        {f.lead && <span className="font-semibold">{f.lead}</span>}
+                        {f.rest}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {/* photo */}
+                <div className="relative min-h-[260px] overflow-hidden bg-bg-soft" style={CUT}>
+                  <Image
+                    src={aboutPhoto}
+                    alt="Василий Аистов"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 30vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </Reveal>
+
+        {/* Stats column */}
         <Reveal delay={120}>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="flex h-full flex-col justify-between gap-8 lg:gap-6">
             {aboutStats.map((s) => (
-              <div
-                key={s.big}
-                className="rounded-[var(--radius-card)] border border-line bg-bg-soft/50 p-5 text-center"
-              >
-                <p className="font-display text-2xl font-bold text-gradient">{s.big}</p>
-                <p className="mt-2 text-xs leading-relaxed text-ink-soft">{s.text}</p>
+              <div key={s.big}>
+                <p className="font-display text-[2.6rem] font-normal leading-none tracking-tight">
+                  {s.big}
+                </p>
+                <p className="mt-1 text-sm text-ink-soft">{s.label}</p>
+                <div className="mt-3">
+                  <StatDeco kind={s.deco} />
+                </div>
+                {s.sub && <p className="mt-2 text-xs text-ink-soft">{s.sub}</p>}
               </div>
             ))}
           </div>

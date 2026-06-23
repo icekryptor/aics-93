@@ -113,18 +113,26 @@ export const salesEngine = {
   ],
 };
 
-export const aboutFacts = [
-  "Cofounder Химички — STEM-бренда, нашедшего свой PMF и собравшего более 20 000 заказов",
-  "Business Builder, действующий CMO",
-  "Арт-директор / дизайнер со стажем 10 лет",
-  "В теме ML / LLM с 2023: разработал сеть нейроагентов по маркетинговым анализам, стратегированию и выбору целевых эмоций бренда (внедряю для клиентов)",
+export const aboutFacts: { lead?: string; rest: string }[] = [
+  { rest: "Business Builder, действующий CMO" },
+  { lead: "Арт-директор / дизайнер", rest: " со стажем 10 лет" },
+  {
+    lead: "В теме ML / LLM с 2023",
+    rest: ", разработал сеть нейроагентов по маркетинговым анализам, стратегированию и выбору целевых эмоций бренда (внедряю для клиентов)",
+  },
+  {
+    lead: "Cofounder Химички",
+    rest: " — STEM-бренда, нашедшего свой PMF и собравшего более 20 000 заказов",
+  },
 ];
 
 export const aboutStats = [
-  { big: "250+", text: "проектов разной сложности" },
-  { big: ">15 000", text: "часов практики — это 1,71 года непрерывной работы" },
-  { big: "81", text: "студент обучен дизайну" },
+  { big: ">15 000", label: "часов практики", sub: "это 1,71 год непрерывной работы", deco: "rings" as const },
+  { big: "250+", label: "проектов разной сложности", sub: "", deco: "dots" as const },
+  { big: "81", label: "студент обучен дизайну", sub: "", deco: "people" as const },
 ];
+
+export const aboutPhoto = "/assets/tild6336-333__photo_2023-05-19_16-.jpg";
 
 export type Project = {
   name: string;
