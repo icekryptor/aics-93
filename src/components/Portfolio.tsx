@@ -1,135 +1,134 @@
 import Image from "next/image";
 import Reveal from "./Reveal";
-import { featured, cases, moreProjects, type Project } from "@/lib/content";
-
-function Tags({ tags }: { tags?: string[] }) {
-  if (!tags?.length) return null;
-  return (
-    <div className="flex flex-wrap gap-2">
-      {tags.map((t) => (
-        <span
-          key={t}
-          className="tech-label rounded-full border border-line px-2.5 py-0.5 text-[11px] text-ink-soft"
-        >
-          {t}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function CaseCard({ p }: { p: Project }) {
-  return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border border-line bg-bg transition-shadow hover:shadow-[0_24px_60px_-30px_rgba(22,18,29,0.4)]">
-      <div className="relative aspect-[16/10] overflow-hidden bg-bg-soft">
-        <Image
-          src={p.image}
-          alt={p.name}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-        />
-      </div>
-      <div className="flex flex-1 flex-col p-6">
-        <Tags tags={p.tags} />
-        <h3 className="mt-3 font-display text-xl font-semibold tracking-tight">{p.name}</h3>
-        <p className="mt-2 text-sm leading-relaxed text-ink-soft">{p.subtitle}</p>
-        {p.services.length > 0 && (
-          <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-ink-soft">
-            {p.services.map((s) => (
-              <li key={s} className="before:mr-1.5 before:text-accent before:content-['•']">
-                {s}
-              </li>
-            ))}
-          </ul>
-        )}
-        {p.link && (
-          <a
-            href={p.link}
-            target={p.link.startsWith("http") ? "_blank" : undefined}
-            rel="noreferrer"
-            className="mt-5 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-accent transition-transform hover:gap-2.5"
-          >
-            Смотреть кейс <span aria-hidden>→</span>
-          </a>
-        )}
-      </div>
-    </article>
-  );
-}
+import { featured, cases, moreProjects } from "@/lib/content";
 
 export default function Portfolio() {
   return (
-    <section id="prtf" className="scroll-mt-24 bg-bg-soft/50 py-16 lg:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <Reveal>
-          <span className="tech-label inline-flex items-center gap-2 text-xs text-ink-soft">
-            <span className="size-1.5 rounded-full bg-accent" />
-            наше портфолио
-          </span>
-          <h2 className="mt-3 font-display text-[clamp(1.8rem,4vw,3rem)] font-semibold tracking-tight">
-            Портфолио
-          </h2>
-        </Reveal>
+    <section id="prtf" className="relative scroll-mt-24 py-16 lg:py-24">
+      {/* vertical "НАШЕ ПОРТФОЛИО" label */}
+      <span
+        className="pointer-events-none absolute left-2 top-24 hidden text-sm tracking-[0.25em] text-ink/70 lg:block"
+        style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+      >
+        НАШЕ ПОРТФОЛИО
+      </span>
 
-        {/* Featured: Химичка */}
-        <Reveal className="mt-10">
-          <article className="grid overflow-hidden rounded-[var(--radius-card)] border border-line bg-bg lg:grid-cols-2">
-            <div className="relative aspect-[4/3] overflow-hidden bg-bg-soft lg:aspect-auto">
-              <Image
-                src={featured.image}
-                alt={featured.name}
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-                priority
-              />
-            </div>
-            <div className="flex flex-col justify-center p-8 lg:p-12">
-              <span className="tech-label text-xs text-accent">главная гордость</span>
-              <h3 className="mt-3 font-display text-3xl font-bold tracking-tight lg:text-4xl">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:pl-16">
+        {/* Featured: Химичка — gradient card */}
+        <Reveal>
+          <article
+            className="grid overflow-hidden rounded-[28px] lg:grid-cols-2"
+            style={{
+              background:
+                "linear-gradient(118deg, #7c3aed 0%, #a855f7 32%, #e879a6 66%, #fb9a5a 100%)",
+            }}
+          >
+            <div className="flex flex-col justify-center p-8 text-white lg:p-12">
+              <span className="text-sm text-white/70">моя главная гордость:</span>
+              <h3 className="mt-2 font-display text-4xl font-normal tracking-tight lg:text-5xl">
                 {featured.name}
               </h3>
-              <p className="mt-3 text-ink-soft">{featured.subtitle}</p>
-              <ul className="mt-6 space-y-2.5">
+              <ul className="mt-6 space-y-2">
                 {featured.services.map((s) => (
-                  <li key={s} className="flex gap-3 text-sm">
-                    <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-gradient-accent" />
+                  <li key={s} className="flex gap-2.5 text-[15px] text-white/90">
+                    <span className="mt-2 size-1.5 shrink-0 rounded-full bg-white/80" />
                     {s}
                   </li>
                 ))}
               </ul>
               <a
                 href={featured.link}
-                className="mt-8 inline-flex w-fit items-center gap-2 rounded-xl bg-ink px-6 py-3.5 text-sm font-semibold text-bg transition-transform hover:scale-[1.03]"
+                className="mt-8 inline-flex w-fit items-center rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-ink transition-transform hover:scale-[1.03]"
               >
-                Подробный кейс <span aria-hidden>→</span>
+                Подробный кейс
               </a>
+            </div>
+            <div className="relative min-h-[280px] lg:min-h-[420px]">
+              <Image
+                src={featured.image}
+                alt={featured.name}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-contain p-6"
+                priority
+              />
             </div>
           </article>
         </Reveal>
 
-        {/* Case grid */}
-        <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {cases.map((p, i) => (
-            <Reveal key={p.name} delay={(i % 3) * 80}>
-              <CaseCard p={p} />
+        {/* Cases: full-width stacked blocks */}
+        <div className="mt-16 space-y-16">
+          {cases.map((c) => (
+            <Reveal key={c.name}>
+              <article>
+                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                  <div className="max-w-xl">
+                    <h3 className="font-display text-3xl font-normal tracking-tight lg:text-4xl">
+                      {c.name}
+                    </h3>
+                    <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{c.subtitle}</p>
+                  </div>
+                  <div className="md:text-right">
+                    {c.tags && (
+                      <div className="flex flex-wrap gap-2 md:justify-end">
+                        {c.tags.map((t) => (
+                          <span
+                            key={t}
+                            className="rounded-full bg-ink px-3 py-1 text-[11px] text-bg"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    {c.link && (
+                      <a
+                        href={c.link}
+                        target={c.link.startsWith("http") ? "_blank" : undefined}
+                        rel="noreferrer"
+                        className="mt-3 inline-block text-sm text-ink-soft underline-offset-4 hover:text-ink hover:underline"
+                      >
+                        {c.link.replace(/^https?:\/\//, "")}
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                <div className="relative mt-6 aspect-[16/8] overflow-hidden rounded-[24px] bg-bg-soft">
+                  <Image
+                    src={c.image}
+                    alt={c.name}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 1100px"
+                    className="object-cover"
+                  />
+                </div>
+
+                {c.services.length > 0 && (
+                  <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-1.5 text-[13px] text-ink-soft">
+                    {c.services.map((s) => (
+                      <li key={s} className="before:mr-1.5 before:text-accent before:content-['•']">
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </article>
             </Reveal>
           ))}
         </div>
 
         {/* More projects */}
-        <Reveal className="mt-16">
-          <h3 className="font-display text-xl font-semibold tracking-tight">Больше проектов</h3>
+        <Reveal className="mt-20">
+          <h3 className="font-display text-2xl font-normal uppercase tracking-tight">
+            Больше проектов
+          </h3>
         </Reveal>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {moreProjects.map((p, i) => (
             <Reveal key={p.name} delay={(i % 4) * 60}>
-              <a
-                href={p.link}
-                className="group block overflow-hidden rounded-2xl border border-line bg-bg"
-              >
-                <div className="relative aspect-[4/3] overflow-hidden bg-bg-soft">
+              <a href={p.link} className="group block">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-bg-soft">
                   <Image
                     src={p.image}
                     alt={p.name}
@@ -138,13 +137,11 @@ export default function Portfolio() {
                     className="object-cover transition-transform duration-500 group-hover:scale-[1.05]"
                   />
                 </div>
-                <div className="p-4">
-                  <p className="text-xs text-ink-soft">{p.subtitle}</p>
-                  <p className="mt-1 font-display text-sm font-semibold leading-tight">{p.name}</p>
-                  <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-accent">
-                    Смотреть сайт <span aria-hidden>→</span>
-                  </span>
-                </div>
+                <p className="mt-3 text-xs text-ink-soft">{p.subtitle}</p>
+                <p className="mt-0.5 font-display text-sm font-normal leading-tight">{p.name}</p>
+                <span className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-accent">
+                  Смотреть сайт <span aria-hidden>→</span>
+                </span>
               </a>
             </Reveal>
           ))}
