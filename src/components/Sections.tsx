@@ -20,56 +20,56 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export function Intro() {
+  const statements = [
+    "Я мультидисциплинарный дизайнер с релевантным бизнес-опытом, навыками маркетинга и создания продуктов.",
+    "Моя работа — придать привлекательные очертания вашему бизнесу для улучшения его ключевых показателей.",
+    "С помощью умелого использования ИИ мои руки развязаны, и я соединил творчество с машинным анализом для получения самых точных результатов.",
+  ];
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
-      <Reveal className="max-w-4xl">
-        <p className="font-display text-[clamp(1.4rem,3.2vw,2.4rem)] font-medium leading-[1.18] tracking-tight">
-          С помощью умелого использования ИИ мои руки развязаны: я соединил
-          творчество с машинным анализом для получения{" "}
-          <span className="text-gradient">самых точных результатов</span>.
-        </p>
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-soft">
-          Я мультидисциплинарный дизайнер с релевантным бизнес-опытом, навыками
-          маркетинга и создания продуктов. Моя работа — придать привлекательные
-          очертания вашему бизнесу для улучшения его ключевых показателей.
-        </p>
-      </Reveal>
+    <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
+      <div className="max-w-5xl space-y-10">
+        {statements.map((s, i) => (
+          <Reveal key={i} delay={i * 80}>
+            <p className="text-[clamp(1.4rem,3vw,2.3rem)] font-medium leading-[1.12] tracking-[-0.01em] text-ink">
+              {s}
+            </p>
+          </Reveal>
+        ))}
+      </div>
     </section>
   );
 }
 
 export function Frameworks() {
   return (
-    <section id="how" className="scroll-mt-24 bg-bg-soft/50 py-16 lg:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.85fr]">
+    <section id="how" className="scroll-mt-24 py-16 lg:py-24">
+      <div className="mx-auto grid max-w-7xl items-start gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-12">
+        {/* Left: heading line + 2×2 framework grid */}
+        <div>
           <Reveal>
-            <SectionLabel>data-driven design</SectionLabel>
-            <h2 className="mt-3 font-display text-[clamp(1.6rem,3.5vw,2.6rem)] font-semibold tracking-tight">
-              Фреймворки и методологии
-            </h2>
-            <p className="mt-4 max-w-md text-base leading-relaxed text-ink-soft">
-              Я не угадываю — я собираю бренд из проверенных бизнес-методологий.
-              Каждое решение опирается на данные и связи между ними.
+            <p className="text-[15px] tracking-tight text-ink-soft">
+              Какие фреймворки и методологии я использую:
             </p>
           </Reveal>
-          <Reveal delay={120}>
-            <GraphCanvas className="h-[300px] w-full sm:h-[360px]" />
-          </Reveal>
+          <div className="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2">
+            {frameworks.map((f, i) => (
+              <Reveal key={f.code} delay={(i % 2) * 80}>
+                <article>
+                  <span className="tech-label text-xs text-ink-soft">[ {f.n} ]</span>
+                  <p className="mt-2 text-2xl font-semibold tracking-tight text-accent">{f.code}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                    {f.full} — {f.text}
+                  </p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {frameworks.map((f, i) => (
-            <Reveal key={f.code} delay={i * 70}>
-              <article className="flex h-full flex-col rounded-[var(--radius-card)] border border-line bg-bg p-6 transition-shadow hover:shadow-[0_18px_50px_-24px_rgba(22,18,29,0.3)]">
-                <span className="tech-label text-xs text-ink-soft">[ {f.n} ]</span>
-                <p className="mt-4 font-display text-3xl font-bold text-gradient">{f.code}</p>
-                <p className="mt-1 text-[11px] uppercase tracking-wide text-ink-soft">{f.full}</p>
-                <p className="mt-4 text-sm leading-relaxed text-ink-soft">{f.text}</p>
-              </article>
-            </Reveal>
-          ))}
-        </div>
+        {/* Right: framework graph */}
+        <Reveal delay={120}>
+          <GraphCanvas className="h-[340px] w-full sm:h-[440px] lg:h-[480px]" />
+        </Reveal>
       </div>
     </section>
   );

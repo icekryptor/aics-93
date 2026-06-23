@@ -375,7 +375,7 @@ export default function HeroCube() {
   return (
     <div
       ref={wrapRef}
-      className="mx-auto w-full max-w-[460px] aspect-square"
+      className="mx-auto w-full max-w-[600px] aspect-square"
       aria-hidden
     >
       <canvas ref={canvasRef} className="block h-full w-full" />

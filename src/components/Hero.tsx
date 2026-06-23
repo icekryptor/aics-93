@@ -4,7 +4,7 @@ import { assets, competencies, heroStats } from "@/lib/content";
 
 export default function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden pt-28 pb-16 sm:pt-32 lg:pb-24">
+    <section id="top" className="relative overflow-hidden pt-16 pb-16 sm:pt-20 lg:pb-24">
       {/* faint grid texture */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -17,25 +17,23 @@ export default function Hero() {
       {/* plus marks */}
       <div className="pointer-events-none absolute right-6 top-24 text-ink/20 select-none hidden lg:block">+</div>
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr_0.7fr]">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[0.92fr_1.16fr_0.72fr]">
         {/* Left: headline */}
         <div>
-          <div className="mb-6 flex items-center gap-3">
-            <span className="grid size-11 place-items-center rounded-full border border-ink/15">
-              <Image src={assets.gear} alt="" width={26} height={26} className="size-6" />
-            </span>
+          <div className="mb-8 flex items-center gap-4">
+            <Image src={assets.gear} alt="" width={64} height={64} className="size-14 shrink-0" />
             <div>
-              <Image src={assets.wordmark} alt="AICS-93" width={90} height={22} className="h-[18px] w-auto" />
-              <p className="mt-1 text-[10px] uppercase tracking-wide text-ink-soft">
-                autonomous intelligent cyberhuman system #93
+              <Image src={assets.wordmark} alt="AICS-93" width={150} height={36} className="h-[28px] w-auto" />
+              <p className="mt-1.5 text-[10px] leading-tight tracking-tight text-ink-soft">
+                autonomous intelligent<br />cyberhuman system #93
               </p>
             </div>
           </div>
 
-          <h1 className="font-display text-[clamp(2rem,5vw,3.4rem)] font-semibold leading-[1.04] tracking-tight">
+          <h1 className="text-[clamp(2rem,4.4vw,3rem)] font-medium leading-[1.06] tracking-[-0.01em] text-ink">
             Дизайн и решения,<br />
-            вдохновлённые<br />
-            <span className="text-gradient">системой и логикой</span>
+            вдохновленные<br />
+            системой и логикой
           </h1>
 
           <p className="mt-6 max-w-md text-[15px] leading-relaxed text-ink-soft">
@@ -75,7 +73,7 @@ export default function Hero() {
         <div className="space-y-8">
           {heroStats.map((s) => (
             <div key={s.big}>
-              <p className="font-display text-3xl font-semibold leading-none">{s.big}</p>
+              <p className="font-display text-[2.4rem] font-normal leading-none tracking-tight text-ink">{s.big}</p>
               <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">{s.text}</p>
             </div>
           ))}
