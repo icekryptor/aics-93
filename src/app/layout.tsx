@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Unbounded, Inter } from "next/font/google";
+import { Unbounded } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const unbounded = Unbounded({
@@ -9,10 +10,16 @@ const unbounded = Unbounded({
   display: "swap",
 });
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin", "cyrillic"],
+// Neue Haas Grotesk Display — the original site's primary typeface.
+const neueHaas = localFont({
+  variable: "--font-neue",
   display: "swap",
+  src: [
+    { path: "./fonts/NeueHaas-ExtraLight.woff", weight: "300", style: "normal" },
+    { path: "./fonts/NeueHaas-Roman.woff", weight: "400", style: "normal" },
+    { path: "./fonts/NeueHaas-Medium.woff", weight: "500", style: "normal" },
+    { path: "./fonts/NeueHaas-Bold.woff", weight: "700", style: "normal" },
+  ],
 });
 
 const siteUrl = "https://aistov.space";
@@ -52,7 +59,7 @@ export default function RootLayout({
     <html
       lang="ru"
       suppressHydrationWarning
-      className={`${unbounded.variable} ${inter.variable} h-full`}
+      className={`${unbounded.variable} ${neueHaas.variable} h-full`}
     >
       <head>
         <script
