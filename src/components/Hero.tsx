@@ -1,59 +1,49 @@
 import Image from "next/image";
 import HeroCube from "./HeroCube";
-import { assets, competencies, heroStats } from "@/lib/content";
-
-function SkewBar({ cells = 22 }: { cells?: number }) {
-  return (
-    <span className="skew-track" aria-hidden>
-      {Array.from({ length: cells }).map((_, i) => (
-        <span
-          key={i}
-          className="skew-cell"
-          style={{ "--d": `${(i * 0.1).toFixed(2)}s` } as React.CSSProperties}
-        />
-      ))}
-    </span>
-  );
-}
+import SkillBars from "./SkillBars";
+import { assets, heroStats } from "@/lib/content";
 
 export default function Hero() {
   return (
     <section id="top" className="relative pt-16 pb-16 sm:pt-20 lg:pb-28">
-      <div className="relative mx-auto grid max-w-[1640px] items-start gap-12 px-6 sm:px-10 lg:grid-cols-[1fr_1.2fr_0.8fr] lg:gap-16 lg:px-16">
-        {/* Left: headline */}
+      <div className="relative mx-auto grid max-w-[1640px] items-start gap-12 px-6 sm:px-10 lg:grid-cols-[0.95fr_1.35fr_0.85fr] lg:gap-14 lg:px-16">
+        {/* Left: headline + bars */}
         <div>
-          <div className="mb-9 flex items-center gap-4">
+          <div className="mb-8 flex items-center gap-4">
             <Image src={assets.gear} alt="" width={64} height={64} className="size-14 shrink-0" />
             <div>
-              <Image src={assets.wordmark} alt="AICS-93" width={150} height={36} className="h-[28px] w-auto" />
+              <Image src={assets.wordmark} alt="AICS-93" width={150} height={36} className="h-[26px] w-auto" />
               <p className="mt-1.5 text-[10px] leading-tight tracking-tight text-ink-soft">
                 autonomous intelligent<br />cyberhuman system #93
               </p>
             </div>
           </div>
 
-          <h1 className="text-[clamp(2.2rem,3.6vw,3.4rem)] font-medium leading-[1.04] tracking-[-0.015em] text-ink">
-            Дизайн и<br />
-            решения,<br />
+          <h1 className="text-[clamp(1.85rem,2.7vw,2.5rem)] font-medium leading-[1.08] tracking-[-0.01em] text-ink">
+            Дизайн и решения,<br />
             вдохновленные<br />
-            системой&nbsp;и&nbsp;логикой
+            системой и логикой
           </h1>
 
-          <div className="mt-7 max-w-lg space-y-3 text-[15px] leading-relaxed text-ink-soft [text-wrap:pretty]">
+          <div className="mt-6 max-w-[340px] space-y-3 text-[15px] leading-relaxed text-ink-soft [text-wrap:pretty]">
             <p>Перестаньте быть просто строкой в выдаче маркетплейсов.</p>
             <p>Сделаю ваш бренд узнаваемым, желаемым и масштабируемым на основе глубокой аналитики и опыта.</p>
           </div>
 
           <a
             href="#upgrade"
-            className="mt-8 inline-flex items-center gap-2 rounded-xl border border-ink px-7 py-3.5 text-sm font-semibold transition-all hover:bg-ink hover:text-bg"
+            className="mt-7 inline-flex items-center gap-2 rounded-xl border border-ink px-7 py-3.5 text-sm font-semibold transition-all hover:bg-ink hover:text-bg"
           >
             Получить КП
           </a>
+
+          <div className="mt-9">
+            <SkillBars />
+          </div>
         </div>
 
         {/* Center: cube */}
-        <div className="lg:-mx-6">
+        <div className="lg:self-center">
           <HeroCube />
         </div>
 
@@ -79,19 +69,6 @@ export default function Hero() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* competency progress bars — spread along the bottom */}
-      <div className="mx-auto mt-14 grid max-w-[1640px] gap-8 px-6 sm:grid-cols-3 sm:px-10 lg:px-16">
-        {competencies.map((c) => (
-          <div key={c.num}>
-            <div className="flex items-center gap-3">
-              <span className="tech-label text-xs text-ink-soft">{c.num}:</span>
-              <SkewBar />
-            </div>
-            <p className="mt-2 text-[13px] font-medium">{c.label}</p>
-          </div>
-        ))}
       </div>
     </section>
   );

@@ -70,6 +70,29 @@ body {
   .skew-cell::after { animation: none; opacity: 1; }
 }
 
+/* one-shot sequential fill (skill bars) */
+.skew-cell2 {
+  position: relative;
+  display: block;
+  flex: 0 0 15px;
+  height: 16px;
+  overflow: hidden;
+  background: rgba(22, 18, 29, 0.1);
+  transform: skewX(-22deg);
+}
+.skew-cell2::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #16121d;
+  opacity: var(--fill, 0);
+  transition: opacity 0.22s ease;
+  transition-delay: var(--delay, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .skew-cell2::after { transition: none; }
+}
+
 .font-display {
   font-family: var(--font-display), system-ui, sans-serif;
 }
