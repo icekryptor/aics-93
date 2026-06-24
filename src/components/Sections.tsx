@@ -83,23 +83,23 @@ export function Intro() {
 export function Frameworks() {
   return (
     <section id="how" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-16 sm:px-6 lg:py-24">
-      <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.8fr]">
+      <Reveal>
+        <p className="text-[15px] tracking-tight text-ink-soft">
+          Какие фреймворки и методологии я использую:
+        </p>
+        <h2 className="mt-3 text-[clamp(1.6rem,3.4vw,2.5rem)] font-normal leading-tight tracking-[-0.01em]">
+          Работаю на данных, а не на догадках
+        </h2>
+      </Reveal>
+
+      <div className="mt-10 grid items-center gap-10 lg:grid-cols-[1.9fr_1fr] lg:gap-12">
         <Reveal>
-          <p className="text-[15px] tracking-tight text-ink-soft">
-            Какие фреймворки и методологии я использую:
-          </p>
-          <h2 className="mt-3 text-[clamp(1.6rem,3.4vw,2.5rem)] font-normal leading-tight tracking-[-0.01em]">
-            Работаю на данных, а не на догадках
-          </h2>
+          <FrameworkCarousel />
         </Reveal>
         <Reveal delay={120}>
-          <GraphCanvas className="h-[260px] w-full sm:h-[320px]" />
+          <GraphCanvas className="h-[300px] w-full sm:h-[420px]" />
         </Reveal>
       </div>
-
-      <Reveal delay={80}>
-        <FrameworkCarousel className="mt-12" />
-      </Reveal>
     </section>
   );
 }

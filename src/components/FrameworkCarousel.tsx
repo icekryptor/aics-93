@@ -43,16 +43,23 @@ export default function FrameworkCarousel({ className = "" }: { className?: stri
   useEffect(() => {
     const measure = () => {
       const w = wrapRef.current?.clientWidth ?? 800;
-      // card width + gap, clamped; adjacent cards peek
-      setStep(Math.max(240, Math.min(420, w * 0.42)));
+      // match the card width (CSS clamp), then step a bit less so neighbours peek
+      const cardW = Math.max(240, Math.min(360, window.innerWidth * 0.8));
+      setStep(Math.min(Math.round(cardW * 0.9), Math.round(w * 0.6)));
     };
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
   }, []);
 
-  const clamp = (i: number) => Math.max(0, Math.min(N - 1, i));
-  const go = (dir: number) => setActive((a) => clamp(a + dir));
+  // infinite / looping index
+  const go = (dir: number) => setActive((a) => (a + dir + N) % N);
+  // nearest wrapped distance from active (for the looping layout)
+  const wrappedDiff = (i: number) => {
+    let d = ((i - active) % N + N) % N;
+    if (d > N / 2) d -= N;
+    return d;
+  };
 
   const onDown = (e: React.PointerEvent) => {
     start.current = { x: e.clientX, id: e.pointerId };
@@ -91,17 +98,15 @@ export default function FrameworkCarousel({ className = "" }: { className?: stri
         <div className="flex items-center gap-2">
           <button
             onClick={() => go(-1)}
-            disabled={active === 0}
             aria-label="Назад"
-            className="grid size-10 place-items-center rounded-full border border-ink/20 transition-colors hover:bg-ink hover:text-bg disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink"
+            className="grid size-10 place-items-center rounded-full border border-ink/20 transition-colors hover:bg-ink hover:text-bg"
           >
             ‹
           </button>
           <button
             onClick={() => go(1)}
-            disabled={active === N - 1}
             aria-label="Вперёд"
-            className="grid size-10 place-items-center rounded-full border border-ink/20 transition-colors hover:bg-ink hover:text-bg disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink"
+            className="grid size-10 place-items-center rounded-full border border-ink/20 transition-colors hover:bg-ink hover:text-bg"
           >
             ›
           </button>
@@ -119,7 +124,7 @@ export default function FrameworkCarousel({ className = "" }: { className?: stri
         onPointerLeave={onUp}
       >
         {frameworks.map((f, i) => {
-          const offset = (i - active) * step + dx;
+          const offset = wrappedDiff(i) * step + dx;
           const dist = Math.abs(offset) / step;
           const hidden = dist > 2.2;
           const isActive = i === active && Math.abs(dx) < step * 0.4;
