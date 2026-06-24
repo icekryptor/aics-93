@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Reveal from "./Reveal";
+import ScrollHighlight from "./ScrollHighlight";
 import GraphCanvas from "./GraphCanvas";
 import {
   assets,
@@ -17,21 +18,57 @@ const CUT = {
     "polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px)",
 };
 
+type Seg = { t: string; hl?: boolean };
+
+const INTRO_STATEMENTS: Seg[][] = [
+  [
+    { t: "Я " },
+    { t: "мультидисциплинарный дизайнер", hl: true },
+    { t: " с релевантным " },
+    { t: "бизнес-опытом", hl: true },
+    { t: ", навыками " },
+    { t: "маркетинга", hl: true },
+    { t: " и создания " },
+    { t: "продуктов", hl: true },
+    { t: "." },
+  ],
+  [
+    { t: "Моя работа — придать " },
+    { t: "привлекательные очертания", hl: true },
+    { t: " вашему бизнесу для улучшения его " },
+    { t: "ключевых показателей", hl: true },
+    { t: "." },
+  ],
+  [
+    { t: "С помощью умелого использования " },
+    { t: "ИИ", hl: true },
+    { t: " мои руки развязаны, и я соединил " },
+    { t: "творчество с машинным анализом", hl: true },
+    { t: " для получения " },
+    { t: "самых точных результатов", hl: true },
+    { t: "." },
+  ],
+];
+
 export function Intro() {
-  const statements = [
-    "Я мультидисциплинарный дизайнер с релевантным бизнес-опытом, навыками маркетинга и создания продуктов.",
-    "Моя работа — придать привлекательные очертания вашему бизнесу для улучшения его ключевых показателей.",
-    "С помощью умелого использования ИИ мои руки развязаны, и я соединил творчество с машинным анализом для получения самых точных результатов.",
-  ];
   return (
     <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
       <div className="max-w-5xl space-y-10">
-        {statements.map((s, i) => (
-          <Reveal key={i} delay={i * 80}>
-            <p className="text-[clamp(1.4rem,3vw,2.3rem)] font-medium leading-[1.12] tracking-[-0.01em] text-ink">
-              {s}
-            </p>
-          </Reveal>
+        {INTRO_STATEMENTS.map((segs, i) => (
+          <ScrollHighlight
+            key={i}
+            className="text-[clamp(1.4rem,3vw,2.3rem)] font-medium leading-[1.12] tracking-[-0.01em] text-ink"
+          >
+            {segs.map((s, j) =>
+              s.hl ? (
+                <span key={j} className="text-accent">
+                  {s.t}
+                </span>
+              ) : (
+                <span key={j}>{s.t}</span>
+              )
+            )}
+          </ScrollHighlight>
         ))}
       </div>
     </section>
