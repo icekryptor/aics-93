@@ -10,6 +10,7 @@ export default function Cursor() {
   const vRef = useRef<HTMLDivElement | null>(null);
   const hRef = useRef<HTMLDivElement | null>(null);
   const crossRef = useRef<HTMLDivElement | null>(null);
+  const crossInnerRef = useRef<HTMLDivElement | null>(null);
   const labelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -20,8 +21,9 @@ export default function Cursor() {
     const v = vRef.current;
     const h = hRef.current;
     const cross = crossRef.current;
+    const crossInner = crossInnerRef.current;
     const label = labelRef.current;
-    if (!root || !v || !h || !cross || !label) return;
+    if (!root || !v || !h || !cross || !crossInner || !label) return;
 
     document.documentElement.classList.add("cursor-none");
     root.style.opacity = "0";
@@ -39,9 +41,9 @@ export default function Cursor() {
       cross.style.transform = `translate(${x}px, ${y}px)`;
       // keep the label inside the viewport
       const lx = x + 14 > window.innerWidth - 70 ? x - 62 : x + 14;
-      const ly = y + 14 > window.innerHeight - 24 ? y - 22 : y + 14;
+      const ly = y + 12 > window.innerHeight - 30 ? y - 30 : y + 12;
       label.style.transform = `translate(${lx}px, ${ly}px)`;
-      label.textContent = `X ${Math.round(x)}  Y ${Math.round(y)}`;
+      label.textContent = `X ${Math.round(x)}\nY ${Math.round(y)}`;
     };
 
     const onMove = (e: PointerEvent) => {
@@ -53,15 +55,24 @@ export default function Cursor() {
     const onLeave = () => {
       root.style.opacity = "0";
     };
+    const onDown = (e: PointerEvent) => {
+      onMove(e);
+      crossInner.style.transform = "scale(0.7)";
+    };
+    const onUp = () => {
+      crossInner.style.transform = "scale(1)";
+    };
 
     window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerdown", onMove, { passive: true });
+    window.addEventListener("pointerdown", onDown, { passive: true });
+    window.addEventListener("pointerup", onUp, { passive: true });
     document.addEventListener("pointerleave", onLeave);
     window.addEventListener("blur", onLeave);
 
     return () => {
       window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerdown", onMove);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup", onUp);
       document.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("blur", onLeave);
       cancelAnimationFrame(raf);
@@ -89,15 +100,18 @@ export default function Cursor() {
       />
       {/* crosshair */}
       <div ref={crossRef} className="absolute left-0 top-0">
-        <div className="relative -left-[9px] -top-[9px] size-[18px]">
+        <div
+          ref={crossInnerRef}
+          className="relative -left-[9px] -top-[9px] size-[18px] origin-center transition-transform duration-100 ease-out"
+        >
           <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-ink" />
           <span className="absolute top-1/2 left-0 h-px w-full -translate-y-1/2 bg-ink" />
         </div>
       </div>
-      {/* X / Y readout */}
+      {/* X / Y readout — stacked, small, monospace */}
       <div
         ref={labelRef}
-        className="absolute left-0 top-0 font-display text-[10px] tracking-tight text-ink/70"
+        className="absolute left-0 top-0 whitespace-pre font-mono text-[8px] leading-[1.3] tracking-tight text-ink/70"
       />
     </div>
   );
