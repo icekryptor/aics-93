@@ -57,7 +57,7 @@ const INTRO_INDENT = ["", "lg:ml-[14%]", "lg:ml-[28%]"];
 
 export function Intro() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
+    <section className="mx-auto max-w-7xl px-4 py-[30px] sm:px-6 lg:py-[50px]">
       <div className="space-y-9">
         {INTRO_STATEMENTS.map((segs, i) => (
           <ScrollHighlight
@@ -82,7 +82,7 @@ export function Intro() {
 
 export function Frameworks() {
   return (
-    <section id="how" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-16 sm:px-6 lg:py-24">
+    <section id="how" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-[30px] sm:px-6 lg:py-[50px]">
       <Reveal>
         <p className="text-[15px] tracking-tight text-ink-soft">
           Какие фреймворки и методологии я использую:
@@ -146,7 +146,7 @@ export function Reasons() {
   // order in data: 0→01 top, 1→02 up-left, 2→03 low-left, 3→04 bottom, 4→05 low-right, 5→06 up-right
   const r = reasons;
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+    <section className="mx-auto max-w-7xl px-4 py-[30px] sm:px-6 lg:py-[50px]">
       {/* Mobile / tablet: title + stacked list */}
       <div className="lg:hidden">
         <Reveal>
@@ -244,7 +244,7 @@ export function SalesEngine() {
     { cx: 1092, cy: 332, R: 124, teeth: 16, lines: ["Удержание, LTV,", "повторные", "покупки"], fontSize: 15 },
   ];
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+    <section className="mx-auto max-w-7xl px-4 py-[30px] sm:px-6 lg:py-[50px]">
       <Reveal>
         <h2 className="font-display text-[clamp(1.5rem,4.2vw,2.6rem)] font-semibold uppercase tracking-tight">
           Двигатель продаж бизнеса
@@ -315,7 +315,7 @@ function StatDeco({ kind }: { kind: "rings" | "dots" | "people" }) {
 
 export function About() {
   return (
-    <section id="exp" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-16 sm:px-6 lg:py-24">
+    <section id="exp" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-[30px] sm:px-6 lg:py-[50px]">
       <div className="grid gap-10 lg:grid-cols-[1.55fr_1fr] lg:items-stretch">
         {/* Cut-corner panel: facts + photo */}
         <Reveal>
@@ -376,7 +376,7 @@ export function About() {
 export function Gantt() {
   const total = gantt.total;
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+    <section className="mx-auto max-w-7xl px-4 py-[30px] sm:px-6 lg:py-[50px]">
       <Reveal>
         <h2 className="font-display text-[clamp(1.5rem,3.6vw,2.4rem)] font-semibold uppercase tracking-tight">
           {gantt.title}
@@ -459,7 +459,7 @@ export function Gantt() {
 
 export function Bio() {
   return (
-    <section className="relative overflow-hidden bg-dark py-16 text-bg lg:py-24">
+    <section className="relative overflow-hidden bg-dark py-[30px] text-bg lg:py-[50px]">
       {/* subtle marble sheen */}
       <div
         className="pointer-events-none absolute inset-0 opacity-60"

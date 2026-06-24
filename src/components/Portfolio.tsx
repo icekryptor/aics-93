@@ -4,7 +4,7 @@ import { featured, cases, moreProjects } from "@/lib/content";
 
 export default function Portfolio() {
   return (
-    <section id="prtf" className="relative scroll-mt-24 py-16 lg:py-24">
+    <section id="prtf" className="relative scroll-mt-24 py-[30px] lg:py-[50px]">
       {/* vertical "НАШЕ ПОРТФОЛИО" label */}
       <span
         className="pointer-events-none absolute left-2 top-24 hidden text-sm tracking-[0.25em] text-ink/70 lg:block"

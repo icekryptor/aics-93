@@ -25,7 +25,7 @@ export default function QuoteForm() {
     "w-full rounded-2xl border border-white/15 bg-transparent px-5 py-4 text-sm outline-none transition-colors placeholder:text-white/35 focus:border-accent";
 
   return (
-    <section id="upgrade" className="relative scroll-mt-24 overflow-hidden bg-dark py-16 text-bg lg:py-24">
+    <section id="upgrade" className="relative scroll-mt-24 overflow-hidden bg-dark py-[30px] text-bg lg:py-[50px]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           <div>

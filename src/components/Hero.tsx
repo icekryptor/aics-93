@@ -6,7 +6,7 @@ import { assets, heroStats } from "@/lib/content";
 
 export default function Hero() {
   return (
-    <section id="top" className="relative pt-16 pb-16 sm:pt-20 lg:pb-28">
+    <section id="top" className="relative pt-16 pb-[30px] sm:pt-20 lg:pb-[50px]">
       <div className="relative mx-auto grid max-w-[1640px] items-start gap-12 px-6 sm:px-10 lg:grid-cols-[0.95fr_1.35fr_0.85fr] lg:gap-14 lg:px-16">
         {/* Left: headline + bars */}
         <div>
