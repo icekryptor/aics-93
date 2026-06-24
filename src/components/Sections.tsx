@@ -2,6 +2,7 @@ import Image from "next/image";
 import Reveal from "./Reveal";
 import ScrollHighlight from "./ScrollHighlight";
 import GraphCanvas from "./GraphCanvas";
+import FrameworkCarousel from "./FrameworkCarousel";
 import {
   assets,
   frameworks,
@@ -50,14 +51,18 @@ const INTRO_STATEMENTS: Seg[][] = [
   ],
 ];
 
+// staircase indents (lab-tech "лесенка"); inline animated images can later be
+// inserted as extra segments inside each statement.
+const INTRO_INDENT = ["", "lg:ml-[14%]", "lg:ml-[28%]"];
+
 export function Intro() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
-      <div className="max-w-5xl space-y-10">
+      <div className="space-y-9">
         {INTRO_STATEMENTS.map((segs, i) => (
           <ScrollHighlight
             key={i}
-            className="text-[clamp(1.4rem,3vw,2.3rem)] font-medium leading-[1.12] tracking-[-0.01em] text-[#333333]"
+            className={`max-w-3xl text-[clamp(1.3rem,2.7vw,2.1rem)] font-normal leading-[1.16] tracking-[-0.01em] text-[#333333] ${INTRO_INDENT[i] ?? ""}`}
           >
             {segs.map((s, j) =>
               s.hl ? (
@@ -77,35 +82,24 @@ export function Intro() {
 
 export function Frameworks() {
   return (
-    <section id="how" className="scroll-mt-24 py-16 lg:py-24">
-      <div className="mx-auto grid max-w-7xl items-start gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-12">
-        {/* Left: heading line + 2×2 framework grid */}
-        <div>
-          <Reveal>
-            <p className="text-[15px] tracking-tight text-ink-soft">
-              Какие фреймворки и методологии я использую:
-            </p>
-          </Reveal>
-          <div className="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-2">
-            {frameworks.map((f, i) => (
-              <Reveal key={f.code} delay={(i % 2) * 80}>
-                <article>
-                  <span className="tech-label text-xs text-ink-soft">[ {f.n} ]</span>
-                  <p className="mt-2 text-2xl font-semibold tracking-tight text-accent">{f.code}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                    {f.full} — {f.text}
-                  </p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-
-        {/* Right: framework graph */}
+    <section id="how" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-16 sm:px-6 lg:py-24">
+      <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.8fr]">
+        <Reveal>
+          <p className="text-[15px] tracking-tight text-ink-soft">
+            Какие фреймворки и методологии я использую:
+          </p>
+          <h2 className="mt-3 text-[clamp(1.6rem,3.4vw,2.5rem)] font-normal leading-tight tracking-[-0.01em]">
+            Работаю на данных, а не на догадках
+          </h2>
+        </Reveal>
         <Reveal delay={120}>
-          <GraphCanvas className="h-[340px] w-full sm:h-[440px] lg:h-[480px]" />
+          <GraphCanvas className="h-[260px] w-full sm:h-[320px]" />
         </Reveal>
       </div>
+
+      <Reveal delay={80}>
+        <FrameworkCarousel className="mt-12" />
+      </Reveal>
     </section>
   );
 }
