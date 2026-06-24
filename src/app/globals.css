@@ -97,19 +97,28 @@ body {
 @keyframes gearspin {
   to { transform: rotate(360deg); }
 }
-@keyframes chevUp {
-  0%, 100% { transform: translateY(-6px); }
-  50% { transform: translateY(0); }
+/* top chevron (∨) drops to centre, bottom chevron (∧) rises to centre → strokes cross into an X */
+@keyframes chevTop {
+  0%, 32% { transform: translateY(-7px); }
+  50%, 62% { transform: translateY(0); }
+  80%, 100% { transform: translateY(-7px); }
 }
-@keyframes chevDown {
-  0%, 100% { transform: translateY(6px); }
-  50% { transform: translateY(0); }
+@keyframes chevBot {
+  0%, 32% { transform: translateY(7px); }
+  50%, 62% { transform: translateY(0); }
+  80%, 100% { transform: translateY(7px); }
 }
 .logo-gear { animation: gearspin 16s linear infinite; transform-origin: 50% 50%; }
-.logo-chev-up { animation: chevUp 2.6s ease-in-out infinite; }
-.logo-chev-down { animation: chevDown 2.6s ease-in-out infinite; }
+.logo-chev-top {
+  transform: translateY(-7px);
+  animation: chevTop 4.4s ease-in-out 1.2s infinite;
+}
+.logo-chev-bot {
+  transform: translateY(7px);
+  animation: chevBot 4.4s ease-in-out 1.2s infinite;
+}
 @media (prefers-reduced-motion: reduce) {
-  .logo-gear, .logo-chev-up, .logo-chev-down { animation: none; }
+  .logo-gear, .logo-chev-top, .logo-chev-bot { animation: none; transform: none; }
 }
 
 .font-display {
