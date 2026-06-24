@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Unbounded } from "next/font/google";
 import localFont from "next/font/local";
 import GridBackground from "@/components/GridBackground";
+import Cursor from "@/components/Cursor";
 import "./globals.css";
 
 const unbounded = Unbounded({
@@ -71,6 +72,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col overflow-x-hidden">
         <GridBackground />
+        <Cursor />
         {children}
       </body>
     </html>

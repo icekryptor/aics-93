@@ -30,6 +30,12 @@ html {
   background: var(--color-bg);
 }
 
+/* custom crosshair cursor hides the native one (precise pointers only) */
+html.cursor-none,
+html.cursor-none * {
+  cursor: none !important;
+}
+
 body {
   background: transparent;
   color: var(--color-ink);

@@ -57,11 +57,11 @@ export function Intro() {
         {INTRO_STATEMENTS.map((segs, i) => (
           <ScrollHighlight
             key={i}
-            className="text-[clamp(1.4rem,3vw,2.3rem)] font-medium leading-[1.12] tracking-[-0.01em] text-ink"
+            className="text-[clamp(1.4rem,3vw,2.3rem)] font-medium leading-[1.12] tracking-[-0.01em] text-[#333333]"
           >
             {segs.map((s, j) =>
               s.hl ? (
-                <span key={j} className="text-accent">
+                <span key={j} className="text-black">
                   {s.t}
                 </span>
               ) : (

@@ -20,7 +20,8 @@ export default function ScrollHighlight({
       const el = ref.current;
       if (!el) return;
       const r = el.getBoundingClientRect();
-      setOn(r.top <= 250 && r.bottom >= 80);
+      const mid = window.innerHeight * 0.5;
+      setOn(r.top <= mid && r.bottom >= 60);
     };
     const onScroll = () => {
       cancelAnimationFrame(raf);
