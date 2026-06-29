@@ -97,7 +97,7 @@ export function Frameworks() {
           <FrameworkCarousel />
         </Reveal>
         <Reveal delay={120}>
-          <GraphCanvas className="h-[300px] w-full sm:h-[420px]" />
+          <GraphCanvas className="h-[300px] w-full overflow-hidden rounded-[24px] bg-bg-soft/70 backdrop-blur-md sm:h-[420px]" />
         </Reveal>
       </div>
     </section>

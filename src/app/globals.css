@@ -258,8 +258,7 @@ body {
 .grad-f::after { background: radial-gradient(circle, #fb7185 0%, rgba(251,113,133,0.5) 45%, rgba(251,113,133,0) 80%); }
 
 .color-mode .grad-bg {
-  background: linear-gradient(160deg, #f0ecf3 0%, #e7e0ee 50%, #e2d9ec 100%);
-  filter: saturate(1.15);
+  background: linear-gradient(160deg, #f1eef3 0%, #eae4ef 50%, #e6dfed 100%);
   transition: background 0.9s ease;
 }
-.color-mode .grad-blob::after { opacity: 1; }
+.color-mode .grad-blob::after { opacity: 0.62; }
