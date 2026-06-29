@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import GradientBackground from "@/components/GradientBackground";
 import GridBackground from "@/components/GridBackground";
 import Cursor from "@/components/Cursor";
+import ColorToggle from "@/components/ColorToggle";
 import "./globals.css";
 
 const unbounded = Unbounded({
@@ -75,6 +76,7 @@ export default function RootLayout({
         <GradientBackground />
         <GridBackground />
         <Cursor />
+        <ColorToggle />
         {children}
       </body>
     </html>

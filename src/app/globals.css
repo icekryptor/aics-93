@@ -240,3 +240,26 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .grad-blob { animation: none !important; }
 }
+
+/* colour mode: cross-fade a coloured layer over each grey blob */
+.grad-blob::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.grad-a::after { background: radial-gradient(circle, #fb923c 0%, rgba(251,146,60,0.55) 45%, rgba(251,146,60,0) 82%); }
+.grad-b::after { background: radial-gradient(circle, #8b67ff 0%, rgba(139,103,255,0.55) 45%, rgba(139,103,255,0) 82%); }
+.grad-c::after { background: radial-gradient(circle, #ec4899 0%, rgba(236,72,153,0.55) 45%, rgba(236,72,153,0) 80%); }
+.grad-d::after { background: radial-gradient(circle, #22c55e 0%, rgba(34,197,94,0.55) 45%, rgba(34,197,94,0) 80%); }
+.grad-e::after { background: radial-gradient(circle, #c084fc 0%, rgba(192,132,252,0.5) 45%, rgba(192,132,252,0) 80%); }
+.grad-f::after { background: radial-gradient(circle, #fb7185 0%, rgba(251,113,133,0.5) 45%, rgba(251,113,133,0) 80%); }
+
+.color-mode .grad-bg {
+  background: linear-gradient(160deg, #f0ecf3 0%, #e7e0ee 50%, #e2d9ec 100%);
+  filter: saturate(1.15);
+  transition: background 0.9s ease;
+}
+.color-mode .grad-blob::after { opacity: 1; }
