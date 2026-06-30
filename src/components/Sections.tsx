@@ -222,9 +222,9 @@ export function SalesEngine() {
           Двигатель продаж бизнеса
         </h2>
       </Reveal>
-      <Reveal delay={120} className="mt-8">
+      <div className="mt-8">
         <SalesGears />
-      </Reveal>
+      </div>
     </section>
   );
 }

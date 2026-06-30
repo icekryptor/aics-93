@@ -1,40 +1,59 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-type Size = "big" | "med" | "sm";
-const SIZES: Record<Size, { px: number; css: string }> = {
-  big: { px: 232, css: "clamp(150px, 17vw, 232px)" },
-  med: { px: 186, css: "clamp(120px, 13.5vw, 186px)" },
-  sm: { px: 150, css: "clamp(98px, 11vw, 150px)" },
-};
+// Fixed coordinate canvas; gears placed tangent (centre distance = r₁+r₂) so
+// they connect at the teeth without overlapping. The whole canvas is scaled to
+// fit its container.
+const CANVAS_W = 1140;
+const CANVAS_H = 460;
 
-// chain order left→right; direction alternates (meshing gears spin opposite ways)
-const GEARS: { f: string; s: Size; label: string; left: string; top: string }[] = [
-  { f: "gear1.svg", s: "big", label: "Маркетинг-стратегия", left: "9%", top: "44%" },
-  { f: "gear3.svg", s: "sm", label: "Брендбук", left: "24%", top: "76%" },
-  { f: "gear2.svg", s: "med", label: "Контент и реклама", left: "37%", top: "39%" },
-  { f: "gear6.svg", s: "med", label: "Собственный сайт", left: "53%", top: "73%" },
-  { f: "gear5.svg", s: "med", label: "Продакт-дизайн", left: "67%", top: "45%" },
-  { f: "gear4.svg", s: "big", label: "Удержание, LTV", left: "83%", top: "53%" },
+type G = { f: string; r: number; cx: number; cy: number; label: string };
+const TRAIN: G[] = [
+  { f: "gear1.svg", r: 115, cx: 130, cy: 200, label: "Маркетинг-стратегия" },
+  { f: "gear3.svg", r: 70, cx: 301, cy: 269, label: "Брендбук" },
+  { f: "gear2.svg", r: 100, cx: 459, cy: 206, label: "Контент и реклама" },
+  { f: "gear6.svg", r: 88, cx: 633, cy: 276, label: "Собственный сайт" },
+  { f: "gear5.svg", r: 95, cx: 803, cy: 208, label: "Продакт-дизайн" },
+  { f: "gear4.svg", r: 118, cx: 1006, cy: 273, label: "Удержание, LTV" },
 ];
 
-const BASE = 34; // rotation speed constant (deg ≈ scrollY * BASE / sizePx)
+const K = 17; // rotation speed: deg ≈ scrollY * K / radius (bigger gear → slower)
+
+function maskStyle(f: string): React.CSSProperties {
+  return {
+    WebkitMaskImage: `url(/assets/gears/${f})`,
+    maskImage: `url(/assets/gears/${f})`,
+  };
+}
 
 export default function SalesGears() {
-  const refs = useRef<(HTMLDivElement | null)[]>([]);
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const refsD = useRef<(HTMLDivElement | null)[]>([]);
+  const refsM = useRef<(HTMLDivElement | null)[]>([]);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const measure = () => {
+      const w = wrapRef.current?.clientWidth ?? CANVAS_W;
+      setScale(Math.min(1, w / CANVAS_W));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   useEffect(() => {
     let raf = 0;
     const render = () => {
       raf = 0;
       const y = window.scrollY;
-      GEARS.forEach((g, i) => {
-        const el = refs.current[i];
-        if (!el) return;
+      TRAIN.forEach((g, i) => {
         const dir = i % 2 === 0 ? 1 : -1;
-        const deg = (y * BASE * dir) / SIZES[g.s].px;
-        el.style.transform = `rotate(${deg}deg)`;
+        const deg = (y * K * dir) / g.r;
+        const t = `rotate(${deg}deg)`;
+        if (refsD.current[i]) refsD.current[i]!.style.transform = t;
+        if (refsM.current[i]) refsM.current[i]!.style.transform = t;
       });
     };
     const onScroll = () => {
@@ -49,31 +68,54 @@ export default function SalesGears() {
   }, []);
 
   return (
-    <div className="relative mx-auto h-[clamp(360px,42vw,540px)] w-full max-w-[1120px]">
-      {GEARS.map((g, i) => {
-        const size = SIZES[g.s].css;
-        return (
+    <>
+      {/* Desktop / tablet: tangent gear train, scaled to fit */}
+      <div ref={wrapRef} className="hidden sm:block">
+        <div
+          className="relative mx-auto"
+          style={{ width: CANVAS_W * scale, height: CANVAS_H * scale }}
+        >
           <div
-            key={g.f}
-            className="absolute -translate-x-1/2 -translate-y-1/2"
-            style={{ left: g.left, top: g.top, width: size, height: size }}
+            className="absolute left-0 top-0 origin-top-left"
+            style={{ width: CANVAS_W, height: CANVAS_H, transform: `scale(${scale})` }}
           >
+            {TRAIN.map((g, i) => (
+              <div
+                key={g.f}
+                className="absolute"
+                style={{ left: g.cx - g.r, top: g.cy - g.r, width: g.r * 2, height: g.r * 2 }}
+              >
+                <div
+                  ref={(el) => {
+                    refsD.current[i] = el;
+                  }}
+                  className="engine-gear size-full"
+                  style={maskStyle(g.f)}
+                />
+                <span className="pointer-events-none absolute left-1/2 top-1/2 w-max max-w-[92%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-line bg-bg/90 px-3 py-1 text-center text-[12px] font-medium leading-tight text-ink shadow-[0_4px_16px_-8px_rgba(22,18,29,0.4)] backdrop-blur-sm">
+                  {g.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile: clean list — rotating gear + label */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-7 sm:hidden">
+        {TRAIN.map((g, i) => (
+          <div key={g.f} className="flex items-center gap-3">
             <div
               ref={(el) => {
-                refs.current[i] = el;
+                refsM.current[i] = el;
               }}
-              className="engine-gear size-full"
-              style={{
-                WebkitMaskImage: `url(/assets/gears/${g.f})`,
-                maskImage: `url(/assets/gears/${g.f})`,
-              }}
+              className="engine-gear size-16 shrink-0"
+              style={maskStyle(g.f)}
             />
-            <span className="pointer-events-none absolute left-1/2 top-1/2 w-max max-w-[88%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-line bg-bg/90 px-3 py-1 text-center text-[11px] font-medium leading-tight text-ink shadow-[0_4px_16px_-8px_rgba(22,18,29,0.4)] backdrop-blur-sm">
-              {g.label}
-            </span>
+            <span className="text-[13px] font-medium leading-tight">{g.label}</span>
           </div>
-        );
-      })}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }
