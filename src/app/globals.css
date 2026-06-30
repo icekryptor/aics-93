@@ -262,3 +262,35 @@ body {
   transition: background 0.9s ease;
 }
 .color-mode .grad-blob::after { opacity: 0.62; }
+
+/* ===== sales-engine gears (SVG mask → themeable colour) ===== */
+.engine-gear {
+  background: linear-gradient(145deg, #565260 0%, #2a2733 55%, #211e29 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  will-change: transform;
+}
+.color-mode .engine-gear {
+  background: linear-gradient(145deg, #b89bff 0%, #8b5cf6 55%, #6d28d9 100%);
+}
+
+/* ===== scroll-driven engine gears (recolourable via mask) ===== */
+.engine-gear {
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  background: linear-gradient(140deg, #d6d6d9 0%, #b3b3b8 48%, #97979d 100%);
+  filter: drop-shadow(0 6px 12px rgba(22, 18, 29, 0.1));
+  will-change: transform;
+}
+.color-mode .engine-gear {
+  background: linear-gradient(140deg, #c4a6ff 0%, #9b74ff 50%, #7c52f0 100%);
+  filter: drop-shadow(0 6px 14px rgba(124, 82, 240, 0.28));
+}

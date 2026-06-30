@@ -3,6 +3,7 @@ import Reveal from "./Reveal";
 import ScrollHighlight from "./ScrollHighlight";
 import GraphCanvas from "./GraphCanvas";
 import FrameworkCarousel from "./FrameworkCarousel";
+import SalesGears from "./SalesGears";
 import {
   assets,
   frameworks,
@@ -213,66 +214,16 @@ export function Reasons() {
   );
 }
 
-function gearPath(cx: number, cy: number, R: number, r: number, teeth: number) {
-  const step = (Math.PI * 2) / teeth;
-  const pts: string[] = [];
-  for (let i = 0; i < teeth; i++) {
-    const a = i * step;
-    const seq: [number, number][] = [
-      [a, r],
-      [a + step * 0.16, R],
-      [a + step * 0.34, R],
-      [a + step * 0.5, r],
-    ];
-    for (const [ang, rad] of seq) {
-      pts.push(`${(cx + Math.cos(ang) * rad).toFixed(1)},${(cy + Math.sin(ang) * rad).toFixed(1)}`);
-    }
-  }
-  return `M${pts.join(" L")} Z`;
-}
-
-type Gear = { cx: number; cy: number; R: number; teeth: number; lines: string[]; fontSize?: number };
-
 export function SalesEngine() {
-  const gears: Gear[] = [
-    { cx: 250, cy: 300, R: 122, teeth: 16, lines: ["Маркетинг-", "стратегия"] },
-    { cx: 432, cy: 432, R: 78, teeth: 12, lines: ["Брендбук"], fontSize: 15 },
-    { cx: 610, cy: 300, R: 112, teeth: 15, lines: ["Контент и", "реклама"] },
-    { cx: 712, cy: 478, R: 96, teeth: 13, lines: ["Собственный", "сайт"] },
-    { cx: 842, cy: 352, R: 92, teeth: 13, lines: ["Продакт-", "дизайн"] },
-    { cx: 948, cy: 232, R: 80, teeth: 12, lines: ["KPI, контроль"], fontSize: 14 },
-    { cx: 1092, cy: 332, R: 124, teeth: 16, lines: ["Удержание, LTV,", "повторные", "покупки"], fontSize: 15 },
-  ];
   return (
-    <section className="mx-auto max-w-7xl px-4 py-[30px] sm:px-6 lg:py-[50px]">
+    <section id="engine" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-[30px] sm:px-6 lg:py-[50px]">
       <Reveal>
         <h2 className="font-display text-[clamp(1.5rem,4.2vw,2.6rem)] font-semibold uppercase tracking-tight">
           Двигатель продаж бизнеса
         </h2>
       </Reveal>
       <Reveal delay={120} className="mt-8">
-        <svg viewBox="0 0 1240 580" className="w-full" role="img" aria-label="Двигатель продаж: брендбук, маркетинг-стратегия, контент, собственный сайт, продакт-дизайн, KPI, удержание">
-          {gears.map((g, i) => (
-            <g key={i}>
-              <path d={gearPath(g.cx, g.cy, g.R, g.R * 0.86, g.teeth)} fill="none" stroke="var(--color-ink)" strokeWidth="1.5" strokeLinejoin="round" />
-              <circle cx={g.cx} cy={g.cy} r={g.R * 0.58} fill="none" stroke="var(--color-ink)" strokeWidth="1.5" />
-              <text
-                x={g.cx}
-                y={g.cy}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                className="fill-ink"
-                style={{ fontSize: g.fontSize ?? 16 }}
-              >
-                {g.lines.map((ln, j) => (
-                  <tspan key={j} x={g.cx} dy={j === 0 ? `${-(g.lines.length - 1) * 0.6}em` : "1.2em"}>
-                    {ln}
-                  </tspan>
-                ))}
-              </text>
-            </g>
-          ))}
-        </svg>
+        <SalesGears />
       </Reveal>
     </section>
   );
