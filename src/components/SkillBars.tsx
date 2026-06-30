@@ -8,7 +8,7 @@ const SKILLS = [
   { n: "03", label: "веб-разработка", pct: 100 },
 ];
 
-const CELLS = 20;
+const CELLS = 14;
 const STEP = 55; // ms between cells (sequential, across all bars)
 
 export default function SkillBars() {

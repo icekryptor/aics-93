@@ -47,7 +47,7 @@ body {
 /* animated parallelogram progress bar */
 .skew-track {
   display: flex;
-  gap: 5px;
+  gap: 1px;
 }
 .skew-cell {
   position: relative;
@@ -76,15 +76,14 @@ body {
   .skew-cell::after { animation: none; opacity: 1; }
 }
 
-/* one-shot sequential fill (skill bars) */
+/* one-shot sequential fill (skill bars) — segment shape from segment.svg */
 .skew-cell2 {
   position: relative;
   display: block;
-  flex: 0 0 15px;
-  height: 16px;
-  overflow: hidden;
-  background: rgba(22, 18, 29, 0.1);
-  transform: skewX(-22deg);
+  flex: 0 0 14px;
+  height: 18px;
+  background: rgba(22, 18, 29, 0.14);
+  clip-path: polygon(88.45% 8.33%, 52.73% 91.67%, 11.55% 91.67%, 47.27% 8.33%);
 }
 .skew-cell2::after {
   content: "";
