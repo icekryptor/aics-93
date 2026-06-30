@@ -190,6 +190,7 @@ body {
   position: absolute;
   border-radius: 50%;
   filter: blur(60px);
+  opacity: 0.5;
   will-change: transform;
   mix-blend-mode: normal;
 }
