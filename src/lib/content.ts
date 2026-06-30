@@ -175,12 +175,39 @@ export const aboutFacts: { lead?: string; rest: string }[] = [
 ];
 
 export const aboutStats = [
-  { big: ">15 000", label: "часов практики", sub: "это 1,71 год непрерывной работы", deco: "rings" as const },
-  { big: "250+", label: "проектов разной сложности", sub: "", deco: "dots" as const },
-  { big: "81", label: "студент обучен дизайну", sub: "", deco: "people" as const },
+  {
+    target: 15000,
+    prefix: ">",
+    label: "часов практики",
+    sub: "это 1,71 год непрерывной работы",
+    deco: "rings" as const,
+  },
+  {
+    target: 250,
+    suffix: "+",
+    label: "проектов разной сложности",
+    sub: "",
+    deco: "dots" as const,
+  },
+  {
+    target: 81,
+    label: "студент обучен дизайну",
+    sub: "",
+    deco: "people" as const,
+  },
 ];
 
-export const aboutPhoto = "/assets/tild6336-333__photo_2023-05-19_16-.jpg";
+export const aboutPhoto = "/assets/tild3033-343__photo_2023-10-14_23-.jpg";
+
+// brands worked with (logos strip under the "КТО Я" panel)
+export const aboutLogos = [
+  { src: "/assets/tild3839-326__Yandex-Search-Logo.jpg", alt: "Yandex" },
+  { src: "/assets/tild3230-396__Accor_Logo_2020.png", alt: "Accor" },
+  { src: "/assets/tild3264-346__QGZ9IQOidGielayPortL.jpg", alt: "Shagal" },
+  { src: "/assets/tild3762-396__LOGO_RED.png", alt: "МТС Live" },
+  { src: "/assets/tild3638-336__bf50509e981032485408.png", alt: "Mövenpick" },
+  { src: "/assets/tild3131-636__f77b46aa55ea46383587.png", alt: "Oriflame" },
+];
 
 export type Project = {
   name: string;
