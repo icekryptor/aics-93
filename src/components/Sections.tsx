@@ -4,7 +4,8 @@ import GraphCanvas from "./GraphCanvas";
 import FrameworkCarousel from "./FrameworkCarousel";
 import SalesGears from "./SalesGears";
 import AboutMe from "./AboutMe";
-import { frameworks, reasons, bio, gantt } from "@/lib/content";
+import ReasonsLedger from "./ReasonsLedger";
+import { frameworks, bio, gantt } from "@/lib/content";
 
 type Seg = { t: string; hl?: boolean };
 
@@ -91,113 +92,8 @@ export function Frameworks() {
   );
 }
 
-function HexBadge({ n }: { n: string }) {
-  return (
-    <span className="relative grid size-16 shrink-0 place-items-center">
-      <svg viewBox="0 0 100 100" className="absolute inset-0 size-full" aria-hidden>
-        <polygon
-          points="25,4 75,4 96,50 75,96 25,96 4,50"
-          fill="none"
-          stroke="var(--color-ink)"
-          strokeWidth="3"
-        />
-      </svg>
-      <span className="font-display text-base font-normal text-ink">{n}</span>
-    </span>
-  );
-}
-
-function ReasonItem({
-  n,
-  title,
-  text,
-  align = "left",
-}: {
-  n: string;
-  title: string;
-  text: string;
-  align?: "left" | "right";
-}) {
-  return (
-    <div className={`max-w-[300px] ${align === "right" ? "text-right" : "text-left"}`}>
-      <div className={`flex items-start gap-3 ${align === "right" ? "flex-row-reverse" : ""}`}>
-        <HexBadge n={n} />
-        <h3 className="mt-1.5 text-lg font-semibold leading-tight tracking-tight">{title}</h3>
-      </div>
-      <p className="mt-3 text-[13px] leading-relaxed text-ink-soft">{text}</p>
-    </div>
-  );
-}
-
 export function Reasons() {
-  // order in data: 0→01 top, 1→02 up-left, 2→03 low-left, 3→04 bottom, 4→05 low-right, 5→06 up-right
-  const r = reasons;
-  return (
-    <section className="mx-auto max-w-7xl px-4 py-[30px] sm:px-6 lg:py-[50px]">
-      {/* Mobile / tablet: title + stacked list */}
-      <div className="lg:hidden">
-        <Reveal>
-          <h2 className="font-display text-[clamp(1.6rem,6vw,2.2rem)] font-normal leading-tight tracking-tight">
-            6 весомых причин заняться брендингом
-          </h2>
-        </Reveal>
-        <div className="mt-10 grid gap-8 sm:grid-cols-2">
-          {r.map((x, i) => (
-            <Reveal key={x.title} delay={(i % 2) * 70}>
-              <ReasonItem n={`0${i + 1}`} title={x.title} text={x.text} />
-            </Reveal>
-          ))}
-        </div>
-      </div>
-
-      {/* Desktop: hexagon radial layout */}
-      <Reveal className="hidden lg:block">
-        <div className="relative mx-auto h-[820px] w-full max-w-[1080px]">
-          {/* central hexagon + title */}
-          <svg
-            viewBox="0 0 460 400"
-            className="absolute left-1/2 top-1/2 h-[420px] w-[500px] -translate-x-1/2 -translate-y-1/2"
-            aria-hidden
-          >
-            <polygon
-              points="138,6 322,6 454,200 322,394 138,394 6,200"
-              fill="none"
-              stroke="var(--color-ink)"
-              strokeWidth="1.5"
-            />
-          </svg>
-          <p className="absolute left-1/2 top-1/2 w-[280px] -translate-x-1/2 -translate-y-1/2 text-center font-display text-[1.7rem] font-normal leading-tight tracking-tight">
-            6 весомых причин заняться брендингом
-          </p>
-
-          {/* 01 top */}
-          <div className="absolute left-1/2 top-0 -translate-x-1/2">
-            <ReasonItem n="01" title={r[0].title} text={r[0].text} align="left" />
-          </div>
-          {/* 02 upper-left */}
-          <div className="absolute left-0 top-[28%]">
-            <ReasonItem n="02" title={r[1].title} text={r[1].text} align="right" />
-          </div>
-          {/* 03 lower-left */}
-          <div className="absolute left-0 top-[56%]">
-            <ReasonItem n="03" title={r[2].title} text={r[2].text} align="right" />
-          </div>
-          {/* 04 bottom */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
-            <ReasonItem n="04" title={r[3].title} text={r[3].text} align="left" />
-          </div>
-          {/* 05 lower-right */}
-          <div className="absolute right-0 top-[56%]">
-            <ReasonItem n="05" title={r[4].title} text={r[4].text} align="left" />
-          </div>
-          {/* 06 upper-right */}
-          <div className="absolute right-0 top-[28%]">
-            <ReasonItem n="06" title={r[5].title} text={r[5].text} align="left" />
-          </div>
-        </div>
-      </Reveal>
-    </section>
-  );
+  return <ReasonsLedger />;
 }
 
 export function SalesEngine() {

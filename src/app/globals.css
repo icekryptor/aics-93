@@ -175,6 +175,20 @@ body {
   .reveal { opacity: 1; transform: none; transition: none; }
 }
 
+/* spec-ledger row entrance — transform only, so rows stay visible even if the
+   animation never runs (no opacity gate) */
+@keyframes ledgerIn {
+  from { transform: translateY(14px); }
+  to { transform: none; }
+}
+.ledger-row {
+  animation: ledgerIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ledger-row { animation: none; }
+}
+
 /* ===== animated greyscale mesh-gradient background ===== */
 .grad-bg {
   position: fixed;
