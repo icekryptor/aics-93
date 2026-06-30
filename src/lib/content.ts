@@ -197,7 +197,7 @@ export const aboutStats = [
   },
 ];
 
-export const aboutPhoto = "/assets/tild3033-343__photo_2023-10-14_23-.jpg";
+export const aboutPhoto = "/assets/about/colosseum.webp";
 
 // brands worked with (logos strip under the "КТО Я" panel)
 export const aboutLogos = [
