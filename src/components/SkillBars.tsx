@@ -41,21 +41,20 @@ export default function SkillBars() {
           <div key={s.n}>
             <div className="flex items-center gap-3">
               <span className="tech-label text-xs text-ink-soft">{s.n}:</span>
-              <span className="skew-track">
+              <span className="seg-track">
                 {Array.from({ length: CELLS }).map((_, i) => {
                   const isFilled = i < filled;
                   const delay = isFilled ? seq++ * STEP : 0;
                   return (
-                    <span
+                    <svg
                       key={i}
-                      className="skew-cell2"
-                      style={
-                        {
-                          "--fill": go && isFilled ? 1 : 0,
-                          "--delay": `${delay}ms`,
-                        } as React.CSSProperties
-                      }
-                    />
+                      viewBox="0 0 7 6"
+                      className={`seg ${go && isFilled ? "on" : ""}`}
+                      style={{ "--delay": `${delay}ms` } as React.CSSProperties}
+                      aria-hidden
+                    >
+                      <path d="M6.19141 0.5L3.69141 5.5H0.808594L3.30859 0.5H6.19141Z" />
+                    </svg>
                   );
                 })}
               </span>

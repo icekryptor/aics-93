@@ -98,29 +98,78 @@ body {
   .skew-cell2::after { transition: none; }
 }
 
+/* hollow parallelogram segments (segment.svg) — outline that lights up */
+.seg-track {
+  display: flex;
+  gap: 2px;
+}
+.seg {
+  flex: 0 0 13px;
+  width: 13px;
+  height: 18px;
+  overflow: visible;
+}
+.seg path {
+  fill: none;
+  stroke: rgba(22, 18, 29, 0.22);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.25s ease;
+  transition-delay: var(--delay, 0s);
+}
+.seg.on path {
+  stroke: #16121d;
+}
+@media (prefers-reduced-motion: reduce) {
+  .seg path { transition: none; }
+}
+
+/* human-studio mini data-grid */
+.studio-grid {
+  display: grid;
+  gap: 2px;
+  color: var(--color-ink);
+}
+.studio-cell {
+  aspect-ratio: 1;
+  border-radius: 1px;
+  background: currentColor;
+  opacity: var(--o, 0.4);
+  animation: studiopulse 3.8s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes studiopulse {
+  0%, 100% { opacity: calc(var(--o, 0.4) * 0.45); }
+  50% { opacity: var(--o, 0.4); }
+}
+.color-mode .studio-grid { color: var(--color-accent); }
+@media (prefers-reduced-motion: reduce) {
+  .studio-cell { animation: none; }
+}
+
 /* animated logo: spinning gear + V/Λ chevrons converging into an X */
 @keyframes gearspin {
   to { transform: rotate(360deg); }
 }
 /* top chevron (∨) drops to centre, bottom chevron (∧) rises to centre → strokes cross into an X */
 @keyframes chevTop {
-  0%, 32% { transform: translateY(-7px); }
-  50%, 62% { transform: translateY(0); }
-  80%, 100% { transform: translateY(-7px); }
+  0%, 30% { transform: translateY(-9px); }
+  48%, 64% { transform: translateY(0); }
+  82%, 100% { transform: translateY(-9px); }
 }
 @keyframes chevBot {
-  0%, 32% { transform: translateY(7px); }
-  50%, 62% { transform: translateY(0); }
-  80%, 100% { transform: translateY(7px); }
+  0%, 30% { transform: translateY(9px); }
+  48%, 64% { transform: translateY(0); }
+  82%, 100% { transform: translateY(9px); }
 }
 .logo-gear { animation: gearspin 16s linear infinite; transform-origin: 50% 50%; }
 .logo-chev-top {
-  transform: translateY(-7px);
-  animation: chevTop 4.4s ease-in-out 1.2s infinite;
+  transform: translateY(-9px);
+  animation: chevTop 4.6s ease-in-out 1.2s infinite;
 }
 .logo-chev-bot {
-  transform: translateY(7px);
-  animation: chevBot 4.4s ease-in-out 1.2s infinite;
+  transform: translateY(9px);
+  animation: chevBot 4.6s ease-in-out 1.2s infinite;
 }
 @media (prefers-reduced-motion: reduce) {
   .logo-gear, .logo-chev-top, .logo-chev-bot { animation: none; transform: none; }

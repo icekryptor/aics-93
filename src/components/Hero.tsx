@@ -2,6 +2,7 @@ import Image from "next/image";
 import HeroCube from "./HeroCube";
 import SkillBars from "./SkillBars";
 import LogoMark from "./LogoMark";
+import StudioGrid from "./StudioGrid";
 import { assets, heroStats } from "@/lib/content";
 
 export default function Hero() {
@@ -67,6 +68,7 @@ export default function Hero() {
                 Я — Василий Аистов, co-founder / CMO в Химичке. Моя задача — делать яркие бренды,
                 запоминающиеся среди конкурентов.
               </p>
+              <StudioGrid className="mt-4" />
             </div>
           </div>
         </div>

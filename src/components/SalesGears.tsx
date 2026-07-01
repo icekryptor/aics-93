@@ -36,7 +36,8 @@ export default function SalesGears() {
   useEffect(() => {
     const measure = () => {
       const w = wrapRef.current?.clientWidth ?? CANVAS_W;
-      setScale(Math.min(1, w / CANVAS_W));
+      // fill the full working area (12 cols) — allow scaling up too
+      setScale(w / CANVAS_W);
     };
     measure();
     window.addEventListener("resize", measure);

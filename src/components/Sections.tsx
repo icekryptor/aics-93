@@ -50,7 +50,7 @@ export function Intro() {
         {INTRO_STATEMENTS.map((segs, i) => (
           <ScrollHighlight
             key={i}
-            className={`max-w-3xl text-[clamp(1.3rem,2.7vw,2.1rem)] font-normal leading-[1.16] tracking-[-0.01em] text-[#333333] ${INTRO_INDENT[i] ?? ""}`}
+            className={`max-w-4xl text-[clamp(1.7rem,4.1vw,3.3rem)] font-medium leading-[1.06] tracking-[-0.025em] text-[#2a2730] ${INTRO_INDENT[i] ?? ""}`}
           >
             {segs.map((s, j) =>
               s.hl ? (

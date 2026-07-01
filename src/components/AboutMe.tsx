@@ -61,7 +61,7 @@ function useCountUp(target: number, run: boolean, duration = 1500) {
 function Deco({ kind, on }: { kind: "rings" | "dots" | "people"; on: boolean }) {
   if (kind === "rings") {
     return (
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-center gap-3">
         <img src="/assets/about/1y.svg" alt="" aria-hidden className="size-12" />
         <img
           src="/assets/about/2y.svg"
@@ -79,7 +79,7 @@ function Deco({ kind, on }: { kind: "rings" | "dots" | "people"; on: boolean }) 
         src={src}
         alt=""
         aria-hidden
-        className="h-auto w-full max-w-[230px] transition-[clip-path] duration-[1200ms] ease-out"
+        className="mx-auto h-auto w-full max-w-[200px] transition-[clip-path] duration-[1200ms] ease-out"
         style={{ clipPath: on ? "inset(0 0 0 0)" : "inset(0 100% 0 0)" }}
       />
     </div>
@@ -115,9 +115,9 @@ export default function AboutMe() {
       ref={secRef}
       className="mx-auto max-w-7xl scroll-mt-24 px-4 py-[30px] sm:px-6 lg:py-[50px]"
     >
-      <div className="grid gap-10 lg:grid-cols-[1.55fr_1fr] lg:items-start">
-        {/* Panel + logos */}
-        <div>
+      <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
+        {/* Panel + logos — 9 cols */}
+        <div className="lg:col-span-9">
           <div className="relative bg-ink/25 p-px" style={CUT}>
             <div className="relative h-full bg-bg p-6 sm:p-8" style={CUT}>
               <span className="pointer-events-none absolute left-3 top-3 size-2.5 border-l border-t border-ink/40" />
@@ -159,25 +159,29 @@ export default function AboutMe() {
             </div>
           </div>
 
-          {/* brand logos */}
-          <div className="mt-7">
-            <p className="tech-label mb-4 text-xs text-ink-soft">работал с брендами</p>
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-5">
-              {aboutLogos.map((l) => (
-                <img
-                  key={l.alt}
-                  src={l.src}
-                  alt={l.alt}
-                  title={l.alt}
-                  className="h-7 w-auto opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 sm:h-8"
-                />
-              ))}
+          {/* brand logos — small frame attached to the big panel */}
+          <div className="relative ml-6 sm:ml-9">
+            {/* connector from panel to the logo frame */}
+            <span className="absolute -top-4 left-6 h-4 w-px bg-ink/25" aria-hidden />
+            <div className="rounded-b-2xl rounded-tr-2xl border border-t-0 border-line bg-bg px-5 py-4 sm:px-7 sm:py-5">
+              <p className="tech-label mb-3 text-[11px] text-ink-soft">работал с брендами</p>
+              <div className="flex flex-wrap items-center gap-x-8 gap-y-4 sm:gap-x-10">
+                {aboutLogos.map((l) => (
+                  <img
+                    key={l.alt}
+                    src={l.src}
+                    alt={l.alt}
+                    title={l.alt}
+                    className="h-9 w-auto opacity-70 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 sm:h-11"
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="flex flex-col gap-9">
+        {/* Stats — 3 cols, centred */}
+        <div className="flex flex-col items-center gap-9 text-center lg:col-span-3">
           {aboutStats.map((s) => (
             <StatBlock key={s.label} stat={s} on={on} />
           ))}

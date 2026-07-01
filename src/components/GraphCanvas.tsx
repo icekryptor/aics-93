@@ -38,14 +38,12 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
     const captionText = "business puzzle solving";
     const cornerCut = 14;
     const labelPool = [
-      "PMF", "CustDev", "JTBD", "STP", "PDCA", "OKR", "MBO", "KPI", "MVP",
-      "Concept", "4P", "BMI", "PRISM", "PESTEL", "BCG", "RACE", "NPS", "SAT",
-      "CAC", "CPS", "ARPU", "SWOT", "AARRR", "Lean", "OST", "TAM", "LTV",
-      "MoSCoW", "HEART",
+      "стратегия", "PMF", "CustDev", "JTBD", "STP", "PDCA", "OKR", "MBO", "KPI",
+      "MVP", "Concept", "4P", "BMI", "PRISM", "PESTEL", "BCG", "RACE", "NPS",
+      "SAT", "CAC", "CPS", "ARPU", "SWOT", "AARRR", "Lean", "OST", "TAM", "LTV",
     ];
     const maxNodes = 22;
-    const minNodes = 14;
-    const eventInterval = 70;
+    const eventInterval = 46;
     const repulsion = 6500;
     const springLen = 105;
     const springK = 0.006;
@@ -74,22 +72,13 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
       for (let k = 0; k < nodes.length; k++) used[nodes[k].label] = true;
       const available: string[] = [];
       for (let k = 0; k < labelPool.length; k++) if (!used[labelPool[k]]) available.push(labelPool[k]);
-      const label = available.length
-        ? available[Math.floor(Math.random() * available.length)]
-        : labelPool[Math.floor(Math.random() * labelPool.length)];
+      // ordered growth: next label in the pool (starts with «стратегия»)
+      const label = available.length ? available[0] : labelPool[0];
       nodes.push({ x, y, vx: 0, vy: 0, r: rand(7, 10), life: 0, label, fill: nodeFills[Math.floor(Math.random() * nodeFills.length)] });
       if (nodes.length > 1) {
         const bi = Math.floor(Math.random() * (nodes.length - 1));
         edges.push({ a: nodes.length - 1, b: bi });
       }
-    }
-    function removeNode() {
-      if (nodes.length <= minNodes) return;
-      const idx = Math.floor(Math.random() * nodes.length);
-      nodes.splice(idx, 1);
-      edges = edges
-        .filter((e) => e.a !== idx && e.b !== idx)
-        .map((e) => ({ a: e.a > idx ? e.a - 1 : e.a, b: e.b > idx ? e.b - 1 : e.b }));
     }
     function addEdge() {
       if (nodes.length < 2) return;
@@ -104,19 +93,14 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
         }
       }
     }
-    function removeEdge() {
-      if (edges.length === 0) return;
-      edges.splice(Math.floor(Math.random() * edges.length), 1);
-    }
+    // progressive build: grow nodes one-by-one (from «стратегия»), then a few
+    // extra edges; never remove — afterwards only the layout keeps shifting
     function doEvent() {
-      const r = Math.random();
-      if (r < 0.4) addNode();
-      else if (r < 0.7) addEdge();
-      else if (r < 0.85) removeEdge();
-      else removeNode();
+      if (nodes.length < maxNodes) addNode();
+      else if (edges.length < maxNodes + 5) addEdge();
     }
 
-    for (let i = 0; i < minNodes; i++) addNode();
+    addNode(); // seed: «стратегия»
 
     function step() {
       const n = nodes.length;
