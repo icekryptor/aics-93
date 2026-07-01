@@ -10,6 +10,16 @@
   --color-accent-2: #c856ff;
   --color-dark: #0d0d0f;
 
+  /* cyber-lab "runtime" — dark full-bleed scenes (boot, hero, ai-process, footer) */
+  --color-runtime: #0a0912;
+  --color-runtime-2: #100d1a;
+  --color-runtime-line: #241f38;
+  --color-runtime-ink: #e9e6f5;
+  --color-runtime-ink-soft: #8b84a6;
+  --color-signal: #8b67ff;
+  --color-signal-2: #c856ff;
+  --color-signal-cool: #56b8ff;
+
   --font-display: var(--font-unbounded);
   --font-sans: var(--font-neue);
 
@@ -357,3 +367,114 @@ body {
   background: linear-gradient(140deg, #c4a6ff 0%, #9b74ff 50%, #7c52f0 100%);
   filter: drop-shadow(0 6px 14px rgba(124, 82, 240, 0.28));
 }
+
+/* =====================================================================
+   CYBER-LAB / AICS-93 IMMERSIVE LAYER
+   dark "runtime" scenes, signal system, boot, HUD, transitions
+   ===================================================================== */
+
+/* --- runtime (dark) scene surface --- */
+.runtime {
+  background: var(--color-runtime);
+  color: var(--color-runtime-ink);
+  position: relative;
+}
+.runtime ::selection { background: color-mix(in srgb, var(--color-signal) 55%, transparent); }
+.runtime-soft { color: var(--color-runtime-ink-soft); }
+.runtime-line { border-color: var(--color-runtime-line); }
+
+/* faint runtime blueprint grid */
+.runtime-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-runtime-line) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-runtime-line) 60%, transparent) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+
+/* --- the "signal" — violet gradient meaning "intelligence is active" --- */
+.signal-grad {
+  background: linear-gradient(100deg, var(--color-signal) 0%, var(--color-signal-2) 100%);
+}
+.signal-text {
+  background: linear-gradient(100deg, var(--color-signal) 0%, var(--color-signal-2) 60%, var(--color-signal-cool) 120%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.signal-glow { box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-signal) 40%, transparent), 0 0 28px -6px var(--color-signal); }
+.text-glow { text-shadow: 0 0 22px color-mix(in srgb, var(--color-signal) 55%, transparent); }
+
+/* --- mono HUD readouts --- */
+.hud {
+  font-family: var(--font-display), ui-monospace, monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.hud-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--color-signal);
+  box-shadow: 0 0 8px var(--color-signal);
+  animation: hudBlink 1.8s steps(1, end) infinite;
+}
+@keyframes hudBlink { 0%,60% { opacity: 1; } 61%,100% { opacity: 0.25; } }
+
+/* --- signal pulse traveling a trace --- */
+@keyframes tracePulse {
+  0% { stroke-dashoffset: 0; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { stroke-dashoffset: -260; opacity: 0; }
+}
+@keyframes traceDraw {
+  from { stroke-dashoffset: var(--len, 1000); }
+  to { stroke-dashoffset: 0; }
+}
+
+/* --- boot sequence --- */
+@keyframes bootScan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+@keyframes bootFlicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.35; }
+  94% { opacity: 1; }
+  97% { opacity: 0.6; }
+  98% { opacity: 1; }
+}
+@keyframes glitchShift {
+  0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  20% { clip-path: inset(20% 0 40% 0); transform: translate(-3px, 0); }
+  40% { clip-path: inset(60% 0 8% 0); transform: translate(3px, 0); }
+  60% { clip-path: inset(30% 0 50% 0); transform: translate(-2px, 0); }
+  80% { clip-path: inset(10% 0 70% 0); transform: translate(2px, 0); }
+}
+
+/* --- section "signal" divider (continuous world seam) --- */
+.signal-seam {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--color-signal) 50%, transparent 100%);
+  opacity: 0.5;
+}
+
+/* --- magnetic / interactive affordance --- */
+[data-magnetic] { will-change: transform; }
+
+/* --- reduced motion: kill the immersive motion, keep the layout --- */
+@media (prefers-reduced-motion: reduce) {
+  .hud-dot,
+  .runtime [class*="animate"] { animation: none !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* --- Lenis smooth-scroll (immersive route) --- */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* verification/deep-link: force reveal-gated content visible */
+.force-reveal .reveal { opacity: 1 !important; transform: none !important; }

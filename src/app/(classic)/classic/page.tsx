@@ -5,7 +5,9 @@ import Portfolio from "@/components/Portfolio";
 import QuoteForm from "@/components/QuoteForm";
 import Footer from "@/components/Footer";
 
-export default function Home() {
+// Frozen "classic" edition of the site (the pre-immersive lab-tech design),
+// preserved at /classic. The immersive experience lives at /.
+export default function ClassicHome() {
   return (
     <>
       <Nav />
