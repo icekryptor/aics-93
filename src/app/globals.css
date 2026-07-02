@@ -516,3 +516,13 @@ html.lenis, html.lenis body { height: auto; }
     animation-iteration-count: 1 !important;
   }
 }
+
+/* act-seam: a soft violet segment slowly breathing along the hairline */
+@keyframes seamBreath {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.55; }
+}
+.seam-breath {
+  background: linear-gradient(90deg, transparent 0%, var(--color-signal) 50%, transparent 100%);
+  animation: seamBreath 7s ease-in-out infinite;
+}

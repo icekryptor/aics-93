@@ -1,6 +1,5 @@
 import ScrollProvider from "@/components/system/ScrollProvider";
-import ShaderBackground from "@/components/system/ShaderBackground";
-import NeuralField from "@/components/system/NeuralField";
+import ModularGrid from "@/components/system/ModularGrid";
 import CursorPro from "@/components/system/CursorPro";
 import MetaHUD from "@/components/system/MetaHUD";
 import BootSequence from "@/components/system/BootSequence";
@@ -23,8 +22,7 @@ export default function ExperienceLayout({ children }: { children: React.ReactNo
       </a>
       <ExperienceRoot />
       {/* ambient world (fixed, behind everything) */}
-      <ShaderBackground />
-      <NeuralField />
+      <ModularGrid />
       {/* boot / POST — self-manages, shows once per tab */}
       <BootSequence />
       {/* instruments */}
