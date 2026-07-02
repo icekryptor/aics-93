@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import LogoMark from "./LogoMark";
-import BrainCanvas from "./system/BrainCanvas";
+import BrainGL from "./system/BrainGL";
 import { heroStats } from "@/lib/content";
 
 const STATES = ["biology", "hybrid", "machine"] as const;
@@ -46,9 +46,13 @@ export default function NeuralHero() {
     >
       {/* faint blueprint grid */}
       <div className="runtime-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
-      {/* the living brain (wrapper gives a definite height so the canvas fills it) */}
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <BrainCanvas className="h-full w-full" />
+      {/* the living brain — WebGL point cloud (falls back to the 2D engine);
+          boxed to the right on desktop so it clears the headline */}
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 w-full lg:left-[34%] lg:w-auto"
+        aria-hidden
+      >
+        <BrainGL className="h-full w-full" />
       </div>
       {/* legibility vignette */}
       <div
