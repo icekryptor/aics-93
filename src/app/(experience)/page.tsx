@@ -18,14 +18,17 @@ export default function Experience() {
         <SignalTransition id="act-mind" index="02" label="// разум · второй мозг" />
         <Intro />
         {/* the brand's DNA — rebranding rewrites the genetic code */}
-        <section className="mx-auto max-w-[1640px] px-6 py-8 sm:px-10 lg:px-16">
-          <div className="mb-2 flex items-baseline gap-3">
+        <section className="mx-auto max-w-[1640px] px-6 py-[30px] sm:px-10 lg:px-16 lg:py-[50px]">
+          <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span className="tech-label text-[11px] text-ink-soft">[ днк бренда ]</span>
-            <span className="text-[13px] text-ink-soft">
+            <span className="text-[11px] text-ink-soft">
               ребрендинг — это переписывание генетического кода бренда
             </span>
           </div>
-          <div className="relative h-[320px] w-full sm:h-[400px]" aria-hidden>
+          <div
+            className="relative h-[320px] w-full overflow-hidden rounded-[24px] border border-line bg-bg-soft/40 sm:h-[400px]"
+            aria-hidden
+          >
             <DnaHelix className="absolute inset-0 h-full w-full" />
           </div>
         </section>
@@ -38,13 +41,13 @@ export default function Experience() {
         <SalesEngine />
 
         {/* ACT IV — THE OPERATOR & THE PROOF */}
-        <SignalTransition id="act-proof" index="04" label="// оператор · доказательства" />
+        <SignalTransition id="act-proof" index="04" label="// оператор · доказательства" compact />
         <About />
         <Portfolio />
         <Gantt />
 
         {/* ACT V — ORIGIN & INVITATION */}
-        <SignalTransition id="act-origin" index="05" label="// исток · приглашение" />
+        <SignalTransition id="act-origin" index="05" label="// исток · приглашение" compact />
         <Bio />
         <QuoteForm />
       </main>

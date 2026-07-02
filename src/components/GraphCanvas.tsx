@@ -23,7 +23,7 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
     let width = 0,
       height = 0;
     function resize() {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
       const rect = wrap!.getBoundingClientRect();
       width = Math.max(1, rect.width);
       height = Math.max(1, rect.height);
@@ -266,8 +266,22 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
           ctx!.globalAlpha = 1;
         }
       }
-      raf = requestAnimationFrame(draw);
+      if (running) raf = requestAnimationFrame(draw);
     }
+
+    // pause the loop when the card is offscreen or the tab is hidden
+    let running = false;
+    let onScreen = true;
+    const sync = () => {
+      const go = onScreen && !document.hidden;
+      if (go && !running) {
+        running = true;
+        raf = requestAnimationFrame(draw);
+      } else if (!go && running) {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+    };
 
     resize();
     let ro: ResizeObserver | undefined;
@@ -277,12 +291,29 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
     } else {
       window.addEventListener("resize", resize);
     }
-    raf = requestAnimationFrame(draw);
+
+    let io: IntersectionObserver | undefined;
+    if (typeof IntersectionObserver !== "undefined") {
+      io = new IntersectionObserver(
+        ([e]) => {
+          onScreen = e.isIntersecting;
+          sync();
+        },
+        { threshold: 0 }
+      );
+      io.observe(wrap);
+    }
+    const onVis = () => sync();
+    document.addEventListener("visibilitychange", onVis);
+    sync();
 
     return () => {
+      running = false;
       cancelAnimationFrame(raf);
       if (ro) ro.disconnect();
       else window.removeEventListener("resize", resize);
+      if (io) io.disconnect();
+      document.removeEventListener("visibilitychange", onVis);
     };
   }, []);
 

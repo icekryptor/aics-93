@@ -298,8 +298,50 @@ export default function AiProcess() {
             AICS-93 / PROCESS ROUTER
           </div>
 
+          {/* mobile: legible stacked chips (the SVG labels are too small on phones) */}
+          <div className="grid grid-cols-2 gap-2.5 sm:hidden">
+            <div
+              className="col-span-2 rounded-xl px-4 py-3 text-center"
+              style={{
+                border: "1px solid color-mix(in srgb, var(--color-signal) 45%, transparent)",
+                background: "rgba(139,103,255,0.10)",
+              }}
+            >
+              <p className="font-display text-[15px]" style={{ color: "var(--color-runtime-ink)" }}>
+                AI <span className="signal-text">ядро</span>
+              </p>
+              <p className="tech-label text-[9px]" style={{ color: "var(--color-runtime-ink-soft)" }}>
+                core.00 · маршрутизирует сигнал
+              </p>
+            </div>
+            {DEPARTMENTS.map((d, i) => (
+              <div
+                key={d.id}
+                className="rounded-xl px-3 py-3"
+                style={{
+                  border: "1px solid var(--color-runtime-line, #241f38)",
+                  background: "rgba(16,13,26,0.5)",
+                }}
+              >
+                <p className="tech-label text-[9px]" style={{ color: "var(--color-runtime-ink-soft)" }}>
+                  {d.code}
+                </p>
+                <p className="mt-1 text-[13px]" style={{ color: "var(--color-runtime-ink)" }}>
+                  {d.label}
+                </p>
+                <p
+                  className="tech-label mt-1 text-[9px]"
+                  style={{ color: energized[i] ? "var(--color-signal)" : "var(--color-runtime-ink-soft)" }}
+                >
+                  {energized[i] ? "● online" : "○ standby"}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* desktop / tablet: interactive radial schematic */}
           <div
-            className="relative w-full overflow-hidden rounded-2xl"
+            className="relative hidden w-full overflow-hidden rounded-2xl sm:block"
             style={{
               border: "1px solid var(--color-runtime-line, #241f38)",
               background:

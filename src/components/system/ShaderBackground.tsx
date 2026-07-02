@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * ShaderBackground
@@ -131,10 +131,18 @@ function compileShader(
 
 export default function ShaderBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  // bump to fully re-init GL after a context-restored event
+  const [epoch, setEpoch] = useState(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // re-run the whole effect (fresh context + program) when the GPU restores
+    const onContextRestored = () => setEpoch((n) => n + 1);
+    canvas.addEventListener("webglcontextrestored", onContextRestored, false);
+    const cleanupEarly = () =>
+      canvas.removeEventListener("webglcontextrestored", onContextRestored, false);
 
     let gl: WebGLRenderingContext | null = null;
     try {
@@ -154,7 +162,7 @@ export default function ShaderBackground() {
     }
 
     // Graceful no-op — never throw.
-    if (!gl) return;
+    if (!gl) return cleanupEarly;
     const ctx = gl;
 
     const reduceMotion =
@@ -165,10 +173,10 @@ export default function ShaderBackground() {
     // --- program setup ---
     const vs = compileShader(ctx, ctx.VERTEX_SHADER, VERT_SRC);
     const fs = compileShader(ctx, ctx.FRAGMENT_SHADER, FRAG_SRC);
-    if (!vs || !fs) return;
+    if (!vs || !fs) return cleanupEarly;
 
     const program = ctx.createProgram();
-    if (!program) return;
+    if (!program) return cleanupEarly;
     ctx.attachShader(program, vs);
     ctx.attachShader(program, fs);
     ctx.linkProgram(program);
@@ -176,7 +184,7 @@ export default function ShaderBackground() {
       ctx.deleteProgram(program);
       ctx.deleteShader(vs);
       ctx.deleteShader(fs);
-      return;
+      return cleanupEarly;
     }
     ctx.useProgram(program);
 
@@ -345,6 +353,7 @@ export default function ShaderBackground() {
       if (!coarse) window.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("visibilitychange", onVisibility);
       canvas.removeEventListener("webglcontextlost", onContextLost, false);
+      canvas.removeEventListener("webglcontextrestored", onContextRestored, false);
       try {
         ctx.deleteProgram(program);
         ctx.deleteShader(vs);
@@ -354,7 +363,7 @@ export default function ShaderBackground() {
         /* ignore */
       }
     };
-  }, []);
+  }, [epoch]);
 
   return (
     <canvas

@@ -379,7 +379,7 @@ export default function SoundToggle() {
       aria-pressed={on}
       title={on ? "Ambient sound: on" : "Ambient sound: off"}
       className={[
-        "fixed right-4 bottom-20 z-50",
+        "fixed right-5 bottom-5 z-50",
         "inline-flex items-center gap-2",
         "rounded-full border px-3 py-1.5",
         "backdrop-blur-md select-none",

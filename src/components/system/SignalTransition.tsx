@@ -6,12 +6,13 @@ type SignalTransitionProps = {
   label?: string;
   index?: string;
   id?: string;
+  compact?: boolean;
 };
 
 const NODE_COUNT = 5;
 const TAP_INDICES = [1, 3];
 
-export default function SignalTransition({ label, index, id }: SignalTransitionProps) {
+export default function SignalTransition({ label, index, id, compact }: SignalTransitionProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -259,7 +260,7 @@ export default function SignalTransition({ label, index, id }: SignalTransitionP
       id={id}
       data-act={id ? "" : undefined}
       className="relative w-full scroll-mt-24 overflow-hidden"
-      style={{ height: 112 }}
+      style={{ height: compact ? 74 : 112 }}
     >
       {showLabel && (
         <span

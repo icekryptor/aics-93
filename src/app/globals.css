@@ -500,3 +500,12 @@ html.lenis, html.lenis body { height: auto; }
 .bg-dark :focus-visible {
   outline-color: var(--color-signal-2);
 }
+
+/* reduced-motion safety net — neutralise any looping animation we missed
+   (bootScan cue, spinners, pulses); transitions are left intact */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

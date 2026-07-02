@@ -55,7 +55,7 @@ export default function NeuralHero() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 92% at 16% 42%, rgba(10,9,18,0.9) 0%, rgba(10,9,18,0.6) 36%, rgba(10,9,18,0.12) 66%, transparent 100%), linear-gradient(to top, #0a0912 3%, transparent 26%)",
+            "radial-gradient(120% 92% at 16% 42%, rgba(10,9,18,0.9) 0%, rgba(10,9,18,0.6) 36%, rgba(10,9,18,0.12) 66%, transparent 100%), linear-gradient(to top, #0a0912 3%, transparent 26%), linear-gradient(to bottom, transparent 80%, color-mix(in srgb, #0a0912 62%, var(--color-bg)) 100%)",
         }}
         aria-hidden
       />

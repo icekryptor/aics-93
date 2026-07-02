@@ -42,7 +42,7 @@ export default function SlideDeck() {
     if (!el) return;
     const l = lenis();
     animatingRef.current = true;
-    window.setTimeout(() => (animatingRef.current = false), 900);
+    window.setTimeout(() => (animatingRef.current = false), 1200);
     if (l && !reducedRef.current) {
       l.scrollTo(el, { offset: -HEADER_OFFSET, duration: 1.1 });
     } else {
@@ -130,9 +130,15 @@ export default function SlideDeck() {
     if (!enabled) return;
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
-      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+      // never hijack keys while a form field or any interactive control is focused
+      if (
+        t &&
+        (t.isContentEditable ||
+          t.closest('a[href], button, select, input, textarea, [role="button"], [tabindex]'))
+      )
+        return;
       let next = activeRef.current;
-      if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === " ") next++;
+      if (e.key === "ArrowDown" || e.key === "PageDown") next++;
       else if (e.key === "ArrowUp" || e.key === "PageUp") next--;
       else if (e.key === "Home") next = 0;
       else if (e.key === "End") next = ACTS.length - 1;
@@ -178,7 +184,7 @@ export default function SlideDeck() {
               className={`block rounded-full transition-all duration-300 ${
                 on
                   ? "signal-grad h-6 w-[3px]"
-                  : "h-[3px] w-[3px] bg-ink/30 group-hover:bg-ink/60"
+                  : "h-[3px] w-[3px] bg-ink/40 shadow-[0_0_0_1px_rgba(255,255,255,0.28)] group-hover:bg-ink/70"
               }`}
             />
           </button>
