@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import LogoMark from "./LogoMark";
 import BrainGL from "./system/BrainGL";
+import StudioGrid from "./StudioGrid";
 import { heroStats } from "@/lib/content";
 
 const STATES = ["biology", "hybrid", "machine"] as const;
 
-// BOOT / THE SYMBIOSIS — act one. The hero is a live neural brain morphing
-// biology → hybrid → machine as you scroll, wrapped in the AICS-93 lockup.
+// BOOT / THE SYMBIOSIS — act one. Three columns: offer / living brain / telemetry.
 export default function NeuralHero() {
   const secRef = useRef<HTMLElement | null>(null);
   const [progress, setProgress] = useState(0);
@@ -54,25 +54,17 @@ export default function NeuralHero() {
     >
       {/* faint blueprint grid */}
       <div className="runtime-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
-      {/* the living brain — WebGL point cloud (falls back to the 2D engine);
-          boxed to the right on desktop so it clears the headline */}
-      <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-full lg:left-[34%] lg:w-auto"
-        aria-hidden
-      >
-        <BrainGL className="h-full w-full" />
-      </div>
-      {/* legibility vignette */}
+      {/* legibility vignette + soft ramp into the light act below */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 92% at 16% 42%, rgba(14, 10, 27,0.9) 0%, rgba(14, 10, 27,0.6) 36%, rgba(14, 10, 27,0.12) 66%, transparent 100%), linear-gradient(to top, #0e0a1b 3%, transparent 26%), linear-gradient(to bottom, transparent 80%, color-mix(in srgb, #0e0a1b 62%, var(--color-bg)) 100%)",
+            "radial-gradient(90% 80% at 14% 40%, rgba(14, 10, 27,0.85) 0%, rgba(14, 10, 27,0.45) 40%, transparent 72%), linear-gradient(to top, #0e0a1b 3%, transparent 24%), linear-gradient(to bottom, transparent 80%, color-mix(in srgb, #0e0a1b 62%, var(--color-bg)) 100%)",
         }}
         aria-hidden
       />
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[1640px] flex-col px-6 pb-14 pt-[88px] sm:px-10 lg:px-16">
+      <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[1640px] flex-col px-6 pb-14 pt-[84px] sm:px-10 lg:px-14">
         {/* top: lockup + state HUD */}
         <div className="flex items-start justify-between gap-6">
           <div className="flex items-center gap-4">
@@ -110,25 +102,27 @@ export default function NeuralHero() {
           </div>
         </div>
 
-        {/* middle: thesis + telemetry stats, vertically centred */}
-        <div className="flex flex-1 flex-col justify-center py-10">
-          <div className="max-w-[54rem]">
+        {/* middle: offer | brain | telemetry */}
+        <div className="grid flex-1 items-center gap-10 py-10 lg:grid-cols-[1.02fr_1.15fr_0.72fr] lg:gap-8">
+          {/* left: offer (three lines) + description */}
+          <div>
             <p className="tech-label mb-5 text-[11px] text-[color-mix(in_srgb,var(--color-signal)_80%,white)]">
               [ boot · симбиоз мозга и машины ]
             </p>
-            <h1 className="text-[clamp(2.4rem,6vw,5.2rem)] font-medium leading-[0.98] tracking-[-0.03em] text-runtime-ink">
+            <h1 className="text-[clamp(2.1rem,3.6vw,3.4rem)] font-medium leading-[1.02] tracking-[-0.028em] text-runtime-ink">
               Мозг и машина —
+              <br />в <span className="signal-text text-glow">симбиозе</span>
               <br />
-              в <span className="signal-text text-glow">симбиозе</span>.
+              для вашего бренда.
             </h1>
-            <p className="mt-7 max-w-xl text-[clamp(1rem,1.5vw,1.2rem)] leading-relaxed text-runtime-ink-soft">
+            <p className="mt-6 max-w-md text-[clamp(0.95rem,1.2vw,1.1rem)] leading-relaxed text-runtime-ink-soft">
               Я соединяю креатив с ИИ-системами и внедряю их в процессы компаний —
               чтобы бренды росли на данных, а не на догадках.
             </p>
 
-            <div className="mt-9 flex flex-wrap items-center gap-4">
+            <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
-                href="#ai"
+                href="#upgrade"
                 data-magnetic
                 data-cursor="route signal"
                 className="signal-grad inline-flex items-center gap-2 rounded-xl px-7 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.03]"
@@ -146,21 +140,43 @@ export default function NeuralHero() {
             </div>
           </div>
 
-          <div className="mt-12 grid max-w-2xl grid-cols-3 gap-6 sm:gap-10">
+          {/* center: the living brain */}
+          <div className="relative order-first h-[340px] sm:h-[420px] lg:order-none lg:h-full lg:min-h-[520px]">
+            <div className="pointer-events-none absolute inset-0" aria-hidden>
+              <BrainGL className="h-full w-full" />
+            </div>
+          </div>
+
+          {/* right: telemetry stats + человек-студия */}
+          <div className="space-y-7">
             {heroStats.map((s) => (
               <div key={s.big} className="border-t border-runtime-line pt-3">
-                <p className="font-display text-[1.4rem] leading-none tracking-tight text-runtime-ink sm:text-[1.8rem]">
+                <p className="font-display text-[1.5rem] leading-none tracking-tight text-runtime-ink sm:text-[1.7rem]">
                   {s.big}
                 </p>
-                <p className="mt-2 text-[11px] leading-snug text-runtime-ink-soft sm:text-[12px]">
-                  {s.text}
-                </p>
+                <p className="mt-2 text-[11.5px] leading-snug text-runtime-ink-soft">{s.text}</p>
               </div>
             ))}
+
+            {/* человек-студия card */}
+            <div className="relative pt-3">
+              <span className="signal-grad absolute left-4 top-0 z-10 rounded-md px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
+                человек-студия
+              </span>
+              <div className="rounded-2xl border border-runtime-line bg-[color-mix(in_srgb,var(--color-runtime-2)_80%,transparent)] px-5 pb-5 pt-7 backdrop-blur-sm">
+                <p className="text-[12.5px] leading-relaxed text-runtime-ink-soft">
+                  Я — Василий Аистов, co-founder / CMO в Химичке. Делаю яркие бренды,
+                  запоминающиеся среди конкурентов.
+                </p>
+                <div className="mt-4 text-runtime-ink [&_.studio-grid]:!text-[color:var(--color-signal)]">
+                  <StudioGrid className="mt-0" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* bottom: scroll cue (right, clear of the bottom-left HUD) */}
+        {/* bottom: scroll cue */}
         <div className="flex justify-end">
           <div className="hidden items-center gap-2 lg:flex">
             <span className="tech-label text-[10px] text-runtime-ink-soft">scroll</span>

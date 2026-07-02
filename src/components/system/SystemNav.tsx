@@ -58,8 +58,8 @@ export default function SystemNav() {
         shown ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
       }`}
     >
-      <header className="pointer-events-auto mx-auto w-full max-w-[1640px] rounded-2xl border border-line/80 bg-bg/70 shadow-[0_10px_40px_-16px_rgba(48,32,85,0.5)] backdrop-blur-xl">
-        <div className="flex h-[52px] items-center justify-between gap-4 pl-3 pr-2 sm:pl-4">
+      <header className="pointer-events-auto mx-auto w-fit max-w-full rounded-[24px] border border-line/60 bg-white/85 shadow-[0_8px_32px_-14px_rgba(48,32,85,0.4)] backdrop-blur-md">
+        <div className="flex h-11 items-center gap-3 pl-2.5 pr-2 sm:gap-4 sm:pl-3">
           {/* left: mark + live dot */}
           <a href="#top" aria-label="AICS-93 — наверх" className="flex items-center gap-2.5" data-magnetic>
             <span className="signal-grad grid size-7 place-items-center rounded-[8px] text-[11px] font-bold text-white">
@@ -68,14 +68,10 @@ export default function SystemNav() {
             <span className="hidden font-display text-[14px] tracking-tight text-ink sm:inline">
               AICS<span className="signal-text">-93</span>
             </span>
-            <span className="ml-1 hidden items-center gap-1.5 lg:flex">
-              <span className="hud-dot" />
-              <span className="hud text-[9px] text-ink-soft">online</span>
-            </span>
           </a>
 
           {/* center: nav (desktop) */}
-          <nav aria-label="Навигация" className="hidden items-center gap-5 md:flex lg:gap-7">
+          <nav aria-label="Навигация" className="hidden items-center gap-4 md:flex lg:gap-5">
             {LINKS.map((l, i) => {
               const on = active === l.href;
               return (
@@ -104,7 +100,7 @@ export default function SystemNav() {
               href="#upgrade"
               data-magnetic
               data-cursor="route signal"
-              className="signal-grad grid h-11 place-items-center rounded-xl px-4 text-[12px] font-semibold text-white transition-transform hover:scale-105 md:h-9"
+              className="signal-grad grid h-11 place-items-center rounded-full px-4 text-[12px] font-semibold text-white transition-transform hover:scale-105 md:h-8 md:px-3.5"
             >
               КП
             </a>
@@ -114,7 +110,7 @@ export default function SystemNav() {
               rel="noreferrer"
               data-magnetic
               aria-label="Telegram"
-              className="grid h-11 place-items-center rounded-xl border border-line px-3 text-[12px] font-semibold text-ink transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)] md:h-9"
+              className="grid h-11 place-items-center rounded-full border border-line px-3 text-[12px] font-semibold text-ink transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)] md:h-8"
             >
               TG
             </a>
@@ -153,7 +149,7 @@ export default function SystemNav() {
             open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
           }`}
         >
-          <nav aria-label="Навигация" className="min-h-0">
+          <nav aria-label="Навигация" className="min-h-0 min-w-[250px]">
             <ul className="flex flex-col gap-1 border-t border-line/70 px-2 py-2">
               {LINKS.map((l, i) => {
                 const on = active === l.href;

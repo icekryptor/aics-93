@@ -52,7 +52,8 @@ const COL = {
   cool: "201, 182, 255", // #c9b6ff
   ink: "48, 32, 85", // #302055
   inkSoft: "85, 68, 136", // #554488
-  line: "222, 214, 240", // #ded6f0
+  line: "222, 214, 240",
+  coral: "255, 112, 80", // brand coral — second strand // #ded6f0
 };
 
 /**
@@ -105,6 +106,7 @@ export default function DnaHelix({ className }: DnaHelixProps) {
 
   // scroll-assemble progress [0..1]
   const assembleRef = useRef<number>(0);
+  const revealSmoothRef = useRef<number>(0);
   // smoothed twist speed multiplier (leans toward pointer)
   const leanRef = useRef<number>(0);
   // read-head glow x (normalized), smoothed
@@ -160,7 +162,8 @@ export default function DnaHelix({ className }: DnaHelixProps) {
       const startY = vh * 0.92;
       const endY = vh * 0.32;
       const p = (startY - rect.top) / (startY - endY);
-      assembleRef.current = Math.max(0, Math.min(1, p));
+      // one-shot: assembles as it enters, never disassembles on scroll-back
+      assembleRef.current = Math.max(assembleRef.current, Math.max(0, Math.min(1, p)));
     };
     computeAssemble();
 
@@ -187,9 +190,10 @@ export default function DnaHelix({ className }: DnaHelixProps) {
       const speed = baseSpeed * (1 + leanRef.current * 0.6);
       const phase = reduced ? Math.PI * 0.25 : elapsed * speed;
 
+      // ease the reveal toward the scroll target — no jumpy reaction
       const assemble = reduced ? 1 : assembleRef.current;
-      // Before visible: reveal only first couple base pairs.
-      const revealT = Math.max(0.06, assemble);
+      revealSmoothRef.current += (assemble - revealSmoothRef.current) * 0.045;
+      const revealT = Math.max(0.06, reduced ? 1 : revealSmoothRef.current);
 
       const pointer = pointerRef.current;
       const fine = !coarseRef.current;
@@ -226,7 +230,7 @@ export default function DnaHelix({ className }: DnaHelixProps) {
           const isViolet = offset === 0;
           const color = isViolet
             ? `rgba(${COL.signal}, ${alpha})`
-            : `rgba(${COL.ink}, ${alpha * 0.72})`;
+            : `rgba(${COL.coral}, ${alpha * 0.85})`;
           canRun2d.beginPath();
           canRun2d.moveTo(x0, y0);
           canRun2d.lineTo(x1, y1);
@@ -326,7 +330,7 @@ export default function DnaHelix({ className }: DnaHelixProps) {
         const radB = 1.4 + (1 - r.front) * 0.6 + r.front * 3.4;
         canRun2d.beginPath();
         canRun2d.arc(r.x, r.yB, radB, 0, Math.PI * 2);
-        canRun2d.fillStyle = `rgba(${COL.ink}, ${0.18 + r.front * 0.45})`;
+        canRun2d.fillStyle = `rgba(${COL.coral}, ${0.22 + r.front * 0.5})`;
         canRun2d.fill();
       }
 

@@ -1,8 +1,8 @@
 import NeuralHero from "@/components/NeuralHero";
-import { Intro, Frameworks, Reasons, SalesEngine, About, Gantt, Bio } from "@/components/Sections";
+import { Intro, Frameworks, Reasons, SalesEngine, About } from "@/components/Sections";
 import AiProcess from "@/components/AiProcess";
-import Portfolio from "@/components/Portfolio";
-import QuoteForm from "@/components/QuoteForm";
+import CaseSlider from "@/components/CaseSlider";
+import ContactConsole from "@/components/ContactConsole";
 import Footer from "@/components/Footer";
 import SignalTransition from "@/components/system/SignalTransition";
 import DnaHelix from "@/components/system/DnaHelix";
@@ -43,13 +43,11 @@ export default function Experience() {
         {/* ACT IV — THE OPERATOR & THE PROOF */}
         <SignalTransition id="act-proof" index="04" label="// оператор · доказательства" compact />
         <About />
-        <Portfolio />
-        <Gantt />
+        <CaseSlider />
 
-        {/* ACT V — ORIGIN & INVITATION */}
-        <SignalTransition id="act-origin" index="05" label="// исток · приглашение" compact />
-        <Bio />
-        <QuoteForm />
+        {/* ACT V — INVITATION */}
+        <SignalTransition id="act-origin" index="05" label="// приглашение" compact />
+        <ContactConsole />
       </main>
       <Footer />
     </>
