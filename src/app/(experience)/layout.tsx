@@ -6,12 +6,15 @@ import MetaHUD from "@/components/system/MetaHUD";
 import BootSequence from "@/components/system/BootSequence";
 import SystemNav from "@/components/system/SystemNav";
 import VerifyScroll from "@/components/system/VerifyScroll";
+import ExperienceRoot from "@/components/system/ExperienceRoot";
+import SoundToggle from "@/components/system/SoundToggle";
 import ColorToggle from "@/components/ColorToggle";
 
 // Chrome for the immersive AICS-93 experience (route "/").
 export default function ExperienceLayout({ children }: { children: React.ReactNode }) {
   return (
     <ScrollProvider>
+      <ExperienceRoot />
       {/* ambient world (fixed, behind everything) */}
       <ShaderBackground />
       <NeuralField />
@@ -22,6 +25,7 @@ export default function ExperienceLayout({ children }: { children: React.ReactNo
       <SystemNav />
       <MetaHUD />
       <ColorToggle />
+      <SoundToggle />
       <VerifyScroll />
       {children}
     </ScrollProvider>

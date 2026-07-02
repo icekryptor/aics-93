@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { projectTypes, assets } from "@/lib/content";
 
@@ -8,6 +8,11 @@ export default function QuoteForm() {
   const [done, setDone] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [form, setForm] = useState({ name: "", phone: "", email: "", about: "" });
+  const [experience, setExperience] = useState(false);
+
+  useEffect(() => {
+    setExperience(document.documentElement.hasAttribute("data-experience"));
+  }, []);
 
   const toggle = (t: string) =>
     setSelected((s) => (s.includes(t) ? s.filter((x) => x !== t) : [...s, t]));
@@ -37,12 +42,30 @@ export default function QuoteForm() {
             </p>
 
             {done ? (
-              <div className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.04] p-10 text-center">
-                <p className="font-display text-xl">Заявка принята ✦</p>
-                <p className="mt-2 text-sm text-white/55">
-                  Спасибо! Свяжусь с вами в ближайшее время. (Демо-режим — отправка пока не подключена.)
-                </p>
-              </div>
+              experience ? (
+                <div className="mt-8 overflow-hidden rounded-[28px] border border-[color-mix(in_srgb,var(--color-signal)_35%,transparent)] bg-white/[0.03] p-10 signal-glow">
+                  <p className="tech-label text-[11px] text-[color-mix(in_srgb,var(--color-signal)_85%,white)]">
+                    <span className="hud-dot mr-2 inline-block align-middle" />
+                    // neural link established
+                  </p>
+                  <p className="mt-4 font-display text-2xl">
+                    Связь <span className="signal-text">установлена</span>.
+                  </p>
+                  <p className="mt-2 max-w-sm text-sm text-white/55">
+                    Сигнал получен — отвечу в течение 2 часов. Ваш проект уже в очереди на обработку системой.
+                  </p>
+                  <p className="hud mt-5 text-[10px] text-white/40">
+                    packet · {selected.length || 0} modules · status 200 · demo mode
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.04] p-10 text-center">
+                  <p className="font-display text-xl">Заявка принята ✦</p>
+                  <p className="mt-2 text-sm text-white/55">
+                    Спасибо! Свяжусь с вами в ближайшее время. (Демо-режим — отправка пока не подключена.)
+                  </p>
+                </div>
+              )
             ) : (
               <form onSubmit={submit} className="mt-8">
                 <p className="mb-3 text-sm font-medium">Какой тип проекта вы хотите заказать?</p>

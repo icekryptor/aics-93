@@ -32,6 +32,14 @@ export default function SalesGears() {
   const refsD = useRef<(HTMLDivElement | null)[]>([]);
   const refsM = useRef<(HTMLDivElement | null)[]>([]);
   const [scale, setScale] = useState(1);
+  const [experience, setExperience] = useState(false);
+
+  useEffect(() => {
+    setExperience(document.documentElement.hasAttribute("data-experience"));
+  }, []);
+
+  // AI core position (above the train) + traces to each gear centre
+  const CORE = { x: CANVAS_W / 2, y: 34, r: 26 };
 
   useEffect(() => {
     const measure = () => {
@@ -80,6 +88,64 @@ export default function SalesGears() {
             className="absolute left-0 top-0 origin-top-left"
             style={{ width: CANVAS_W, height: CANVAS_H, transform: `scale(${scale})` }}
           >
+            {/* AI core driving the train (immersive route only) */}
+            {experience && (
+              <svg
+                className="pointer-events-none absolute left-0 top-0"
+                width={CANVAS_W}
+                height={CANVAS_H}
+                viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`}
+                aria-hidden
+              >
+                {TRAIN.map((g) => (
+                  <line
+                    key={g.f}
+                    x1={CORE.x}
+                    y1={CORE.y}
+                    x2={g.cx}
+                    y2={g.cy}
+                    stroke="url(#coreGrad)"
+                    strokeWidth={1.4}
+                    className="ai-core-flow"
+                    opacity={0.5}
+                  />
+                ))}
+                <defs>
+                  <linearGradient id="coreGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stopColor="#c856ff" />
+                    <stop offset="1" stopColor="#8b67ff" />
+                  </linearGradient>
+                  <radialGradient id="coreFill">
+                    <stop offset="0" stopColor="#c856ff" />
+                    <stop offset="1" stopColor="#6d28d9" />
+                  </radialGradient>
+                </defs>
+                <g className="ai-core-throb" style={{ transformOrigin: `${CORE.x}px ${CORE.y}px` }}>
+                  <circle cx={CORE.x} cy={CORE.y} r={CORE.r + 10} fill="#8b67ff" opacity={0.18} />
+                  <circle cx={CORE.x} cy={CORE.y} r={CORE.r} fill="url(#coreFill)" />
+                </g>
+                <text
+                  x={CORE.x}
+                  y={CORE.y + 1}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="#ffffff"
+                  style={{ font: "600 13px var(--font-display), sans-serif", letterSpacing: "0.05em" }}
+                >
+                  AI
+                </text>
+                <text
+                  x={CORE.x}
+                  y={CORE.y + CORE.r + 16}
+                  textAnchor="middle"
+                  fill="#8b67ff"
+                  style={{ font: "600 10px var(--font-display), monospace", letterSpacing: "0.12em", textTransform: "uppercase" }}
+                >
+                  ядро · core
+                </text>
+              </svg>
+            )}
+
             {TRAIN.map((g, i) => (
               <div
                 key={g.f}

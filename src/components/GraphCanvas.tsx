@@ -15,6 +15,11 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // "second brain" mode — signal pulses along edges, only on the immersive route
+    const experience = document.documentElement.hasAttribute("data-experience");
+    type Pulse = { e: number; t: number; sp: number };
+    let pulses: Pulse[] = [];
+
     let width = 0,
       height = 0;
     function resize() {
@@ -210,6 +215,33 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
         ctx!.lineTo(cx + b.x * s, cy + b.y * s);
         ctx!.stroke();
       }
+
+      // signal pulses travelling the edges (immersive route only)
+      if (experience && edges.length > 0) {
+        if (pulses.length < 6 && Math.random() < 0.06) {
+          pulses.push({ e: Math.floor(Math.random() * edges.length), t: 0, sp: 0.010 + Math.random() * 0.022 });
+        }
+        for (let p = pulses.length - 1; p >= 0; p--) {
+          const pl = pulses[p];
+          pl.t += pl.sp;
+          const edge = edges[pl.e];
+          if (pl.t >= 1 || !edge) { pulses.splice(p, 1); continue; }
+          const a = nodes[edge.a], b = nodes[edge.b];
+          if (!a || !b) { pulses.splice(p, 1); continue; }
+          const X = cx + (a.x + (b.x - a.x) * pl.t) * s;
+          const Y = cy + (a.y + (b.y - a.y) * pl.t) * s;
+          const rad = Math.max(4, 7 * s);
+          const g = ctx!.createRadialGradient(X, Y, 0, X, Y, rad);
+          g.addColorStop(0, "rgba(200,86,255,0.95)");
+          g.addColorStop(0.5, "rgba(139,103,255,0.5)");
+          g.addColorStop(1, "rgba(139,103,255,0)");
+          ctx!.fillStyle = g;
+          ctx!.beginPath();
+          ctx!.arc(X, Y, rad, 0, Math.PI * 2);
+          ctx!.fill();
+        }
+      }
+
       const nodeLW = Math.max(1, Math.min(width, height) / 500);
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];

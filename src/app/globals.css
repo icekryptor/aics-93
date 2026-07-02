@@ -478,3 +478,10 @@ html.lenis, html.lenis body { height: auto; }
 
 /* verification/deep-link: force reveal-gated content visible */
 .force-reveal .reveal { opacity: 1 !important; transform: none !important; }
+
+/* --- AI-core overlay for the sales-engine gears (experience only) --- */
+@keyframes aicoreThrob { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+.ai-core-throb { transform-origin: center; animation: aicoreThrob 2.4s ease-in-out infinite; }
+@keyframes aicoreFlow { to { stroke-dashoffset: -32; } }
+.ai-core-flow { stroke-dasharray: 3 7; animation: aicoreFlow 1.1s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .ai-core-throb, .ai-core-flow { animation: none; } }

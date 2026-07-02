@@ -4,18 +4,8 @@ import AiProcess from "@/components/AiProcess";
 import Portfolio from "@/components/Portfolio";
 import QuoteForm from "@/components/QuoteForm";
 import Footer from "@/components/Footer";
-
-// Act divider — a labelled "signal seam" reinforcing the narrative spine:
-// the site is the boot-and-run of one cyberhuman operating system.
-function ActSeam({ index, title }: { index: string; title: string }) {
-  return (
-    <div className="mx-auto flex max-w-[1640px] items-center gap-4 px-6 py-2 sm:px-10 lg:px-16">
-      <span className="font-display text-[11px] tabular-nums text-ink-soft">{index}</span>
-      <span className="tech-label text-[11px] text-ink-soft">{title}</span>
-      <span className="signal-seam h-px flex-1" aria-hidden />
-    </div>
-  );
-}
+import SignalTransition from "@/components/system/SignalTransition";
+import MoleculeViz from "@/components/system/MoleculeViz";
 
 export default function Experience() {
   return (
@@ -25,24 +15,33 @@ export default function Experience() {
         <NeuralHero />
 
         {/* ACT II — THE MIND / SECOND BRAIN */}
-        <ActSeam index="02" title="// разум · второй мозг" />
+        <SignalTransition index="02" label="// разум · второй мозг" />
         <Intro />
+        {/* brand & creativity as a living polymer form */}
+        <section className="mx-auto max-w-[1640px] px-6 py-6 sm:px-10 lg:px-16" aria-hidden>
+          <div className="relative h-[300px] w-full sm:h-[360px]">
+            <MoleculeViz className="absolute inset-0 h-full w-full" />
+            <span className="tech-label absolute left-0 top-0 text-[11px] text-ink-soft">
+              [ бренд · форма креатива ]
+            </span>
+          </div>
+        </section>
         <Frameworks />
 
         {/* ACT III — THE ENGINE / AI INTO YOUR PROCESSES */}
-        <ActSeam index="03" title="// движок · ии в ваших процессах" />
+        <SignalTransition index="03" label="// движок · ии в ваших процессах" />
         <Reasons />
         <AiProcess />
         <SalesEngine />
 
         {/* ACT IV — THE OPERATOR & THE PROOF */}
-        <ActSeam index="04" title="// оператор · доказательства" />
+        <SignalTransition index="04" label="// оператор · доказательства" />
         <About />
         <Portfolio />
         <Gantt />
 
         {/* ACT V — ORIGIN & INVITATION */}
-        <ActSeam index="05" title="// исток · приглашение" />
+        <SignalTransition index="05" label="// исток · приглашение" />
         <Bio />
         <QuoteForm />
       </main>
