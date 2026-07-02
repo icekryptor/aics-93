@@ -38,6 +38,11 @@ type PulseT = {
 
 const SIGNAL = "139,103,255"; // --color-signal rgb
 const SIGNAL2 = "200,86,255"; // --color-signal-2 rgb
+const MONO = "92,88,110"; // graphite ambient when colour-mode is OFF
+const MONO2 = "120,114,140";
+// ambient node/trace colour follows the mono↔colour toggle
+const cSig = (colorMode: boolean) => (colorMode ? SIGNAL : MONO);
+const cSig2 = (colorMode: boolean) => (colorMode ? SIGNAL2 : MONO2);
 
 export default function NeuralField() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -252,7 +257,7 @@ export default function NeuralField() {
       } else {
         ctx!.lineTo(bx, by);
       }
-      ctx!.strokeStyle = `rgba(${SIGNAL},${alpha * (colorMode ? 1.35 : 1)})`;
+      ctx!.strokeStyle = `rgba(${cSig(colorMode)},${alpha * (colorMode ? 1.35 : 1)})`;
       ctx!.stroke();
     }
 
@@ -261,11 +266,13 @@ export default function NeuralField() {
       const base = n.accent ? 0.34 : 0.18;
       const a = Math.min(0.95, (base + n.bright * 0.75) * (colorMode ? 1.3 : 1));
       const r = (n.accent ? 2.4 : 1.7) + n.bright * 2.2;
+      const sig = cSig(colorMode);
+      const sig2 = cSig2(colorMode);
       // glow for bright/accent nodes
       if (n.bright > 0.05 || n.accent) {
         const g = ctx!.createRadialGradient(x, y, 0, x, y, r * 3.5);
-        g.addColorStop(0, `rgba(${n.accent ? SIGNAL2 : SIGNAL},${a * 0.6})`);
-        g.addColorStop(1, `rgba(${SIGNAL},0)`);
+        g.addColorStop(0, `rgba(${n.accent ? sig2 : sig},${a * 0.6})`);
+        g.addColorStop(1, `rgba(${sig},0)`);
         ctx!.fillStyle = g;
         ctx!.beginPath();
         ctx!.arc(x, y, r * 3.5, 0, Math.PI * 2);
@@ -273,7 +280,7 @@ export default function NeuralField() {
       }
       ctx!.beginPath();
       ctx!.arc(x, y, r, 0, Math.PI * 2);
-      ctx!.fillStyle = `rgba(${n.accent ? SIGNAL2 : SIGNAL},${a})`;
+      ctx!.fillStyle = `rgba(${n.accent ? sig2 : sig},${a})`;
       ctx!.fill();
     }
 
@@ -341,7 +348,7 @@ export default function NeuralField() {
             ctx!.beginPath();
             ctx!.moveTo(pointer.x, pointer.y);
             ctx!.lineTo(nx, ny);
-            ctx!.strokeStyle = `rgba(${SIGNAL2},${a})`;
+            ctx!.strokeStyle = `rgba(${cSig2(colorMode)},${a})`;
             ctx!.stroke();
           }
         }
@@ -373,8 +380,8 @@ export default function NeuralField() {
         const [px, py] = pointToSeg(p.chain, p.seg, p.t);
         // dash trail
         const g = ctx!.createRadialGradient(px, py, 0, px, py, 8);
-        g.addColorStop(0, `rgba(${SIGNAL2},${colorMode ? 0.95 : 0.85})`);
-        g.addColorStop(1, `rgba(${SIGNAL2},0)`);
+        g.addColorStop(0, `rgba(${cSig2(colorMode)},${colorMode ? 0.95 : 0.85})`);
+        g.addColorStop(1, `rgba(${cSig2(colorMode)},0)`);
         ctx!.fillStyle = g;
         ctx!.beginPath();
         ctx!.arc(px, py, 8, 0, Math.PI * 2);

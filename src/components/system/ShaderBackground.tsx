@@ -94,11 +94,18 @@ void main() {
   vec3 signal = mix(signalA, signalB, mixT);
   signal = mix(signal, signalC, clamp(q.x * 0.35, 0.0, 0.35));
 
+  // mono (default) desaturates the veins to graphite; color-mode restores the
+  // full violet→magenta→cyan spectrum. This is the mono↔colour background toggle.
+  float m = clamp(u_mode, 0.0, 1.0);
+  float lum = dot(signal, vec3(0.299, 0.587, 0.114));
+  vec3 grey = vec3(lum * 0.92);
+  signal = mix(grey, signal, m);
+
   // intensity of the veins
   float intensity = filament * (0.30 + 0.55 * f) + glow;
 
   // color-mode: richer, a touch more contrast
-  float modeBoost = mix(1.0, 1.45, clamp(u_mode, 0.0, 1.0));
+  float modeBoost = mix(1.0, 1.45, m);
   intensity *= modeBoost;
 
   // keep it FAINT — near-light field, low-alpha violet on top
