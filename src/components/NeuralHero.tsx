@@ -12,6 +12,14 @@ const STATES = ["biology", "hybrid", "machine"] as const;
 export default function NeuralHero() {
   const secRef = useRef<HTMLElement | null>(null);
   const [progress, setProgress] = useState(0);
+  const [brainState, setBrainState] = useState<number | null>(null);
+
+  // BrainGL is the source of truth for the current state (scroll or click)
+  useEffect(() => {
+    const on = (e: Event) => setBrainState((e as CustomEvent<number>).detail);
+    window.addEventListener("aics:brainstate", on);
+    return () => window.removeEventListener("aics:brainstate", on);
+  }, []);
 
   useEffect(() => {
     const el = secRef.current;
@@ -36,7 +44,7 @@ export default function NeuralHero() {
     };
   }, []);
 
-  const stateIdx = progress < 0.34 ? 0 : progress < 0.7 ? 1 : 2;
+  const stateIdx = brainState ?? (progress < 0.34 ? 0 : progress < 0.7 ? 1 : 2);
 
   return (
     <section
@@ -95,6 +103,9 @@ export default function NeuralHero() {
                   {i < STATES.length - 1 ? " · " : ""}
                 </span>
               ))}
+            </p>
+            <p className="tech-label mt-2 hidden text-[9px] text-runtime-ink-soft lg:block">
+              [ клик по мозгу — сменить состояние ]
             </p>
           </div>
         </div>

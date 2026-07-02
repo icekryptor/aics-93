@@ -52,6 +52,7 @@ type Geometry = {
   p1: Float32Array; // hybrid — right hemisphere on lattice
   p2: Float32Array; // machine — cubic chip-die lattice
   seed: Float32Array;
+  shade: Float32Array; // 0 core → 1 cortex (dim interior, bright surface)
 };
 
 let geometryCache: Geometry | null = null;
@@ -62,6 +63,7 @@ function buildGeometry(): Geometry {
   const p1 = new Float32Array(n * 3);
   const p2 = new Float32Array(n * 3);
   const seed = new Float32Array(n);
+  const shade = new Float32Array(n);
   const Q = 0.16; // hybrid quantization cell
 
   for (let i = 0; i < n; i++) {
@@ -77,10 +79,15 @@ function buildGeometry(): Geometry {
     const dx = sinT * Math.cos(ph);
     const dy = cosT;
     const dz = sinT * Math.sin(ph);
-    // Bias density strongly toward the shell (cortex), sparse core.
-    const r = Math.pow(w, 0.22);
-    const shell = smoothstepN(0.72, 1, r);
-    const rr = r * (1 + shell * 0.085 * wrinkle(dx, dy, dz));
+    // Almost all density on the cortex shell — readable surface, sparse core.
+    const r = Math.pow(w, 0.11);
+    const shell = smoothstepN(0.55, 1, r);
+    shade[i] = 0.28 + 0.72 * shell;
+    // gyri: banded folds wrapping the surface + finer wrinkle detail
+    const fold =
+      Math.sin(dx * 5.2 + dz * 8.8 + Math.sin(dy * 6.1) * 1.5) * 0.62 +
+      Math.sin(dy * 11.3 + dx * 7.4 + dz * 3.1) * 0.38;
+    const rr = r * (1 + shell * (0.105 * wrinkle(dx, dy, dz) + 0.08 * fold));
     let x = dx * rr * 0.8;
     let y = dy * rr * 0.72;
     const z = dz * rr * 1.02;
@@ -115,7 +122,7 @@ function buildGeometry(): Geometry {
     p2[i * 3 + 2] = (iz / (GRID_Z - 1) - 0.5) * 2.15;
   }
 
-  return { p0, p1, p2, seed };
+  return { p0, p1, p2, seed, shade };
 }
 
 function getGeometry(): Geometry {
@@ -132,6 +139,7 @@ attribute vec3 a_pos0;
 attribute vec3 a_pos1;
 attribute vec3 a_pos2;
 attribute float a_seed;
+attribute float a_shade;
 uniform mat4 u_proj;
 uniform float u_m01;
 uniform float u_m12;
@@ -141,6 +149,8 @@ uniform float u_scale;
 uniform float u_dpr;
 varying float v_near;
 varying float v_seed;
+varying float v_shade;
+varying float v_machine;
 void main() {
   vec3 p = mix(mix(a_pos0, a_pos1, u_m01), a_pos2, u_m12) * u_scale;
   float cy = cos(u_yaw);
@@ -150,10 +160,14 @@ void main() {
   float sx = sin(u_pitch);
   q = vec3(q.x, q.y * cx - q.z * sx, q.y * sx + q.z * cx);
   float near = clamp((q.z + 1.4) / 2.8, 0.0, 1.0);
+  // machine state shades uniformly (chip die), organic keeps cortex/core depth
+  float sh = mix(a_shade, 1.0, u_m12);
   gl_Position = u_proj * vec4(q.x, q.y, q.z - 3.0, 1.0);
-  gl_PointSize = clamp(u_dpr * mix(2.2, 5.5, near), 1.0, 60.0);
+  gl_PointSize = clamp(u_dpr * mix(2.2, 5.5, near) * mix(0.75, 1.12, sh), 1.0, 60.0);
   v_near = near;
   v_seed = a_seed;
+  v_shade = sh;
+  v_machine = u_m12;
 }
 `;
 
@@ -161,7 +175,10 @@ const FRAG_SRC = `
 precision mediump float;
 varying float v_near;
 varying float v_seed;
+varying float v_shade;
+varying float v_machine;
 uniform float u_pointer;
+uniform float u_time;
 void main() {
   vec2 d = gl_PointCoord - vec2(0.5);
   float r2 = dot(d, d);
@@ -173,6 +190,7 @@ void main() {
   vec3 mid  = vec3(0.710, 0.482, 1.0);
   vec3 soft = vec3(0.788, 0.714, 1.0);
   vec3 ink  = vec3(0.937, 0.918, 1.0);
+  vec3 lime = vec3(0.773, 1.0, 0.267);
   vec3 col = mix(deep, soft, v_near);
   float a = 0.26 + 0.5 * v_near;
   if (v_seed > 0.985) {
@@ -182,6 +200,15 @@ void main() {
     col = mid;
     a = 0.72;
   }
+  // dim core / bright cortex (uniform in machine state via v_shade→1)
+  a *= mix(0.35, 1.0, v_shade);
+  // MACHINE: lattice points blink like chip registers
+  float reg = fract(v_seed * 61.7);
+  float regMask = step(0.6, reg);
+  float blinkOn = step(0.5, fract(u_time * (0.8 + reg * 2.8) + reg * 17.0));
+  a *= mix(1.0, mix(0.3, 1.25, blinkOn), v_machine * regMask);
+  // the hottest registers flash constructive lime
+  col = mix(col, lime, v_machine * step(0.94, reg) * blinkOn * 0.85);
   a *= fall * (1.0 + 0.3 * u_pointer);
   gl_FragColor = vec4(col * a, a);
 }
@@ -229,6 +256,7 @@ type UniformLocs = {
   scale: WebGLUniformLocation;
   dpr: WebGLUniformLocation;
   pointer: WebGLUniformLocation;
+  time: WebGLUniformLocation;
 };
 
 /* ------------------------------------------------------------------ */
@@ -369,7 +397,8 @@ export default function BrainGL({ className }: BrainGLProps) {
         !attach("a_pos0", geo.p0, 3) ||
         !attach("a_pos1", geo.p1, 3) ||
         !attach("a_pos2", geo.p2, 3) ||
-        !attach("a_seed", geo.seed, 1)
+        !attach("a_seed", geo.seed, 1) ||
+        !attach("a_shade", geo.shade, 1)
       ) {
         return null;
       }
@@ -382,6 +411,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       const uScale = ctx.getUniformLocation(prog, "u_scale");
       const uDpr = ctx.getUniformLocation(prog, "u_dpr");
       const uPointer = ctx.getUniformLocation(prog, "u_pointer");
+      const uTime = ctx.getUniformLocation(prog, "u_time");
       if (
         !uProj ||
         !uM01 ||
@@ -390,7 +420,8 @@ export default function BrainGL({ className }: BrainGLProps) {
         !uPitch ||
         !uScale ||
         !uDpr ||
-        !uPointer
+        !uPointer ||
+        !uTime
       ) {
         return null;
       }
@@ -408,6 +439,7 @@ export default function BrainGL({ className }: BrainGLProps) {
         scale: uScale,
         dpr: uDpr,
         pointer: uPointer,
+        time: uTime,
       };
     };
 
@@ -424,6 +456,7 @@ export default function BrainGL({ className }: BrainGLProps) {
     /* --- animation state (closure vars; no per-frame allocation) --- */
     let lastNow = -1;
     let t = 0;
+    let rot = 0; // integrated yaw so speed changes never jump the angle
     let m01 = 0;
     let m12 = 0;
     let m01Target = 0;
@@ -446,15 +479,67 @@ export default function BrainGL({ className }: BrainGLProps) {
     const shouldRun = () =>
       !reducedMotion && !contextLost && pageVisible && onScreen && !disposed;
 
+    // click-to-morph override: -1 = scroll-driven; 0/1/2 = pinned state
+    let override = -1;
+    let overrideScrollY = 0;
+    let lastState = -1;
+
+    const dispatchState = () => {
+      const s = m12Target > 0.5 ? 2 : m01Target > 0.5 ? 1 : 0;
+      if (s !== lastState) {
+        lastState = s;
+        try {
+          window.dispatchEvent(new CustomEvent("aics:brainstate", { detail: s }));
+        } catch {
+          /* ignore */
+        }
+      }
+    };
+
     const updateRect = () => {
       const r = wrap.getBoundingClientRect();
       centerX = r.left + r.width / 2;
       centerY = r.top + r.height / 2;
       halfDiag = Math.sqrt(r.width * r.width + r.height * r.height) / 2;
-      const p = clampN(-r.top / Math.max(1, r.height * 0.85), 0, 1);
-      m01Target = smoothstepN(0, 0.55, p);
-      m12Target = smoothstepN(0.55, 1, p);
+      // scrolling away releases a click-pinned state back to scroll control
+      if (override >= 0 && Math.abs(window.scrollY - overrideScrollY) > 120) {
+        override = -1;
+      }
+      if (override < 0) {
+        const p = clampN(-r.top / Math.max(1, r.height * 0.85), 0, 1);
+        m01Target = smoothstepN(0, 0.55, p);
+        m12Target = smoothstepN(0.55, 1, p);
+      } else {
+        m01Target = override >= 1 ? 1 : 0;
+        m12Target = override >= 2 ? 1 : 0;
+      }
+      dispatchState();
     };
+
+    // click anywhere over the brain (non-interactive targets) cycles the state
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        typeof target.closest === "function" &&
+        target.closest("a, button, input, textarea, select, [role='button']")
+      )
+        return;
+      const r = wrap.getBoundingClientRect();
+      if (
+        e.clientX < r.left ||
+        e.clientX > r.right ||
+        e.clientY < r.top ||
+        e.clientY > r.bottom
+      )
+        return;
+      const cur =
+        override >= 0 ? override : m12Target > 0.5 ? 2 : m01Target > 0.5 ? 1 : 0;
+      override = (cur + 1) % 3;
+      overrideScrollY = window.scrollY;
+      updateRect();
+    };
+    window.addEventListener("click", onClick);
 
     const draw = (yaw: number, pitch: number, scale: number) => {
       ctx.clearColor(0, 0, 0, 0);
@@ -465,6 +550,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       ctx.uniform1f(locs.pitch, pitch);
       ctx.uniform1f(locs.scale, scale);
       ctx.uniform1f(locs.pointer, pointerS);
+      ctx.uniform1f(locs.time, t);
       ctx.drawArrays(ctx.POINTS, 0, POINT_COUNT);
     };
 
@@ -529,14 +615,16 @@ export default function BrainGL({ className }: BrainGLProps) {
         );
       }
 
-      m01 += (m01Target - m01) * 0.09;
-      m12 += (m12Target - m12) * 0.09;
-      yawOff += (yawTarget - yawOff) * 0.05;
-      pitchOff += (pitchTarget - pitchOff) * 0.05;
-      pointerS += (pointerTarget - pointerS) * 0.06;
+      m01 += (m01Target - m01) * 0.16;
+      m12 += (m12Target - m12) * 0.16;
+      yawOff += (yawTarget - yawOff) * 0.1;
+      pitchOff += (pitchTarget - pitchOff) * 0.1;
+      pointerS += (pointerTarget - pointerS) * 0.12;
 
+      // machine state settles: rotation slows to a near-stop
+      rot += dt * 0.05 * (1 - m12 * 0.72);
       const breathe = 1 + 0.018 * Math.sin(t * 0.85);
-      draw(t * 0.05 + yawOff, -0.18 + pitchOff, breathe * 0.82);
+      draw(rot + yawOff, -0.18 + pitchOff, breathe * 0.82);
 
       raf = requestAnimationFrame(frame);
     };
@@ -568,6 +656,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       return () => {
         disposed = true;
         ro.disconnect();
+        window.removeEventListener("click", onClick);
         baseCleanup();
         disposeGL();
       };
@@ -616,6 +705,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       ro.disconnect();
       if (io) io.disconnect();
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("click", onClick);
       if (!coarse) window.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("visibilitychange", onVisibility);
       baseCleanup();
