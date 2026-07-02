@@ -163,6 +163,7 @@ export default function SlideDeck() {
             type="button"
             onClick={() => goTo(i)}
             aria-current={on ? "true" : undefined}
+            aria-label={`Перейти к акту ${i + 1}: ${a.label}`}
             className="group flex items-center gap-2.5"
             data-cursor={a.label}
           >

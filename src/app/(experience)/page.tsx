@@ -10,7 +10,7 @@ import DnaHelix from "@/components/system/DnaHelix";
 export default function Experience() {
   return (
     <>
-      <main>
+      <main id="main">
         {/* ACT I — BOOT / THE SYMBIOSIS */}
         <NeuralHero />
 

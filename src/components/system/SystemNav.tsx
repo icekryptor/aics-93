@@ -53,7 +53,7 @@ export default function SystemNav() {
         className={`pointer-events-auto mx-auto flex h-[52px] w-full max-w-[1640px] items-center justify-between gap-4 rounded-2xl border border-line/80 bg-bg/70 pl-3 pr-2 shadow-[0_10px_40px_-16px_rgba(22,18,29,0.5)] backdrop-blur-xl sm:pl-4`}
       >
         {/* left: mark + live dot */}
-        <a href="#top" className="flex items-center gap-2.5" data-magnetic>
+        <a href="#top" aria-label="AICS-93 — наверх" className="flex items-center gap-2.5" data-magnetic>
           <span className="signal-grad grid size-7 place-items-center rounded-[8px] text-[11px] font-bold text-white">
             A
           </span>

@@ -15,6 +15,12 @@ import ColorToggle from "@/components/ColorToggle";
 export default function ExperienceLayout({ children }: { children: React.ReactNode }) {
   return (
     <ScrollProvider>
+      <a
+        href="#main"
+        className="sr-only left-3 top-3 z-[200] rounded-lg bg-ink px-4 py-2 text-sm font-semibold text-bg focus:not-sr-only focus:fixed"
+      >
+        К содержимому
+      </a>
       <ExperienceRoot />
       {/* ambient world (fixed, behind everything) */}
       <ShaderBackground />
