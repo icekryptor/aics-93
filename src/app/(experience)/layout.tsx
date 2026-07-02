@@ -5,6 +5,7 @@ import CursorPro from "@/components/system/CursorPro";
 import MetaHUD from "@/components/system/MetaHUD";
 import BootSequence from "@/components/system/BootSequence";
 import SystemNav from "@/components/system/SystemNav";
+import SlideDeck from "@/components/system/SlideDeck";
 import VerifyScroll from "@/components/system/VerifyScroll";
 import ExperienceRoot from "@/components/system/ExperienceRoot";
 import SoundToggle from "@/components/system/SoundToggle";
@@ -23,6 +24,7 @@ export default function ExperienceLayout({ children }: { children: React.ReactNo
       {/* instruments */}
       <CursorPro />
       <SystemNav />
+      <SlideDeck />
       <MetaHUD />
       <ColorToggle />
       <SoundToggle />

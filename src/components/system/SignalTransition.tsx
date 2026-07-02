@@ -5,12 +5,13 @@ import { useEffect, useRef, useState } from "react";
 type SignalTransitionProps = {
   label?: string;
   index?: string;
+  id?: string;
 };
 
 const NODE_COUNT = 5;
 const TAP_INDICES = [1, 3];
 
-export default function SignalTransition({ label, index }: SignalTransitionProps) {
+export default function SignalTransition({ label, index, id }: SignalTransitionProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -255,7 +256,9 @@ export default function SignalTransition({ label, index }: SignalTransitionProps
   return (
     <div
       ref={rootRef}
-      className="relative w-full overflow-hidden"
+      id={id}
+      data-act={id ? "" : undefined}
+      className="relative w-full scroll-mt-24 overflow-hidden"
       style={{ height: 112 }}
     >
       {showLabel && (

@@ -5,7 +5,7 @@ import Portfolio from "@/components/Portfolio";
 import QuoteForm from "@/components/QuoteForm";
 import Footer from "@/components/Footer";
 import SignalTransition from "@/components/system/SignalTransition";
-import MoleculeViz from "@/components/system/MoleculeViz";
+import DnaHelix from "@/components/system/DnaHelix";
 
 export default function Experience() {
   return (
@@ -15,33 +15,36 @@ export default function Experience() {
         <NeuralHero />
 
         {/* ACT II — THE MIND / SECOND BRAIN */}
-        <SignalTransition index="02" label="// разум · второй мозг" />
+        <SignalTransition id="act-mind" index="02" label="// разум · второй мозг" />
         <Intro />
-        {/* brand & creativity as a living polymer form */}
-        <section className="mx-auto max-w-[1640px] px-6 py-6 sm:px-10 lg:px-16" aria-hidden>
-          <div className="relative h-[300px] w-full sm:h-[360px]">
-            <MoleculeViz className="absolute inset-0 h-full w-full" />
-            <span className="tech-label absolute left-0 top-0 text-[11px] text-ink-soft">
-              [ бренд · форма креатива ]
+        {/* the brand's DNA — rebranding rewrites the genetic code */}
+        <section className="mx-auto max-w-[1640px] px-6 py-8 sm:px-10 lg:px-16">
+          <div className="mb-2 flex items-baseline gap-3">
+            <span className="tech-label text-[11px] text-ink-soft">[ днк бренда ]</span>
+            <span className="text-[13px] text-ink-soft">
+              ребрендинг — это переписывание генетического кода бренда
             </span>
+          </div>
+          <div className="relative h-[320px] w-full sm:h-[400px]" aria-hidden>
+            <DnaHelix className="absolute inset-0 h-full w-full" />
           </div>
         </section>
         <Frameworks />
 
         {/* ACT III — THE ENGINE / AI INTO YOUR PROCESSES */}
-        <SignalTransition index="03" label="// движок · ии в ваших процессах" />
+        <SignalTransition id="act-engine" index="03" label="// движок · ии в ваших процессах" />
         <Reasons />
         <AiProcess />
         <SalesEngine />
 
         {/* ACT IV — THE OPERATOR & THE PROOF */}
-        <SignalTransition index="04" label="// оператор · доказательства" />
+        <SignalTransition id="act-proof" index="04" label="// оператор · доказательства" />
         <About />
         <Portfolio />
         <Gantt />
 
         {/* ACT V — ORIGIN & INVITATION */}
-        <SignalTransition index="05" label="// исток · приглашение" />
+        <SignalTransition id="act-origin" index="05" label="// исток · приглашение" />
         <Bio />
         <QuoteForm />
       </main>
