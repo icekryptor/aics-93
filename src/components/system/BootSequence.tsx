@@ -275,7 +275,7 @@ export default function BootSequence({ onDone }: BootSequenceProps) {
                   color: lit
                     ? "var(--color-signal-2)"
                     : "var(--color-runtime-ink-soft)",
-                  textShadow: lit ? "0 0 12px rgba(200,86,255,0.55)" : "none",
+                  textShadow: lit ? "0 0 12px rgba(181, 123, 255,0.55)" : "none",
                   fontWeight: lit ? 600 : 400,
                 }}
               >
@@ -395,7 +395,7 @@ function ChipDie({ progress, lit }: { progress: number; lit: boolean }) {
               transition: "stroke-dashoffset 320ms ease",
               opacity: on ? 1 : 0.25,
               filter: on
-                ? "drop-shadow(0 0 4px rgba(139,103,255,0.6))"
+                ? "drop-shadow(0 0 4px rgba(151, 71, 255,0.6))"
                 : "none",
             }}
           />
@@ -462,8 +462,8 @@ const SCANLINE_STYLE: CSSProperties = {
   top: 0,
   height: "2px",
   background:
-    "linear-gradient(90deg, transparent, rgba(139,103,255,0.55), rgba(200,86,255,0.7), transparent)",
-  boxShadow: "0 0 18px rgba(139,103,255,0.5)",
+    "linear-gradient(90deg, transparent, rgba(151, 71, 255,0.55), rgba(181, 123, 255,0.7), transparent)",
+  boxShadow: "0 0 18px rgba(151, 71, 255,0.5)",
   willChange: "transform, opacity",
 };
 

@@ -1,24 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #ececeb;
-  --color-bg-soft: #e0e0de;
-  --color-ink: #16121d;
-  --color-ink-soft: #6b6577;
-  --color-line: #d4d3d1;
-  --color-accent: #8b67ff;
-  --color-accent-2: #c856ff;
-  --color-dark: #0d0d0f;
+  /* AICS-93 brand design system palette */
+  --color-bg: #fcfbff;        /* main background */
+  --color-bg-soft: #f1ecfa;   /* soft inset / panel */
+  --color-ink: #302055;       /* deep dark — primary text */
+  --color-ink-soft: #554488;  /* light dark — secondary text */
+  --color-line: #ded6f0;      /* soft lavender border */
+  --color-accent: #9747ff;    /* bright accent */
+  --color-accent-2: #b57bff;  /* lighter accent partner (gradients) */
+  --color-accent-ink: #8038e8; /* text-safe accent on light bg (≥4.5:1 small text) */
+  --color-dark: #302055;      /* deep-dark surface (CTA/footer) */
 
-  /* cyber-lab "runtime" — dark full-bleed scenes (boot, hero, ai-process, footer) */
-  --color-runtime: #0a0912;
-  --color-runtime-2: #100d1a;
-  --color-runtime-line: #241f38;
-  --color-runtime-ink: #e9e6f5;
-  --color-runtime-ink-soft: #8b84a6;
-  --color-signal: #8b67ff;
-  --color-signal-2: #c856ff;
-  --color-signal-cool: #56b8ff;
+  /* semantic (from the design system) */
+  --color-mild: #ccbbee;         /* mild accent */
+  --color-constructive: #c5ff44; /* constructive / positive */
+  --color-destructive: #ff7050;  /* destructive / negative */
+
+  /* cyber-lab "runtime" — dark full-bleed scenes, tuned to the deep-dark purple family */
+  --color-runtime: #0e0a1b;
+  --color-runtime-2: #171029;
+  --color-runtime-line: #2c2247;
+  --color-runtime-ink: #efeaff;
+  --color-runtime-ink-soft: #a99fce;
+  --color-signal: #9747ff;
+  --color-signal-2: #b57bff;
+  --color-signal-cool: #c9b6ff;
 
   --font-display: var(--font-unbounded);
   --font-sans: var(--font-neue);
@@ -92,14 +99,14 @@ body {
   display: block;
   flex: 0 0 14px;
   height: 18px;
-  background: rgba(22, 18, 29, 0.14);
+  background: rgba(48, 32, 85, 0.14);
   clip-path: polygon(88.45% 8.33%, 52.73% 91.67%, 11.55% 91.67%, 47.27% 8.33%);
 }
 .skew-cell2::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: #16121d;
+  background: #302055;
   opacity: var(--fill, 0);
   transition: opacity 0.22s ease;
   transition-delay: var(--delay, 0s);
@@ -121,14 +128,14 @@ body {
 }
 .seg path {
   fill: none;
-  stroke: rgba(22, 18, 29, 0.22);
+  stroke: rgba(48, 32, 85, 0.22);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
   transition: stroke 0.25s ease;
   transition-delay: var(--delay, 0s);
 }
 .seg.on path {
-  stroke: #16121d;
+  stroke: #302055;
 }
 @media (prefers-reduced-motion: reduce) {
   .seg path { transition: none; }
@@ -324,7 +331,7 @@ body {
   transition: opacity 0.9s ease;
 }
 .grad-a::after { background: radial-gradient(circle, #fb923c 0%, rgba(251,146,60,0.55) 45%, rgba(251,146,60,0) 82%); }
-.grad-b::after { background: radial-gradient(circle, #8b67ff 0%, rgba(139,103,255,0.55) 45%, rgba(139,103,255,0) 82%); }
+.grad-b::after { background: radial-gradient(circle, #9747ff 0%, rgba(151, 71, 255,0.55) 45%, rgba(151, 71, 255,0) 82%); }
 .grad-c::after { background: radial-gradient(circle, #ec4899 0%, rgba(236,72,153,0.55) 45%, rgba(236,72,153,0) 80%); }
 .grad-d::after { background: radial-gradient(circle, #22c55e 0%, rgba(34,197,94,0.55) 45%, rgba(34,197,94,0) 80%); }
 .grad-e::after { background: radial-gradient(circle, #c084fc 0%, rgba(192,132,252,0.5) 45%, rgba(192,132,252,0) 80%); }
@@ -360,7 +367,7 @@ body {
   -webkit-mask-position: center;
   mask-position: center;
   background: linear-gradient(140deg, #d6d6d9 0%, #b3b3b8 48%, #97979d 100%);
-  filter: drop-shadow(0 6px 12px rgba(22, 18, 29, 0.1));
+  filter: drop-shadow(0 6px 12px rgba(48, 32, 85, 0.1));
   will-change: transform;
 }
 .color-mode .engine-gear {

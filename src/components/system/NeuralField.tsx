@@ -36,8 +36,8 @@ type PulseT = {
   life: number; // remaining segments budget
 };
 
-const SIGNAL = "139,103,255"; // --color-signal rgb
-const SIGNAL2 = "200,86,255"; // --color-signal-2 rgb
+const SIGNAL = "151, 71, 255"; // --color-signal rgb
+const SIGNAL2 = "181, 123, 255"; // --color-signal-2 rgb
 const MONO = "92,88,110"; // graphite ambient when colour-mode is OFF
 const MONO2 = "120,114,140";
 // ambient node/trace colour follows the mono↔colour toggle

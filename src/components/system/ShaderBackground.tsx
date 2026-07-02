@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
  * A fixed, full-viewport RAW WebGL fragment-shader ambient background.
  *
  * - Subtle, slow-drifting neural/plasma field of faint violet filaments over a
- *   near-light field (matches the page bg #ececeb) — reads as ambient depth,
+ *   near-light field (matches the page bg #fcfbff) — reads as ambient depth,
  *   not a loud background.
  * - Graceful no-op if WebGL is unavailable.
  * - DPR-aware (cap 2), ResizeObserver-driven, rAF paused on document.hidden.
@@ -85,10 +85,10 @@ void main() {
   float pd = distance(uv, u_pointer);
   float glow = smoothstep(0.42, 0.0, pd) * 0.16;
 
-  // signal palette: #8b67ff -> #c856ff -> cool #56b8ff hint
-  vec3 signalA = vec3(0.545, 0.404, 1.0);   // #8b67ff
-  vec3 signalB = vec3(0.784, 0.337, 1.0);   // #c856ff
-  vec3 signalC = vec3(0.337, 0.722, 1.0);   // #56b8ff
+  // signal palette: #9747ff -> #b57bff -> soft #c9b6ff hint
+  vec3 signalA = vec3(0.592, 0.278, 1.0);   // #9747ff
+  vec3 signalB = vec3(0.710, 0.482, 1.0);   // #b57bff
+  vec3 signalC = vec3(0.788, 0.714, 1.0);   // #c9b6ff
 
   float mixT = clamp(r.x + q.y * 0.5, 0.0, 1.0);
   vec3 signal = mix(signalA, signalB, mixT);

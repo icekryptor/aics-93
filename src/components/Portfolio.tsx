@@ -62,7 +62,7 @@ function TickRuler() {
       className="pointer-events-none absolute inset-x-0 top-0 z-10 h-2"
       style={{
         backgroundImage:
-          "repeating-linear-gradient(to right, rgba(22,18,29,0.35) 0 1px, transparent 1px 9px)",
+          "repeating-linear-gradient(to right, rgba(48, 32, 85,0.35) 0 1px, transparent 1px 9px)",
       }}
       aria-hidden
     />
@@ -133,7 +133,7 @@ export default function Portfolio() {
                   <span className="font-display text-[1.6rem] font-normal leading-none text-accent tabular-nums">
                     00
                   </span>
-                  <span className="tech-label rounded-sm bg-accent/12 px-2 py-1 text-[10px] text-accent">
+                  <span className="tech-label rounded-sm bg-accent/12 px-2 py-1 text-[10px] text-accent-ink">
                     главный проект
                   </span>
                 </div>
@@ -263,7 +263,7 @@ export default function Portfolio() {
                           href={c.link}
                           target={c.link.startsWith("http") ? "_blank" : undefined}
                           rel="noreferrer"
-                          className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-accent underline-offset-4 hover:underline lg:ml-[calc(clamp(2.4rem,4vw,3.4rem)+1rem)]"
+                          className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-accent-ink underline-offset-4 hover:underline lg:ml-[calc(clamp(2.4rem,4vw,3.4rem)+1rem)]"
                         >
                           {c.link.replace(/^https?:\/\//, "")} <span aria-hidden>↗</span>
                         </a>
@@ -306,7 +306,7 @@ export default function Portfolio() {
                   </div>
                   <p className="mt-3 text-xs text-ink-soft">{p.subtitle}</p>
                   <p className="mt-0.5 font-display text-sm font-normal leading-tight">{p.name}</p>
-                  <span className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-accent">
+                  <span className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-accent-ink">
                     Смотреть сайт <span aria-hidden>→</span>
                   </span>
                 </a>

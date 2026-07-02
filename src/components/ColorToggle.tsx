@@ -29,14 +29,15 @@ export default function ColorToggle() {
       onClick={toggle}
       aria-pressed={color}
       title={color ? "Вернуть монохром" : "Добавить красок"}
-      className="group fixed bottom-5 right-5 z-[120] flex items-center gap-2 rounded-full border border-ink/15 bg-bg/70 py-1.5 pl-1.5 pr-3.5 text-[12px] font-medium text-ink shadow-[0_8px_30px_-12px_rgba(22,18,29,0.35)] backdrop-blur-md transition-all hover:scale-[1.03]"
+      className="group fixed bottom-5 right-5 z-[120] flex items-center gap-2 rounded-full border border-ink/15 bg-bg/70 py-1.5 pl-1.5 pr-3.5 text-[12px] font-medium text-ink shadow-[0_8px_30px_-12px_rgba(48,32,85,0.35)] backdrop-blur-md transition-all hover:scale-[1.03]"
     >
       <span
         className="size-6 rounded-full ring-1 ring-black/5 transition-transform group-active:scale-90"
         style={{
           background: color
             ? "conic-gradient(#9ca3af, #d1d5db, #9ca3af, #e5e7eb, #9ca3af)"
-            : "conic-gradient(#fb923c, #ec4899, #c084fc, #8b67ff, #22c55e, #fb923c)",
+            : // official AICS-93 palette: violet / mild / constructive / destructive
+              "conic-gradient(#9747ff, #ccbbee, #c5ff44, #ff7050, #9747ff)",
         }}
       />
       <span className="tech-label text-[11px]">

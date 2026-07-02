@@ -53,16 +53,16 @@ export default function SignalTransition({ label, index, id, compact }: SignalTr
       return v || fallback;
     };
 
-    let cLine = readColor("--color-line", "#d4d3d1");
-    let cSignal = readColor("--color-signal", "#8b67ff");
-    let cSignal2 = readColor("--color-signal-2", "#c856ff");
-    let cInkSoft = readColor("--color-ink-soft", "#6b6577");
+    let cLine = readColor("--color-line", "#ded6f0");
+    let cSignal = readColor("--color-signal", "#9747ff");
+    let cSignal2 = readColor("--color-signal-2", "#b57bff");
+    let cInkSoft = readColor("--color-ink-soft", "#554488");
 
     const refreshColors = () => {
-      cLine = readColor("--color-line", "#d4d3d1");
-      cSignal = readColor("--color-signal", "#8b67ff");
-      cSignal2 = readColor("--color-signal-2", "#c856ff");
-      cInkSoft = readColor("--color-ink-soft", "#6b6577");
+      cLine = readColor("--color-line", "#ded6f0");
+      cSignal = readColor("--color-signal", "#9747ff");
+      cSignal2 = readColor("--color-signal-2", "#b57bff");
+      cInkSoft = readColor("--color-ink-soft", "#554488");
     };
 
     const resize = () => {
@@ -171,7 +171,7 @@ export default function SignalTransition({ label, index, id, compact }: SignalTr
       const trail = 90 + proximity * 40;
       const gradStart = Math.max(x0, px - trail);
       const grad = ctx.createLinearGradient(px - trail, 0, px, 0);
-      grad.addColorStop(0, "rgba(139,103,255,0)");
+      grad.addColorStop(0, "rgba(151, 71, 255,0)");
       grad.addColorStop(1, cSignal);
       ctx.globalAlpha = 0.85;
       ctx.strokeStyle = grad;
@@ -186,7 +186,7 @@ export default function SignalTransition({ label, index, id, compact }: SignalTr
       const headGlow = ctx.createRadialGradient(px, midY, 0, px, midY, headR * 4);
       headGlow.addColorStop(0, cSignal2);
       headGlow.addColorStop(0.5, cSignal);
-      headGlow.addColorStop(1, "rgba(139,103,255,0)");
+      headGlow.addColorStop(1, "rgba(151, 71, 255,0)");
       ctx.globalAlpha = 0.6 + proximity * 0.4;
       ctx.fillStyle = headGlow;
       ctx.beginPath();

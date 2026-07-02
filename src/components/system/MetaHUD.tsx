@@ -262,9 +262,9 @@ export default function MetaHUD() {
   // Stable server/first-client render: nothing until mounted (prevents hydration mismatch).
   if (!mounted) return null;
 
-  const inkSoft = "var(--color-ink-soft, #6b6577)";
-  const ink = "var(--color-ink, #16121d)";
-  const signal = "var(--color-signal, #8b67ff)";
+  const inkSoft = "var(--color-ink-soft, #554488)";
+  const ink = "var(--color-ink, #302055)";
+  const signal = "var(--color-signal, #9747ff)";
 
   return (
     <div
@@ -300,10 +300,10 @@ export default function MetaHUD() {
           padding: "8px 10px",
           borderRadius: "10px",
           border: `1px solid ${
-            colorMode ? signal : "var(--color-line, #d4d3d1)"
+            colorMode ? signal : "var(--color-line, #ded6f0)"
           }`,
           background: colorMode
-            ? "color-mix(in srgb, var(--color-signal, #8b67ff) 8%, rgba(255,255,255,0.62))"
+            ? "color-mix(in srgb, var(--color-signal, #9747ff) 8%, rgba(255,255,255,0.62))"
             : "rgba(255,255,255,0.55)",
           backdropFilter: "blur(8px) saturate(1.05)",
           WebkitBackdropFilter: "blur(8px) saturate(1.05)",

@@ -112,16 +112,16 @@ export default function SalesGears() {
                 ))}
                 <defs>
                   <linearGradient id="coreGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0" stopColor="#c856ff" />
-                    <stop offset="1" stopColor="#8b67ff" />
+                    <stop offset="0" stopColor="#b57bff" />
+                    <stop offset="1" stopColor="#9747ff" />
                   </linearGradient>
                   <radialGradient id="coreFill">
-                    <stop offset="0" stopColor="#c856ff" />
+                    <stop offset="0" stopColor="#b57bff" />
                     <stop offset="1" stopColor="#6d28d9" />
                   </radialGradient>
                 </defs>
                 <g className="ai-core-throb" style={{ transformOrigin: `${CORE.x}px ${CORE.y}px` }}>
-                  <circle cx={CORE.x} cy={CORE.y} r={CORE.r + 10} fill="#8b67ff" opacity={0.18} />
+                  <circle cx={CORE.x} cy={CORE.y} r={CORE.r + 10} fill="#9747ff" opacity={0.18} />
                   <circle cx={CORE.x} cy={CORE.y} r={CORE.r} fill="url(#coreFill)" />
                 </g>
                 <text
@@ -138,7 +138,7 @@ export default function SalesGears() {
                   x={CORE.x}
                   y={CORE.y + CORE.r + 16}
                   textAnchor="middle"
-                  fill="#8b67ff"
+                  fill="#9747ff"
                   style={{ font: "600 10px var(--font-display), monospace", letterSpacing: "0.12em", textTransform: "uppercase" }}
                 >
                   ядро · core
@@ -159,7 +159,7 @@ export default function SalesGears() {
                   className="engine-gear size-full"
                   style={maskStyle(g.f)}
                 />
-                <span className="pointer-events-none absolute left-1/2 top-1/2 w-max max-w-[92%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-line bg-bg/90 px-3 py-1 text-center text-[12px] font-medium leading-tight text-ink shadow-[0_4px_16px_-8px_rgba(22,18,29,0.4)] backdrop-blur-sm">
+                <span className="pointer-events-none absolute left-1/2 top-1/2 w-max max-w-[92%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-line bg-bg/90 px-3 py-1 text-center text-[12px] font-medium leading-tight text-ink shadow-[0_4px_16px_-8px_rgba(48,32,85,0.4)] backdrop-blur-sm">
                   {g.label}
                 </span>
               </div>

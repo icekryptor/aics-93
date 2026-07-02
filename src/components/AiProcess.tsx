@@ -207,8 +207,8 @@ export default function AiProcess() {
       className="runtime relative isolate overflow-hidden"
       style={{
         background:
-          "radial-gradient(120% 90% at 50% -10%, var(--color-runtime-2, #100d1a) 0%, var(--color-runtime, #0a0912) 62%)",
-        color: "var(--color-runtime-ink, #e9e6f5)",
+          "radial-gradient(120% 90% at 50% -10%, var(--color-runtime-2, #171029) 0%, var(--color-runtime, #0e0a1b) 62%)",
+        color: "var(--color-runtime-ink, #efeaff)",
       }}
     >
       {/* top seam */}
@@ -232,7 +232,7 @@ export default function AiProcess() {
           <span
             className="tech-label"
             style={{
-              color: "var(--color-signal, #8b67ff)",
+              color: "var(--color-signal, #9747ff)",
               fontFamily: "var(--font-display, inherit)",
               letterSpacing: "0.22em",
               fontSize: "0.72rem",
@@ -244,14 +244,14 @@ export default function AiProcess() {
 
           <h2
             className="mt-6 text-balance text-3xl font-semibold leading-[1.08] sm:text-4xl lg:text-[3.35rem]"
-            style={{ color: "var(--color-runtime-ink, #e9e6f5)" }}
+            style={{ color: "var(--color-runtime-ink, #efeaff)" }}
           >
             ИИ — не инструмент.{" "}
             <span
               className="signal-text"
               style={{
                 background:
-                  "linear-gradient(92deg, var(--color-signal, #8b67ff), var(--color-signal-2, #c856ff))",
+                  "linear-gradient(92deg, var(--color-signal, #9747ff), var(--color-signal-2, #b57bff))",
                 WebkitBackgroundClip: "text",
                 backgroundClip: "text",
                 color: "transparent",
@@ -264,7 +264,7 @@ export default function AiProcess() {
 
           <p
             className="mt-6 max-w-2xl text-base leading-relaxed sm:text-lg"
-            style={{ color: "var(--color-runtime-ink-soft, #8b84a6)" }}
+            style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}
           >
             Внедряю сеть нейроагентов в процессы компаний — от контента и
             аналитики до продаж и найма. Один связный контур: данные текут в
@@ -277,7 +277,7 @@ export default function AiProcess() {
           <div
             className="tech-label mb-4 flex items-center gap-2"
             style={{
-              color: "var(--color-runtime-ink-soft, #8b84a6)",
+              color: "var(--color-runtime-ink-soft, #a99fce)",
               fontFamily: "var(--font-display, inherit)",
               fontSize: "0.66rem",
               letterSpacing: "0.2em",
@@ -291,8 +291,8 @@ export default function AiProcess() {
                 width: 6,
                 height: 6,
                 borderRadius: 999,
-                background: "var(--color-signal, #8b67ff)",
-                boxShadow: "0 0 8px var(--color-signal, #8b67ff)",
+                background: "var(--color-signal, #9747ff)",
+                boxShadow: "0 0 8px var(--color-signal, #9747ff)",
               }}
             />
             AICS-93 / PROCESS ROUTER
@@ -304,7 +304,7 @@ export default function AiProcess() {
               className="col-span-2 rounded-xl px-4 py-3 text-center"
               style={{
                 border: "1px solid color-mix(in srgb, var(--color-signal) 45%, transparent)",
-                background: "rgba(139,103,255,0.10)",
+                background: "rgba(151, 71, 255,0.10)",
               }}
             >
               <p className="font-display text-[15px]" style={{ color: "var(--color-runtime-ink)" }}>
@@ -319,8 +319,8 @@ export default function AiProcess() {
                 key={d.id}
                 className="rounded-xl px-3 py-3"
                 style={{
-                  border: "1px solid var(--color-runtime-line, #241f38)",
-                  background: "rgba(16,13,26,0.5)",
+                  border: "1px solid var(--color-runtime-line, #2c2247)",
+                  background: "rgba(23, 16, 41,0.5)",
                 }}
               >
                 <p className="tech-label text-[9px]" style={{ color: "var(--color-runtime-ink-soft)" }}>
@@ -343,9 +343,9 @@ export default function AiProcess() {
           <div
             className="relative hidden w-full overflow-hidden rounded-2xl sm:block"
             style={{
-              border: "1px solid var(--color-runtime-line, #241f38)",
+              border: "1px solid var(--color-runtime-line, #2c2247)",
               background:
-                "linear-gradient(180deg, rgba(20,17,32,0.55), rgba(10,9,18,0.2))",
+                "linear-gradient(180deg, rgba(23, 16, 41,0.55), rgba(14, 10, 27,0.2))",
             }}
           >
             <ProcessSVG
@@ -371,8 +371,8 @@ export default function AiProcess() {
           <div
             className="rounded-2xl p-6 sm:p-7"
             style={{
-              border: "1px solid var(--color-runtime-line, #241f38)",
-              background: "rgba(16,13,26,0.5)",
+              border: "1px solid var(--color-runtime-line, #2c2247)",
+              background: "rgba(23, 16, 41,0.5)",
             }}
           >
             <div
@@ -381,14 +381,14 @@ export default function AiProcess() {
                 fontFamily: "var(--font-display, inherit)",
                 fontSize: "0.68rem",
                 letterSpacing: "0.24em",
-                color: "var(--color-runtime-ink-soft, #8b84a6)",
+                color: "var(--color-runtime-ink-soft, #a99fce)",
               }}
             >
               БЫЛО
             </div>
             <ul
               className="mt-4 space-y-3 text-[0.95rem] leading-relaxed"
-              style={{ color: "var(--color-runtime-ink-soft, #8b84a6)" }}
+              style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}
             >
               {["ручные процессы", "разрозненные данные", "решения «на глаз»"].map(
                 (t) => (
@@ -396,7 +396,7 @@ export default function AiProcess() {
                     <span
                       aria-hidden="true"
                       className="mt-[0.55em] inline-block h-px w-4 shrink-0"
-                      style={{ background: "var(--color-runtime-line, #241f38)" }}
+                      style={{ background: "var(--color-runtime-line, #2c2247)" }}
                     />
                     {t}
                   </li>
@@ -409,9 +409,9 @@ export default function AiProcess() {
           <div
             className="signal-glow relative overflow-hidden rounded-2xl p-6 sm:p-7"
             style={{
-              border: "1px solid rgba(139,103,255,0.4)",
+              border: "1px solid rgba(151, 71, 255,0.4)",
               background:
-                "linear-gradient(180deg, rgba(139,103,255,0.1), rgba(200,86,255,0.04))",
+                "linear-gradient(180deg, rgba(151, 71, 255,0.1), rgba(181, 123, 255,0.04))",
             }}
           >
             <div
@@ -420,14 +420,14 @@ export default function AiProcess() {
                 fontFamily: "var(--font-display, inherit)",
                 fontSize: "0.68rem",
                 letterSpacing: "0.24em",
-                color: "var(--color-signal, #8b67ff)",
+                color: "var(--color-signal, #9747ff)",
               }}
             >
               СТАЛО
             </div>
             <ul
               className="mt-4 space-y-3 text-[0.95rem] leading-relaxed"
-              style={{ color: "var(--color-runtime-ink, #e9e6f5)" }}
+              style={{ color: "var(--color-runtime-ink, #efeaff)" }}
             >
               {["агенты в каждом узле", "единый поток данных", "решения на данных"].map(
                 (t) => (
@@ -437,8 +437,8 @@ export default function AiProcess() {
                       className="mt-[0.5em] inline-block h-[7px] w-[7px] shrink-0 rounded-full"
                       style={{
                         background:
-                          "linear-gradient(92deg, var(--color-signal, #8b67ff), var(--color-signal-2, #c856ff))",
-                        boxShadow: "0 0 10px rgba(139,103,255,0.9)",
+                          "linear-gradient(92deg, var(--color-signal, #9747ff), var(--color-signal-2, #b57bff))",
+                        boxShadow: "0 0 10px rgba(151, 71, 255,0.9)",
                       }}
                     />
                     {t}
@@ -463,8 +463,8 @@ export default function AiProcess() {
               key={m.l}
               className="rounded-xl px-4 py-5"
               style={{
-                border: "1px solid var(--color-runtime-line, #241f38)",
-                background: "rgba(16,13,26,0.45)",
+                border: "1px solid var(--color-runtime-line, #2c2247)",
+                background: "rgba(23, 16, 41,0.45)",
               }}
             >
               <div
@@ -473,7 +473,7 @@ export default function AiProcess() {
                   fontFamily: "var(--font-display, inherit)",
                   fontVariantNumeric: "tabular-nums",
                   background:
-                    "linear-gradient(92deg, var(--color-signal, #8b67ff), var(--color-signal-2, #c856ff))",
+                    "linear-gradient(92deg, var(--color-signal, #9747ff), var(--color-signal-2, #b57bff))",
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
                   color: "transparent",
@@ -483,7 +483,7 @@ export default function AiProcess() {
               </div>
               <div
                 className="mt-1.5 text-[0.78rem] leading-snug"
-                style={{ color: "var(--color-runtime-ink-soft, #8b84a6)" }}
+                style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}
               >
                 {m.l}
               </div>
@@ -494,7 +494,7 @@ export default function AiProcess() {
         <p
           className="mt-5 text-[0.72rem]"
           style={{
-            color: "var(--color-runtime-ink-soft, #8b84a6)",
+            color: "var(--color-runtime-ink-soft, #a99fce)",
             opacity: 0.7,
           }}
         >
@@ -540,13 +540,13 @@ function ProcessSVG({
     >
       <defs>
         <linearGradient id="aip-trace" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="var(--color-signal, #8b67ff)" />
-          <stop offset="100%" stopColor="var(--color-signal-2, #c856ff)" />
+          <stop offset="0%" stopColor="var(--color-signal, #9747ff)" />
+          <stop offset="100%" stopColor="var(--color-signal-2, #b57bff)" />
         </linearGradient>
         <radialGradient id="aip-core" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="var(--color-signal-2, #c856ff)" />
-          <stop offset="55%" stopColor="var(--color-signal, #8b67ff)" />
-          <stop offset="100%" stopColor="rgba(139,103,255,0)" />
+          <stop offset="0%" stopColor="var(--color-signal-2, #b57bff)" />
+          <stop offset="55%" stopColor="var(--color-signal, #9747ff)" />
+          <stop offset="100%" stopColor="rgba(151, 71, 255,0)" />
         </radialGradient>
         <filter id="aip-glow" x="-60%" y="-60%" width="220%" height="220%">
           <feGaussianBlur stdDeviation="4.5" result="b" />
@@ -566,7 +566,7 @@ function ProcessSVG({
         cy={CY}
         r={RING_R}
         fill="none"
-        stroke="var(--color-runtime-line, #241f38)"
+        stroke="var(--color-runtime-line, #2c2247)"
         strokeWidth={1}
         strokeDasharray="2 8"
         opacity={0.55}
@@ -585,7 +585,7 @@ function ProcessSVG({
               y1={n.start.y}
               x2={n.edge.x}
               y2={n.edge.y}
-              stroke="var(--color-runtime-line, #241f38)"
+              stroke="var(--color-runtime-line, #2c2247)"
               strokeWidth={2}
               strokeLinecap="round"
             />
@@ -615,7 +615,7 @@ function ProcessSVG({
               <circle
                 key={`pulse-${n.dept.id}-${pulseKey}`}
                 r={3.4}
-                fill="var(--color-signal-2, #c856ff)"
+                fill="var(--color-signal-2, #b57bff)"
                 filter="url(#aip-glow)"
               >
                 <animateMotion
@@ -699,7 +699,7 @@ function ProcessSVG({
           cx={CX}
           cy={CY}
           r={50}
-          fill="rgba(16,13,26,0.92)"
+          fill="rgba(23, 16, 41,0.92)"
           stroke="url(#aip-trace)"
           strokeWidth={1.6}
         />
@@ -707,7 +707,7 @@ function ProcessSVG({
           x={CX}
           y={CY - 4}
           textAnchor="middle"
-          fill="var(--color-runtime-ink, #e9e6f5)"
+          fill="var(--color-runtime-ink, #efeaff)"
           style={{
             fontFamily: "var(--font-display, inherit)",
             fontWeight: 700,
@@ -721,7 +721,7 @@ function ProcessSVG({
           x={CX}
           y={CY + 14}
           textAnchor="middle"
-          fill="var(--color-signal, #8b67ff)"
+          fill="var(--color-signal, #9747ff)"
           style={{
             fontFamily: "var(--font-display, inherit)",
             fontSize: 8.5,
@@ -771,8 +771,8 @@ function DeptNode({
 
       <path
         d={chipPath(x, y, NODE_W, NODE_H, CUT)}
-        fill={on ? "rgba(24,18,40,0.95)" : "rgba(16,13,26,0.9)"}
-        stroke={on ? "url(#aip-trace)" : "var(--color-runtime-line, #241f38)"}
+        fill={on ? "rgba(24,18,40,0.95)" : "rgba(23, 16, 41,0.9)"}
+        stroke={on ? "url(#aip-trace)" : "var(--color-runtime-line, #2c2247)"}
         strokeWidth={on ? 1.6 : 1.2}
         style={{
           transition: reduced ? "none" : "stroke 0.35s ease, fill 0.35s ease",
@@ -785,8 +785,8 @@ function DeptNode({
         y={center.y - 4}
         fill={
           on
-            ? "var(--color-runtime-ink, #e9e6f5)"
-            : "var(--color-runtime-ink-soft, #8b84a6)"
+            ? "var(--color-runtime-ink, #efeaff)"
+            : "var(--color-runtime-ink-soft, #a99fce)"
         }
         style={{
           fontFamily: "var(--font-sans, inherit)",
@@ -804,8 +804,8 @@ function DeptNode({
         y={center.y + 14}
         fill={
           on
-            ? "var(--color-signal, #8b67ff)"
-            : "var(--color-runtime-ink-soft, #8b84a6)"
+            ? "var(--color-signal, #9747ff)"
+            : "var(--color-runtime-ink-soft, #a99fce)"
         }
         style={{
           fontFamily: "var(--font-display, inherit)",
@@ -828,7 +828,7 @@ function DeptNode({
           cx={center.x + NODE_W / 2 - 40}
           cy={center.y + 10}
           r={2.6}
-          fill="var(--color-signal-2, #c856ff)"
+          fill="var(--color-signal-2, #b57bff)"
         >
           {on && !reduced && (
             <animate
@@ -842,7 +842,7 @@ function DeptNode({
         <text
           x={center.x + NODE_W / 2 - 34}
           y={center.y + 13}
-          fill="var(--color-signal, #8b67ff)"
+          fill="var(--color-signal, #9747ff)"
           style={{
             fontFamily: "var(--font-display, inherit)",
             fontSize: 7.5,

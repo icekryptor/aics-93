@@ -9,16 +9,16 @@ export default function GridBackground() {
             {/* dashed grid lines through the tile centre */}
             <line
               x1="104" y1="0" x2="104" y2="208"
-              stroke="rgba(22,18,29,0.12)" strokeWidth="1" strokeDasharray="2 8"
+              stroke="rgba(48, 32, 85,0.12)" strokeWidth="1" strokeDasharray="2 8"
             />
             <line
               x1="0" y1="104" x2="208" y2="104"
-              stroke="rgba(22,18,29,0.12)" strokeWidth="1" strokeDasharray="2 8"
+              stroke="rgba(48, 32, 85,0.12)" strokeWidth="1" strokeDasharray="2 8"
             />
             {/* subtle intersection cross */}
             <path
               d="M97 104 H111 M104 97 V111"
-              stroke="rgba(22,18,29,0.22)" strokeWidth="1"
+              stroke="rgba(48, 32, 85,0.22)" strokeWidth="1"
             />
           </pattern>
         </defs>

@@ -259,7 +259,7 @@ function CursorProInner() {
             const rad = 1.2 + t * 2.2;
             ctx.beginPath();
             ctx.arc(p.x, p.y, rad, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(139, 103, 255, ${p.life * 0.5 * t})`;
+            ctx.fillStyle = `rgba(151, 71, 255, ${p.life * 0.5 * t})`;
             ctx.fill();
           }
         }
@@ -395,7 +395,7 @@ function CursorProInner() {
             top: "-0.5px",
             width: "22px",
             height: "1px",
-            background: "var(--color-signal, #8b67ff)",
+            background: "var(--color-signal, #9747ff)",
             opacity: 0.9,
           }}
         />
@@ -407,7 +407,7 @@ function CursorProInner() {
             top: "-11px",
             width: "1px",
             height: "22px",
-            background: "var(--color-signal, #8b67ff)",
+            background: "var(--color-signal, #9747ff)",
             opacity: 0.9,
           }}
         />
@@ -421,8 +421,8 @@ function CursorProInner() {
             width: "8px",
             height: "8px",
             borderRadius: "50%",
-            border: "1px solid var(--color-signal, #8b67ff)",
-            boxShadow: "0 0 8px 0 rgba(139,103,255,0.65)",
+            border: "1px solid var(--color-signal, #9747ff)",
+            boxShadow: "0 0 8px 0 rgba(151, 71, 255,0.65)",
           }}
         />
 
@@ -457,17 +457,17 @@ function CursorProInner() {
           fontSize: "9px",
           letterSpacing: "0.12em",
           lineHeight: 1.35,
-          color: "var(--color-signal-2, #c856ff)",
-          textShadow: "0 0 6px rgba(200,86,255,0.35)",
+          color: "var(--color-signal-2, #b57bff)",
+          textShadow: "0 0 6px rgba(181, 123, 255,0.35)",
           whiteSpace: "nowrap",
           willChange: "transform",
         }}
       >
-        <span style={{ color: "var(--color-runtime-ink-soft, #8b84a6)" }}>X</span>
+        <span style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}>X</span>
         &nbsp;
         <span ref={readoutXRef}>0000</span>
         &nbsp;&nbsp;
-        <span style={{ color: "var(--color-runtime-ink-soft, #8b84a6)" }}>Y</span>
+        <span style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}>Y</span>
         &nbsp;
         <span ref={readoutYRef}>0000</span>
       </div>
@@ -484,8 +484,8 @@ function CursorProInner() {
           fontSize: "9px",
           letterSpacing: "0.18em",
           textTransform: "uppercase",
-          color: "var(--color-signal, #8b67ff)",
-          textShadow: "0 0 8px rgba(139,103,255,0.5)",
+          color: "var(--color-signal, #9747ff)",
+          textShadow: "0 0 8px rgba(151, 71, 255,0.5)",
           whiteSpace: "nowrap",
           opacity: 0,
           transition: "opacity 140ms ease",
@@ -499,8 +499,8 @@ function CursorProInner() {
           position: absolute;
           width: 8px;
           height: 8px;
-          border: 1px solid var(--color-signal, #8b67ff);
-          box-shadow: 0 0 6px 0 rgba(139,103,255,0.55);
+          border: 1px solid var(--color-signal, #9747ff);
+          box-shadow: 0 0 6px 0 rgba(151, 71, 255,0.55);
           opacity: 0;
           transition: opacity 160ms ease;
         }
@@ -517,8 +517,8 @@ function CursorProInner() {
         .cp-down .cp-ring { transform: scale(0.6); }
 
         html.color-mode .cp-line,
-        html.color-mode .cp-brackets .cp-corner { box-shadow: 0 0 10px 0 rgba(200,86,255,0.7); }
-        html.color-mode .cp-ring { box-shadow: 0 0 12px 0 rgba(200,86,255,0.8); }
+        html.color-mode .cp-brackets .cp-corner { box-shadow: 0 0 10px 0 rgba(181, 123, 255,0.7); }
+        html.color-mode .cp-ring { box-shadow: 0 0 12px 0 rgba(181, 123, 255,0.8); }
       `}</style>
     </div>
   );

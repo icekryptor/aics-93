@@ -232,9 +232,9 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
           const Y = cy + (a.y + (b.y - a.y) * pl.t) * s;
           const rad = Math.max(4, 7 * s);
           const g = ctx!.createRadialGradient(X, Y, 0, X, Y, rad);
-          g.addColorStop(0, "rgba(200,86,255,0.95)");
-          g.addColorStop(0.5, "rgba(139,103,255,0.5)");
-          g.addColorStop(1, "rgba(139,103,255,0)");
+          g.addColorStop(0, "rgba(181, 123, 255,0.95)");
+          g.addColorStop(0.5, "rgba(151, 71, 255,0.5)");
+          g.addColorStop(1, "rgba(151, 71, 255,0)");
           ctx!.fillStyle = g;
           ctx!.beginPath();
           ctx!.arc(X, Y, rad, 0, Math.PI * 2);

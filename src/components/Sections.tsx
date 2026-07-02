@@ -207,7 +207,7 @@ export function Bio() {
         className="pointer-events-none absolute inset-0 opacity-60"
         style={{
           backgroundImage:
-            "radial-gradient(60% 80% at 80% 10%, rgba(139,103,255,0.16), transparent 60%), radial-gradient(50% 60% at 10% 90%, rgba(200,86,255,0.12), transparent 60%)",
+            "radial-gradient(60% 80% at 80% 10%, rgba(151, 71, 255,0.16), transparent 60%), radial-gradient(50% 60% at 10% 90%, rgba(181, 123, 255,0.12), transparent 60%)",
         }}
       />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6">

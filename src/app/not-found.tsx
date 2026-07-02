@@ -80,13 +80,13 @@ export default function NotFound() {
       buildLayout();
     };
 
-    const SIGNAL = "#8b67ff";
-    const SIGNAL2 = "#c856ff";
+    const SIGNAL = "#9747ff";
+    const SIGNAL2 = "#b57bff";
 
     const drawCluster = (nodes: Node[], pulse: number) => {
       // links to the cluster centre
       const c = nodes[nodes.length - 1];
-      ctx.strokeStyle = "rgba(139,103,255,0.22)";
+      ctx.strokeStyle = "rgba(151, 71, 255,0.22)";
       ctx.lineWidth = 1;
       for (let i = 0; i < nodes.length - 1; i++) {
         ctx.beginPath();
@@ -99,7 +99,7 @@ export default function NotFound() {
         const isCore = i === nodes.length - 1;
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r + (isCore ? pulse * 1.5 : 0), 0, Math.PI * 2);
-        ctx.fillStyle = isCore ? SIGNAL : "rgba(233,230,245,0.65)";
+        ctx.fillStyle = isCore ? SIGNAL : "rgba(239, 234, 255,0.65)";
         if (isCore) {
           ctx.shadowColor = SIGNAL;
           ctx.shadowBlur = 12 + pulse * 8;
@@ -114,14 +114,14 @@ export default function NotFound() {
       to: { x: number; y: number }
     ) => {
       // the intact severed stub, before the gap
-      ctx.strokeStyle = "rgba(139,103,255,0.55)";
+      ctx.strokeStyle = "rgba(151, 71, 255,0.55)";
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(from.x, from.y);
       ctx.lineTo(to.x, to.y);
       ctx.stroke();
       // frayed endpoint tick
-      ctx.strokeStyle = "rgba(200,86,255,0.55)";
+      ctx.strokeStyle = "rgba(181, 123, 255,0.55)";
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.moveTo(to.x, to.y - 5);
@@ -144,7 +144,7 @@ export default function NotFound() {
       // static broken hint across the gap (dotted, faint)
       ctx.save();
       ctx.setLineDash([2, 6]);
-      ctx.strokeStyle = "rgba(139,103,255,0.18)";
+      ctx.strokeStyle = "rgba(151, 71, 255,0.18)";
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.moveTo(gapA.x, gapA.y);
@@ -152,7 +152,7 @@ export default function NotFound() {
       ctx.stroke();
       ctx.restore();
       // gap endpoint ticks
-      ctx.fillStyle = "rgba(139,132,166,0.5)";
+      ctx.fillStyle = "rgba(169, 159, 206,0.5)";
       ctx.beginPath();
       ctx.arc(gapA.x, gapA.y, 2, 0, Math.PI * 2);
       ctx.arc(gapB.x, gapB.y, 2, 0, Math.PI * 2);
@@ -245,7 +245,7 @@ export default function NotFound() {
       // faint permanent broken-gap dotted guide
       ctx.save();
       ctx.setLineDash([2, 7]);
-      ctx.strokeStyle = "rgba(139,132,166,0.16)";
+      ctx.strokeStyle = "rgba(169, 159, 206,0.16)";
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(gapA.x, gapA.y);

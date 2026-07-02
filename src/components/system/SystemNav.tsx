@@ -58,7 +58,7 @@ export default function SystemNav() {
         shown ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
       }`}
     >
-      <header className="pointer-events-auto mx-auto w-full max-w-[1640px] rounded-2xl border border-line/80 bg-bg/70 shadow-[0_10px_40px_-16px_rgba(22,18,29,0.5)] backdrop-blur-xl">
+      <header className="pointer-events-auto mx-auto w-full max-w-[1640px] rounded-2xl border border-line/80 bg-bg/70 shadow-[0_10px_40px_-16px_rgba(48,32,85,0.5)] backdrop-blur-xl">
         <div className="flex h-[52px] items-center justify-between gap-4 pl-3 pr-2 sm:pl-4">
           {/* left: mark + live dot */}
           <a href="#top" aria-label="AICS-93 — наверх" className="flex items-center gap-2.5" data-magnetic>

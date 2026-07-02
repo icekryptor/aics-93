@@ -486,7 +486,7 @@ export default function BrainCanvas({ className }: BrainCanvasProps) {
       } else {
         ctx.lineTo(x2, y2);
       }
-      ctx.strokeStyle = `rgba(139,103,255,${alpha.toFixed(3)})`;
+      ctx.strokeStyle = `rgba(151, 71, 255,${alpha.toFixed(3)})`;
       ctx.stroke();
     }
 
@@ -513,8 +513,8 @@ export default function BrainCanvas({ className }: BrainCanvasProps) {
       const r = 2.4 * fade + 0.6;
       const g = ctx.createRadialGradient(x, y, 0, x, y, r * 4);
       g.addColorStop(0, `rgba(200,134,255,${(0.9 * fade).toFixed(3)})`);
-      g.addColorStop(0.4, `rgba(139,103,255,${(0.5 * fade).toFixed(3)})`);
-      g.addColorStop(1, "rgba(139,103,255,0)");
+      g.addColorStop(0.4, `rgba(151, 71, 255,${(0.5 * fade).toFixed(3)})`);
+      g.addColorStop(1, "rgba(151, 71, 255,0)");
       ctx.fillStyle = g;
       ctx.beginPath();
       ctx.arc(x, y, r * 4, 0, Math.PI * 2);

@@ -43,7 +43,7 @@ export default function Nav() {
       >
         <a
           href="#upgrade"
-          className="grid size-11 place-items-center rounded-full bg-gradient-accent text-[12px] font-semibold text-white shadow-[0_8px_24px_-8px_rgba(139,103,255,0.7)] transition-transform hover:scale-105"
+          className="grid size-11 place-items-center rounded-full bg-gradient-accent text-[12px] font-semibold text-white shadow-[0_8px_24px_-8px_rgba(151,71,255,0.7)] transition-transform hover:scale-105"
         >
           КП
         </a>
