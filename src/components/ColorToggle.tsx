@@ -41,7 +41,7 @@ export default function ColorToggle() {
         }}
       />
       <span className="tech-label text-[11px]">
-        {color ? "монохром" : "краски"}
+        {color ? "монохром" : "добавить яркости"}
       </span>
     </button>
   );

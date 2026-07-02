@@ -1,4 +1,5 @@
 import ScrollProvider from "@/components/system/ScrollProvider";
+import MeshGradient from "@/components/system/MeshGradient";
 import ModularGrid from "@/components/system/ModularGrid";
 import CursorPro from "@/components/system/CursorPro";
 import MetaHUD from "@/components/system/MetaHUD";
@@ -21,7 +22,8 @@ export default function ExperienceLayout({ children }: { children: React.ReactNo
         К содержимому
       </a>
       <ExperienceRoot />
-      {/* ambient world (fixed, behind everything) */}
+      {/* ambient world (fixed, behind everything): fluid mesh under the grid */}
+      <MeshGradient />
       <ModularGrid />
       {/* boot / POST — self-manages, shows once per tab */}
       <BootSequence />

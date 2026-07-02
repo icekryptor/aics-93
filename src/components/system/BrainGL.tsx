@@ -53,6 +53,11 @@ type Geometry = {
   p2: Float32Array; // machine — cubic chip-die lattice
   seed: Float32Array;
   shade: Float32Array; // 0 core → 1 cortex (dim interior, bright surface)
+  // synapse segments (pairs of endpoints), morphing through the same 3 states
+  lineP0: Float32Array;
+  lineP1: Float32Array;
+  lineP2: Float32Array;
+  lineVertexCount: number;
 };
 
 let geometryCache: Geometry | null = null;
@@ -122,7 +127,76 @@ function buildGeometry(): Geometry {
     p2[i * 3 + 2] = (iz / (GRID_Z - 1) - 0.5) * 2.15;
   }
 
-  return { p0, p1, p2, seed, shade };
+  /* --- synapses: connect near cortex neighbours (deterministic) --- */
+  const CELLC = 0.15; // neighbour search radius / hash cell
+  const buckets = new Map<string, number[]>();
+  const keyOf = (x: number, y: number, z: number) =>
+    Math.floor(x / CELLC) + "," + Math.floor(y / CELLC) + "," + Math.floor(z / CELLC);
+  for (let i = 0; i < n; i++) {
+    if (shade[i] < 0.82) continue; // cortex only
+    const k = keyOf(p0[i * 3], p0[i * 3 + 1], p0[i * 3 + 2]);
+    let arr = buckets.get(k);
+    if (!arr) {
+      arr = [];
+      buckets.set(k, arr);
+    }
+    arr.push(i);
+  }
+  const edges: number[] = [];
+  const seen = new Set<number>();
+  const MAX_EDGES = 900;
+  outer: for (const [k, arr] of buckets) {
+    const [cx, cy, cz] = k.split(",").map(Number);
+    for (const i of arr) {
+      let best = -1;
+      let bestD = CELLC * CELLC;
+      for (let ox = -1; ox <= 1; ox++)
+        for (let oy = -1; oy <= 1; oy++)
+          for (let oz = -1; oz <= 1; oz++) {
+            const nb = buckets.get(cx + ox + "," + (cy + oy) + "," + (cz + oz));
+            if (!nb) continue;
+            for (const j of nb) {
+              if (j === i) continue;
+              const dx2 = p0[i * 3] - p0[j * 3];
+              const dy2 = p0[i * 3 + 1] - p0[j * 3 + 1];
+              const dz2 = p0[i * 3 + 2] - p0[j * 3 + 2];
+              const d = dx2 * dx2 + dy2 * dy2 + dz2 * dz2;
+              if (d > 0.0004 && d < bestD) {
+                bestD = d;
+                best = j;
+              }
+            }
+          }
+      if (best >= 0) {
+        const a = Math.min(i, best);
+        const b = Math.max(i, best);
+        const pairKey = a * n + b;
+        if (!seen.has(pairKey)) {
+          seen.add(pairKey);
+          edges.push(a, b);
+          if (edges.length / 2 >= MAX_EDGES) break outer;
+        }
+      }
+    }
+  }
+  const E = edges.length; // vertex count = edges array length (2 per segment)
+  const lineP0 = new Float32Array(E * 3);
+  const lineP1 = new Float32Array(E * 3);
+  const lineP2 = new Float32Array(E * 3);
+  for (let v2 = 0; v2 < E; v2++) {
+    const src = edges[v2] * 3;
+    lineP0[v2 * 3] = p0[src];
+    lineP0[v2 * 3 + 1] = p0[src + 1];
+    lineP0[v2 * 3 + 2] = p0[src + 2];
+    lineP1[v2 * 3] = p1[src];
+    lineP1[v2 * 3 + 1] = p1[src + 1];
+    lineP1[v2 * 3 + 2] = p1[src + 2];
+    lineP2[v2 * 3] = p2[src];
+    lineP2[v2 * 3 + 1] = p2[src + 1];
+    lineP2[v2 * 3 + 2] = p2[src + 2];
+  }
+
+  return { p0, p1, p2, seed, shade, lineP0, lineP1, lineP2, lineVertexCount: E };
 }
 
 function getGeometry(): Geometry {
@@ -151,6 +225,7 @@ varying float v_near;
 varying float v_seed;
 varying float v_shade;
 varying float v_machine;
+varying float v_rim;
 void main() {
   vec3 p = mix(mix(a_pos0, a_pos1, u_m01), a_pos2, u_m12) * u_scale;
   float cy = cos(u_yaw);
@@ -162,8 +237,13 @@ void main() {
   float near = clamp((q.z + 1.4) / 2.8, 0.0, 1.0);
   // machine state shades uniformly (chip die), organic keeps cortex/core depth
   float sh = mix(a_shade, 1.0, u_m12);
+  // silhouette rim: shell points whose direction is ⟂ to the view axis form
+  // the visible outline of the brain — brighten them (organic states only)
+  vec3 nrm = q / max(length(q), 0.0001);
+  float rim = pow(1.0 - abs(nrm.z), 3.0) * a_shade;
+  v_rim = rim * (1.0 - u_m12);
   gl_Position = u_proj * vec4(q.x, q.y, q.z - 3.0, 1.0);
-  gl_PointSize = clamp(u_dpr * mix(2.2, 5.5, near) * mix(0.75, 1.12, sh), 1.0, 60.0);
+  gl_PointSize = clamp(u_dpr * mix(2.2, 5.5, near) * mix(0.75, 1.12, sh) * (1.0 + v_rim * 0.35), 1.0, 60.0);
   v_near = near;
   v_seed = a_seed;
   v_shade = sh;
@@ -177,6 +257,7 @@ varying float v_near;
 varying float v_seed;
 varying float v_shade;
 varying float v_machine;
+varying float v_rim;
 uniform float u_pointer;
 uniform float u_time;
 void main() {
@@ -202,6 +283,9 @@ void main() {
   }
   // dim core / bright cortex (uniform in machine state via v_shade→1)
   a *= mix(0.35, 1.0, v_shade);
+  // glowing silhouette outline — makes the brain contour read instantly
+  a *= 1.0 + v_rim * 1.6;
+  col = mix(col, soft, clamp(v_rim, 0.0, 1.0) * 0.5);
   // MACHINE: lattice points blink like chip registers
   float reg = fract(v_seed * 61.7);
   float regMask = step(0.6, reg);
@@ -210,6 +294,47 @@ void main() {
   // the hottest registers flash constructive lime
   col = mix(col, lime, v_machine * step(0.94, reg) * blinkOn * 0.85);
   a *= fall * (1.0 + 0.3 * u_pointer);
+  gl_FragColor = vec4(col * a, a);
+}
+`;
+
+// synapse lines — same transform, flat translucent violet, fade toward machine
+const LINE_VERT_SRC = `
+attribute vec3 a_p0;
+attribute vec3 a_p1;
+attribute vec3 a_p2;
+uniform mat4 u_proj;
+uniform float u_m01;
+uniform float u_m12;
+uniform float u_yaw;
+uniform float u_pitch;
+uniform float u_scale;
+varying float v_near;
+varying float v_machine;
+void main() {
+  vec3 p = mix(mix(a_p0, a_p1, u_m01), a_p2, u_m12) * u_scale;
+  float cy = cos(u_yaw);
+  float sy = sin(u_yaw);
+  vec3 q = vec3(p.x * cy + p.z * sy, p.y, p.z * cy - p.x * sy);
+  float cx = cos(u_pitch);
+  float sx = sin(u_pitch);
+  q = vec3(q.x, q.y * cx - q.z * sx, q.y * sx + q.z * cx);
+  float near = clamp((q.z + 1.4) / 2.8, 0.0, 1.0);
+  gl_Position = u_proj * vec4(q.x, q.y, q.z - 3.0, 1.0);
+  v_near = near;
+  v_machine = u_m12;
+}
+`;
+
+const LINE_FRAG_SRC = `
+precision mediump float;
+varying float v_near;
+varying float v_machine;
+void main() {
+  vec3 deep = vec3(0.592, 0.278, 1.0);
+  vec3 soft = vec3(0.788, 0.714, 1.0);
+  vec3 col = mix(deep, soft, v_near);
+  float a = (0.05 + 0.11 * v_near) * (1.0 - v_machine * 0.7);
   gl_FragColor = vec4(col * a, a);
 }
 `;
@@ -340,20 +465,35 @@ export default function BrainGL({ className }: BrainGLProps) {
       );
     };
 
-    /* --- program + static buffers --- */
+    /* --- programs + static buffers --- */
     let program: WebGLProgram | null = null;
+    let lineProgram: WebGLProgram | null = null;
     const buffers: WebGLBuffer[] = [];
+    type Binding = { loc: number; buf: WebGLBuffer; size: number };
+    const pointBindings: Binding[] = [];
+    const lineBindings: Binding[] = [];
+    let lineVertexCount = 0;
+    let lineLocs: {
+      proj: WebGLUniformLocation;
+      m01: WebGLUniformLocation;
+      m12: WebGLUniformLocation;
+      yaw: WebGLUniformLocation;
+      pitch: WebGLUniformLocation;
+      scale: WebGLUniformLocation;
+    } | null = null;
+    let dprNow = 1;
 
     const disposeGL = () => {
       if (ctx.isContextLost()) return;
       for (const b of buffers) ctx.deleteBuffer(b);
       if (program) ctx.deleteProgram(program);
+      if (lineProgram) ctx.deleteProgram(lineProgram);
     };
 
-    const init = (): UniformLocs | null => {
-      const vs = compileShader(ctx, ctx.VERTEX_SHADER, VERT_SRC);
+    const makeProgram = (vsSrc: string, fsSrc: string): WebGLProgram | null => {
+      const vs = compileShader(ctx, ctx.VERTEX_SHADER, vsSrc);
       if (!vs) return null;
-      const fs = compileShader(ctx, ctx.FRAGMENT_SHADER, FRAG_SRC);
+      const fs = compileShader(ctx, ctx.FRAGMENT_SHADER, fsSrc);
       if (!fs) {
         ctx.deleteShader(vs);
         return null;
@@ -373,35 +513,74 @@ export default function BrainGL({ className }: BrainGLProps) {
         ctx.deleteProgram(prog);
         return null;
       }
+      return prog;
+    };
+
+    const makeAttrib = (
+      prog: WebGLProgram,
+      name: string,
+      data: Float32Array,
+      size: number,
+      into: Binding[]
+    ): boolean => {
+      const loc = ctx.getAttribLocation(prog, name);
+      if (loc < 0) return false;
+      const buf = ctx.createBuffer();
+      if (!buf) return false;
+      buffers.push(buf);
+      ctx.bindBuffer(ctx.ARRAY_BUFFER, buf);
+      ctx.bufferData(ctx.ARRAY_BUFFER, data as BufferSource, ctx.STATIC_DRAW);
+      into.push({ loc, buf, size });
+      return true;
+    };
+
+    const bindAll = (bindings: Binding[]) => {
+      for (const b of bindings) {
+        ctx.bindBuffer(ctx.ARRAY_BUFFER, b.buf);
+        ctx.vertexAttribPointer(b.loc, b.size, ctx.FLOAT, false, 0, 0);
+        ctx.enableVertexAttribArray(b.loc);
+      }
+    };
+
+    const init = (): UniformLocs | null => {
+      const prog = makeProgram(VERT_SRC, FRAG_SRC);
+      if (!prog) return null;
       program = prog;
       ctx.useProgram(prog);
 
       const geo = getGeometry();
-      const attach = (
-        name: string,
-        data: Float32Array,
-        size: number
-      ): boolean => {
-        const loc = ctx.getAttribLocation(prog, name);
-        if (loc < 0) return false;
-        const buf = ctx.createBuffer();
-        if (!buf) return false;
-        buffers.push(buf);
-        ctx.bindBuffer(ctx.ARRAY_BUFFER, buf);
-        ctx.bufferData(ctx.ARRAY_BUFFER, data as BufferSource, ctx.STATIC_DRAW);
-        ctx.enableVertexAttribArray(loc);
-        ctx.vertexAttribPointer(loc, size, ctx.FLOAT, false, 0, 0);
-        return true;
-      };
       if (
-        !attach("a_pos0", geo.p0, 3) ||
-        !attach("a_pos1", geo.p1, 3) ||
-        !attach("a_pos2", geo.p2, 3) ||
-        !attach("a_seed", geo.seed, 1) ||
-        !attach("a_shade", geo.shade, 1)
+        !makeAttrib(prog, "a_pos0", geo.p0, 3, pointBindings) ||
+        !makeAttrib(prog, "a_pos1", geo.p1, 3, pointBindings) ||
+        !makeAttrib(prog, "a_pos2", geo.p2, 3, pointBindings) ||
+        !makeAttrib(prog, "a_seed", geo.seed, 1, pointBindings) ||
+        !makeAttrib(prog, "a_shade", geo.shade, 1, pointBindings)
       ) {
         return null;
       }
+
+      // synapse line program (optional — points still render if it fails)
+      const lp = makeProgram(LINE_VERT_SRC, LINE_FRAG_SRC);
+      if (lp) {
+        const okLines =
+          makeAttrib(lp, "a_p0", geo.lineP0, 3, lineBindings) &&
+          makeAttrib(lp, "a_p1", geo.lineP1, 3, lineBindings) &&
+          makeAttrib(lp, "a_p2", geo.lineP2, 3, lineBindings);
+        const lProj = ctx.getUniformLocation(lp, "u_proj");
+        const lM01 = ctx.getUniformLocation(lp, "u_m01");
+        const lM12 = ctx.getUniformLocation(lp, "u_m12");
+        const lYaw = ctx.getUniformLocation(lp, "u_yaw");
+        const lPitch = ctx.getUniformLocation(lp, "u_pitch");
+        const lScale = ctx.getUniformLocation(lp, "u_scale");
+        if (okLines && lProj && lM01 && lM12 && lYaw && lPitch && lScale) {
+          lineProgram = lp;
+          lineVertexCount = geo.lineVertexCount;
+          lineLocs = { proj: lProj, m01: lM01, m12: lM12, yaw: lYaw, pitch: lPitch, scale: lScale };
+        } else {
+          ctx.deleteProgram(lp);
+        }
+      }
+      ctx.useProgram(prog);
 
       const uProj = ctx.getUniformLocation(prog, "u_proj");
       const uM01 = ctx.getUniformLocation(prog, "u_m01");
@@ -483,6 +662,10 @@ export default function BrainGL({ className }: BrainGLProps) {
     let override = -1;
     let overrideScrollY = 0;
     let lastState = -1;
+    // idle showcase: at the top of the hero, auto-cycle states every 5s
+    let autoState = 0;
+    let autoT = 0;
+    let lastP = 0;
 
     const dispatchState = () => {
       const s = m12Target > 0.5 ? 2 : m01Target > 0.5 ? 1 : 0;
@@ -505,10 +688,17 @@ export default function BrainGL({ className }: BrainGLProps) {
       if (override >= 0 && Math.abs(window.scrollY - overrideScrollY) > 120) {
         override = -1;
       }
+      const p = clampN(-r.top / Math.max(1, r.height * 0.85), 0, 1);
+      lastP = p;
       if (override < 0) {
-        const p = clampN(-r.top / Math.max(1, r.height * 0.85), 0, 1);
-        m01Target = smoothstepN(0, 0.55, p);
-        m12Target = smoothstepN(0.55, 1, p);
+        if (p < 0.06) {
+          // idle at the top — the 5s auto-showcase drives the state
+          m01Target = autoState >= 1 ? 1 : 0;
+          m12Target = autoState >= 2 ? 1 : 0;
+        } else {
+          m01Target = smoothstepN(0, 0.55, p);
+          m12Target = smoothstepN(0.55, 1, p);
+        }
       } else {
         m01Target = override >= 1 ? 1 : 0;
         m12Target = override >= 2 ? 1 : 0;
@@ -537,6 +727,8 @@ export default function BrainGL({ className }: BrainGLProps) {
         override >= 0 ? override : m12Target > 0.5 ? 2 : m01Target > 0.5 ? 1 : 0;
       override = (cur + 1) % 3;
       overrideScrollY = window.scrollY;
+      autoState = override; // auto-showcase continues from the clicked state
+      autoT = 0;
       updateRect();
     };
     window.addEventListener("click", onClick);
@@ -544,6 +736,22 @@ export default function BrainGL({ className }: BrainGLProps) {
     const draw = (yaw: number, pitch: number, scale: number) => {
       ctx.clearColor(0, 0, 0, 0);
       ctx.clear(ctx.COLOR_BUFFER_BIT);
+      // synapses first (points render on top)
+      if (lineProgram && lineLocs && lineVertexCount > 0) {
+        ctx.useProgram(lineProgram);
+        bindAll(lineBindings);
+        ctx.uniformMatrix4fv(lineLocs.proj, false, projMat);
+        ctx.uniform1f(lineLocs.m01, m01);
+        ctx.uniform1f(lineLocs.m12, m12);
+        ctx.uniform1f(lineLocs.yaw, yaw);
+        ctx.uniform1f(lineLocs.pitch, pitch);
+        ctx.uniform1f(lineLocs.scale, scale);
+        ctx.drawArrays(ctx.LINES, 0, lineVertexCount);
+      }
+      ctx.useProgram(program);
+      bindAll(pointBindings);
+      ctx.uniformMatrix4fv(locs.proj, false, projMat);
+      ctx.uniform1f(locs.dpr, dprNow);
       ctx.uniform1f(locs.m01, m01);
       ctx.uniform1f(locs.m12, m12);
       ctx.uniform1f(locs.yaw, yaw);
@@ -575,8 +783,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       }
       ctx.viewport(0, 0, bw, bh);
       perspective(projMat, (34 * Math.PI) / 180, bw / bh, 0.1, 20);
-      ctx.uniformMatrix4fv(locs.proj, false, projMat);
-      ctx.uniform1f(locs.dpr, dpr);
+      dprNow = dpr;
       scrollDirty = true;
       if (reducedMotion) {
         updateRect();
@@ -597,6 +804,16 @@ export default function BrainGL({ className }: BrainGLProps) {
         updateRect();
       }
 
+      // 5s auto-showcase while idle at the top of the hero
+      autoT += dt;
+      if (autoT >= 5) {
+        autoT = 0;
+        if (override < 0 && lastP < 0.06) {
+          autoState = (autoState + 1) % 3;
+          updateRect();
+        }
+      }
+
       if (coarse) {
         // No cursor influence on touch devices — gentle autonomous drift.
         yawTarget = Math.sin(t * 0.21) * 0.07;
@@ -605,8 +822,8 @@ export default function BrainGL({ className }: BrainGLProps) {
       } else if (hasPointer) {
         const vw = window.innerWidth || 1;
         const vh = window.innerHeight || 1;
-        yawTarget = clampN((px / vw - 0.5) * 0.32, -0.15, 0.15);
-        pitchTarget = clampN((py / vh - 0.5) * 0.32, -0.15, 0.15);
+        yawTarget = clampN((px / vw - 0.5) * 0.5, -0.22, 0.22);
+        pitchTarget = clampN((py / vh - 0.5) * 0.5, -0.22, 0.22);
         const ddx = px - centerX;
         const ddy = py - centerY;
         pointerTarget = Math.max(
@@ -617,9 +834,9 @@ export default function BrainGL({ className }: BrainGLProps) {
 
       m01 += (m01Target - m01) * 0.16;
       m12 += (m12Target - m12) * 0.16;
-      yawOff += (yawTarget - yawOff) * 0.1;
-      pitchOff += (pitchTarget - pitchOff) * 0.1;
-      pointerS += (pointerTarget - pointerS) * 0.12;
+      yawOff += (yawTarget - yawOff) * 0.18;
+      pitchOff += (pitchTarget - pitchOff) * 0.18;
+      pointerS += (pointerTarget - pointerS) * 0.16;
 
       // machine state settles: rotation slows to a near-stop
       rot += dt * 0.05 * (1 - m12 * 0.72);

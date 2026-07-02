@@ -33,13 +33,13 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    const nodeColour = "#AC79FD";
-    const nodeFills = ["#BF98FE", "#CEB0FE", "#DDC8FE", "#EBDFFF"];
-    const edgeColour = "#DAC3FE";
-    const labelColour = "#7649BE";
-    const frameColour = "#1A1A1A";
-    const captionBgColour = "#1A1A1A";
-    const captionColour = "#FFFEFB";
+    const nodeColour = "rgba(151, 71, 255, 0.9)";
+    const nodeFills = ["#b57bff", "#c9b6ff", "#e0d4ff", "#efe8ff"];
+    const edgeColour = "rgba(151, 71, 255, 0.22)";
+    const labelColour = "#554488";
+    const frameColour = "#ded6f0";
+    const captionBgColour = "#302055";
+    const captionColour = "#fcfbff";
     const captionText = "business puzzle solving";
     const cornerCut = 14;
     const labelPool = [
@@ -154,9 +154,9 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
       const lw = Math.max(1, Math.min(width, height) / 600);
       const cut = Math.min(cornerCut, Math.min(width, height) / 12);
       ctx!.save();
+      // clean cut-corner hairline + corner ticks (matches the site's panels)
       ctx!.strokeStyle = frameColour;
       ctx!.lineWidth = lw;
-      ctx!.setLineDash([6, 5]);
       const x0 = pad, y0 = pad;
       const x1 = width - pad, y1 = height - pad;
       ctx!.beginPath();
@@ -170,23 +170,47 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
       ctx!.lineTo(x0, y0 + cut);
       ctx!.closePath();
       ctx!.stroke();
-      ctx!.setLineDash([]);
+      // accent corner brackets
+      ctx!.strokeStyle = "rgba(151, 71, 255, 0.55)";
+      ctx!.lineWidth = lw * 1.4;
+      const arm = Math.min(14, cut);
+      ctx!.beginPath();
+      ctx!.moveTo(x0, y0 + cut + arm);
+      ctx!.lineTo(x0, y0 + cut);
+      ctx!.lineTo(x0 + cut, y0);
+      ctx!.lineTo(x0 + cut + arm, y0);
+      ctx!.moveTo(x1 - cut - arm, y1);
+      ctx!.lineTo(x1 - cut, y1);
+      ctx!.lineTo(x1, y1 - cut);
+      ctx!.lineTo(x1, y1 - cut - arm);
+      ctx!.stroke();
 
       const capFontPx = Math.max(10, Math.min(width, height) / 50);
       ctx!.font = capFontPx.toFixed(0) + "px ui-monospace, 'SF Mono', Menlo, Consolas, monospace";
       const tw = ctx!.measureText(captionText).width;
-      const padX = capFontPx * 0.7;
-      const padY = capFontPx * 0.35;
-      const boxW = tw + padX * 2;
+      const padX = capFontPx * 0.8;
+      const padY = capFontPx * 0.4;
+      const boxW = tw + padX * 2 + capFontPx * 1.1;
       const boxH = capFontPx + padY * 2;
-      const boxX = x1 - boxW - 6;
-      const boxY = y1 - boxH - 6;
+      const boxX = x1 - boxW - 8;
+      const boxY = y1 - boxH - 8;
       ctx!.fillStyle = captionBgColour;
-      ctx!.fillRect(boxX, boxY, boxW, boxH);
+      if (typeof ctx!.roundRect === "function") {
+        ctx!.beginPath();
+        ctx!.roundRect(boxX, boxY, boxW, boxH, boxH / 2);
+        ctx!.fill();
+      } else {
+        ctx!.fillRect(boxX, boxY, boxW, boxH);
+      }
+      // live dot
+      ctx!.fillStyle = "#b57bff";
+      ctx!.beginPath();
+      ctx!.arc(boxX + padX * 0.7 + capFontPx * 0.3, boxY + boxH / 2, capFontPx * 0.22, 0, Math.PI * 2);
+      ctx!.fill();
       ctx!.fillStyle = captionColour;
-      ctx!.textAlign = "center";
+      ctx!.textAlign = "left";
       ctx!.textBaseline = "middle";
-      ctx!.fillText(captionText, boxX + boxW / 2, boxY + boxH / 2 + capFontPx * 0.05);
+      ctx!.fillText(captionText, boxX + padX * 0.7 + capFontPx * 0.85, boxY + boxH / 2 + capFontPx * 0.05);
       ctx!.restore();
     }
 
@@ -251,10 +275,13 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
         ctx!.fillStyle = node.fill;
         ctx!.strokeStyle = nodeColour;
         ctx!.lineWidth = nodeLW;
+        ctx!.shadowColor = "rgba(151, 71, 255, 0.5)";
+        ctx!.shadowBlur = r * 1.6;
         ctx!.beginPath();
         ctx!.arc(cx + node.x * s, cy + node.y * s, r, 0, Math.PI * 2);
         ctx!.fill();
         ctx!.stroke();
+        ctx!.shadowBlur = 0;
         if (grow > 0.15) {
           const fontPx = Math.max(8, r * 0.55);
           ctx!.font = "500 " + fontPx.toFixed(0) + "px ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif";
