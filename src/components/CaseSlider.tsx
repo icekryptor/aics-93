@@ -158,25 +158,44 @@ export default function CaseSlider() {
         </div>
       </header>
 
-      {/* stage */}
-      <div
-        ref={stageRef}
-        className="relative z-[1] flex-1 select-none"
-        style={{ touchAction: "pan-y" }}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-        onClickCapture={onClickCapture}
-      >
+      {/* framed stage — cut-corner panel, neighbours peek at the edges */}
+      <div className="relative z-[1] flex-1 px-3 py-4 sm:px-6 lg:px-10 lg:py-5">
         <div
-          className="flex h-full"
-          style={{
-            transform: `translateX(calc(${-index * 100}% + ${offset}px))`,
-            transition: trackTransition,
-            willChange: "transform",
-          }}
+          className="relative h-full p-px"
+          style={{ clipPath: CLIP, background: "rgba(151,71,255,0.32)" }}
         >
+          <div
+            className="relative h-full overflow-hidden"
+            style={{ clipPath: CLIP, background: "rgba(23, 16, 41, 0.55)" }}
+          >
+            {/* corner accents */}
+            <span className="pointer-events-none absolute left-3 top-3 z-10 size-3 border-l border-t border-[rgba(151,71,255,0.6)]" aria-hidden />
+            <span className="pointer-events-none absolute bottom-3 right-3 z-10 size-3 border-b border-r border-[rgba(151,71,255,0.6)]" aria-hidden />
+            <span
+              className="tech-label pointer-events-none absolute right-4 top-3 z-10 hidden text-[9px] text-[#554488] lg:block"
+              aria-hidden
+            >
+              aics · case files
+            </span>
+
+            <div
+              ref={stageRef}
+              className="relative h-full select-none"
+              style={{ touchAction: "pan-y" }}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
+              onClickCapture={onClickCapture}
+            >
+              <div
+                className="flex h-full"
+                style={{
+                  transform: `translateX(calc(6% - ${index} * 88% + ${offset}px))`,
+                  transition: trackTransition,
+                  willChange: "transform",
+                }}
+              >
           {slides.map((s, i) => {
             const active = i === index;
             const isHttp = Boolean(s.link && s.link.startsWith("http"));
@@ -186,7 +205,9 @@ export default function CaseSlider() {
                 inert={!active}
                 aria-hidden={!active}
                 aria-label={`кейс ${pad(i + 1)}: ${s.name}`}
-                className="grid w-full min-w-full shrink-0 grid-cols-1 items-center gap-8 px-6 py-8 lg:grid-cols-2 lg:gap-14 lg:px-14 lg:py-6"
+                className={`grid w-[88%] min-w-[88%] shrink-0 grid-cols-1 items-center gap-8 px-6 py-8 transition-[opacity,transform] duration-700 lg:grid-cols-2 lg:gap-12 lg:px-12 lg:py-6 ${
+                  active ? "opacity-100 scale-100" : "opacity-35 scale-[0.96]"
+                }`}
               >
                 {/* LEFT — copy */}
                 <div
@@ -301,6 +322,9 @@ export default function CaseSlider() {
               </article>
             );
           })}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
