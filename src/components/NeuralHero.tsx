@@ -140,9 +140,16 @@ export default function NeuralHero() {
             </div>
           </div>
 
-          {/* center: the living brain */}
+          {/* center: the living brain — shifted 20px left; the canvas overflows
+              its cell vertically so the cloud is never cropped (overlay allowed).
+              Vertical growth doesn't change the brain size — its scale keys off
+              the smaller (width) dimension. */}
           <div className="relative order-first h-[360px] sm:h-[440px] lg:order-none lg:h-full lg:min-h-[560px] lg:-mx-12 xl:-mx-16">
-            <div className="pointer-events-none absolute inset-0" aria-hidden>
+            <div
+              className="pointer-events-none absolute -inset-y-12 inset-x-0 lg:-inset-y-20"
+              style={{ transform: "translateX(-20px)" }}
+              aria-hidden
+            >
               <BrainGL className="h-full w-full" />
             </div>
           </div>
