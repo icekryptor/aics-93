@@ -276,24 +276,25 @@ void main() {
   float a = 0.26 + 0.5 * v_near;
   if (v_seed > 0.985) {
     col = ink;
-    a = 0.92;
+    a = 0.78;
   } else if (v_seed > 0.9) {
     col = mid;
-    a = 0.72;
+    a = 0.58;
   }
   // dim core / bright cortex (uniform in machine state via v_shade→1)
   a *= mix(0.35, 1.0, v_shade);
   // glowing silhouette outline — makes the brain contour read instantly
-  a *= 1.0 + v_rim * 1.6;
+  a *= 1.0 + v_rim * 1.1;
   col = mix(col, soft, clamp(v_rim, 0.0, 1.0) * 0.5);
   // MACHINE: lattice points blink like chip registers
   float reg = fract(v_seed * 61.7);
   float regMask = step(0.6, reg);
   float blinkOn = step(0.5, fract(u_time * (0.8 + reg * 2.8) + reg * 17.0));
-  a *= mix(1.0, mix(0.3, 1.25, blinkOn), v_machine * regMask);
+  a *= mix(1.0, mix(0.3, 1.1, blinkOn), v_machine * regMask);
   // the hottest registers flash constructive lime
   col = mix(col, lime, v_machine * step(0.94, reg) * blinkOn * 0.85);
   a *= fall * (1.0 + 0.3 * u_pointer);
+  a *= 0.74; // global dim — the brain should glow, not blind
   gl_FragColor = vec4(col * a, a);
 }
 `;
@@ -334,7 +335,7 @@ void main() {
   vec3 deep = vec3(0.592, 0.278, 1.0);
   vec3 soft = vec3(0.788, 0.714, 1.0);
   vec3 col = mix(deep, soft, v_near);
-  float a = (0.05 + 0.11 * v_near) * (1.0 - v_machine * 0.7);
+  float a = (0.04 + 0.09 * v_near) * (1.0 - v_machine * 0.7);
   gl_FragColor = vec4(col * a, a);
 }
 `;
@@ -767,7 +768,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       m01 = 1;
       m12 = 0;
       pointerS = 0;
-      draw(0.55, -0.18, 0.82);
+      draw(0.55, -0.18, 0.94);
     };
 
     const resize = () => {
@@ -841,7 +842,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       // machine state settles: rotation slows to a near-stop
       rot += dt * 0.05 * (1 - m12 * 0.72);
       const breathe = 1 + 0.018 * Math.sin(t * 0.85);
-      draw(rot + yawOff, -0.18 + pitchOff, breathe * 0.82);
+      draw(rot + yawOff, -0.18 + pitchOff, breathe * 0.94);
 
       raf = requestAnimationFrame(frame);
     };

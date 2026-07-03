@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { Unbounded } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
-const unbounded = Unbounded({
+// Self-hosted variable Unbounded (latin + cyrillic) — no network at build time.
+const unbounded = localFont({
   variable: "--font-unbounded",
-  subsets: ["latin", "cyrillic"],
-  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
+  src: [{ path: "./fonts/Unbounded-Variable.ttf", weight: "300 700", style: "normal" }],
 });
 
 // Neue Haas Grotesk Display — the original site's primary typeface.

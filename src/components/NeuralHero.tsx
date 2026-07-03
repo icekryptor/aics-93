@@ -141,7 +141,7 @@ export default function NeuralHero() {
           </div>
 
           {/* center: the living brain */}
-          <div className="relative order-first h-[340px] sm:h-[420px] lg:order-none lg:h-full lg:min-h-[520px]">
+          <div className="relative order-first h-[360px] sm:h-[440px] lg:order-none lg:h-full lg:min-h-[560px] lg:-mx-12 xl:-mx-16">
             <div className="pointer-events-none absolute inset-0" aria-hidden>
               <BrainGL className="h-full w-full" />
             </div>
