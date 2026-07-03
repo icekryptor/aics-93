@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllPosts, formatDate } from "@/lib/blog";
+import GenerativeCover from "@/components/blog/GenerativeCover";
 
 // Compact journal teaser on the main page — makes the blog discoverable.
 export default function BlogTeaser() {
@@ -27,14 +28,10 @@ export default function BlogTeaser() {
           {latest.map((p) => (
             <Link key={p.slug} href={`/blog/${p.slug}`} className="group block">
               <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-bg transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_45%,transparent)]">
-                <div
-                  className="relative h-28"
-                  style={{
-                    background: `radial-gradient(120% 120% at 75% 15%, ${p.accent}, color-mix(in srgb, ${p.accent} 22%, #302055) 60%, #171029 100%)`,
-                  }}
-                >
+                <div className="relative h-28 overflow-hidden">
+                  <GenerativeCover seed={p.slug} accent={p.accent} className="absolute inset-0" />
                   <span
-                    className="tech-label absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[9px]"
+                    className="tech-label absolute left-3 top-3 z-10 rounded-full bg-white/90 px-2.5 py-1 text-[9px]"
                     style={{ color: p.accent }}
                   >
                     {p.tag}

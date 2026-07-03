@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPost, formatDate } from "@/lib/blog";
 import MarkdownLite from "@/components/blog/MarkdownLite";
+import GenerativeCover from "@/components/blog/GenerativeCover";
 
 export function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -38,15 +39,11 @@ export default async function BlogPostPage({
   return (
     <article className="mx-auto max-w-[1180px] px-4 pb-16 sm:px-6">
       {/* cover */}
-      <div
-        className="relative mt-6 flex min-h-[300px] items-end overflow-hidden rounded-[24px] p-7 sm:p-10 lg:min-h-[380px]"
-        style={{
-          background: `radial-gradient(100% 120% at 85% 5%, ${post.accent}, color-mix(in srgb, ${post.accent} 22%, #302055) 55%, #171029 100%)`,
-        }}
-      >
+      <div className="relative mt-6 flex min-h-[300px] items-end overflow-hidden rounded-[24px] p-7 sm:p-10 lg:min-h-[380px]">
+        <GenerativeCover seed={post.slug} accent={post.accent} className="absolute inset-0" density={1.15} />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.5]"
+          className="pointer-events-none absolute inset-0 opacity-[0.35]"
           style={{
             backgroundImage:
               "linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px)",
