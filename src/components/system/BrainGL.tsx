@@ -127,6 +127,27 @@ function buildGeometry(): Geometry {
     p2[i * 3 + 2] = (iz / (GRID_Z - 1) - 0.5) * 2.15;
   }
 
+  /* --- recenter: x (and z) centroid = 0 for every state, so the cloud sits
+     dead-centre and yaw rotation never swings it sideways. y keeps its small
+     artistic offset. --- */
+  const recenterXZ = (arr: Float32Array) => {
+    let sx = 0;
+    let sz = 0;
+    for (let i = 0; i < n; i++) {
+      sx += arr[i * 3];
+      sz += arr[i * 3 + 2];
+    }
+    const mx = sx / n;
+    const mz = sz / n;
+    for (let i = 0; i < n; i++) {
+      arr[i * 3] -= mx;
+      arr[i * 3 + 2] -= mz;
+    }
+  };
+  recenterXZ(p0);
+  recenterXZ(p1);
+  recenterXZ(p2);
+
   /* --- synapses: connect near cortex neighbours (deterministic) --- */
   const CELLC = 0.15; // neighbour search radius / hash cell
   const buckets = new Map<string, number[]>();
@@ -768,7 +789,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       m01 = 1;
       m12 = 0;
       pointerS = 0;
-      draw(0.55, -0.18, 0.94);
+      draw(0.55, -0.18, 1.05);
     };
 
     const resize = () => {
@@ -842,7 +863,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       // machine state settles: rotation slows to a near-stop
       rot += dt * 0.05 * (1 - m12 * 0.72);
       const breathe = 1 + 0.018 * Math.sin(t * 0.85);
-      draw(rot + yawOff, -0.18 + pitchOff, breathe * 0.94);
+      draw(rot + yawOff, -0.18 + pitchOff, breathe * 1.05);
 
       raf = requestAnimationFrame(frame);
     };
