@@ -3,6 +3,7 @@ import { Intro, Frameworks, Reasons, SalesEngine, About } from "@/components/Sec
 import AiProcess from "@/components/AiProcess";
 import CaseSlider from "@/components/CaseSlider";
 import ContactConsole from "@/components/ContactConsole";
+import BlogTeaser from "@/components/BlogTeaser";
 import Footer from "@/components/Footer";
 import SignalTransition from "@/components/system/SignalTransition";
 import DnaHelix from "@/components/system/DnaHelix";
@@ -45,8 +46,9 @@ export default function Experience() {
         <About />
         <CaseSlider />
 
-        {/* ACT V — INVITATION */}
-        <SignalTransition id="act-origin" index="05" label="// приглашение" compact />
+        {/* ACT V — JOURNAL + INVITATION */}
+        <SignalTransition id="act-origin" index="05" label="// журнал · приглашение" compact />
+        <BlogTeaser />
         <ContactConsole />
       </main>
       <Footer />

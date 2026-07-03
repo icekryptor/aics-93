@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { legal } from "@/lib/content";
 
@@ -92,6 +93,12 @@ export default function SystemNav() {
                 </a>
               );
             })}
+            <Link
+              href="/blog"
+              className="tech-label text-[11px] text-ink-soft transition-colors hover:text-ink"
+            >
+              <span className="mr-1 opacity-40">06</span>журнал
+            </Link>
           </nav>
 
           {/* right: actions */}
@@ -168,6 +175,15 @@ export default function SystemNav() {
                   </li>
                 );
               })}
+              <li>
+                <Link
+                  href="/blog"
+                  onClick={() => setOpen(false)}
+                  className="tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[13px] text-ink-soft transition-colors hover:bg-ink/[0.04]"
+                >
+                  <span className="opacity-40">06</span>журнал
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>

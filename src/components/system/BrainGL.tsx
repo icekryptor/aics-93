@@ -789,7 +789,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       m01 = 1;
       m12 = 0;
       pointerS = 0;
-      draw(0.55, -0.18, 1.0);
+      draw(0.55, -0.18, 0.92);
     };
 
     const resize = () => {
@@ -863,7 +863,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       // machine state settles: rotation slows to a near-stop
       rot += dt * 0.05 * (1 - m12 * 0.72);
       const breathe = 1 + 0.018 * Math.sin(t * 0.85);
-      draw(rot + yawOff, -0.18 + pitchOff, breathe * 1.0);
+      draw(rot + yawOff, -0.18 + pitchOff, breathe * 0.92);
 
       raf = requestAnimationFrame(frame);
     };
