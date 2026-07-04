@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import JsonLd from "@/components/seo/JsonLd";
+import YandexMetrika from "@/components/analytics/YandexMetrika";
 import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION, AUTHOR } from "@/lib/site";
 
 // Self-hosted variable Unbounded (latin + cyrillic) — no network at build time.
@@ -139,6 +140,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col overflow-x-hidden">
         <JsonLd data={siteJsonLd} />
+        <YandexMetrika />
         {children}
       </body>
     </html>
