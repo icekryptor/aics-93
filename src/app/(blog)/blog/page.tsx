@@ -2,12 +2,26 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts, formatDate } from "@/lib/blog";
 import GenerativeCover from "@/components/blog/GenerativeCover";
+import JsonLd from "@/components/seo/JsonLd";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Журнал AICS-93 — бренд, ИИ в процессах, дизайн на данных",
   description:
     "Заметки Василия Аистова о брендинге, внедрении ИИ в процессы компаний и дизайне, который отстраивает.",
-  alternates: { canonical: "/blog" },
+  alternates: {
+    canonical: "/blog",
+    types: { "application/rss+xml": `${SITE_URL}/feed.xml` },
+  },
+  openGraph: {
+    type: "website",
+    url: "/blog",
+    siteName: SITE_NAME,
+    title: "Журнал AICS-93",
+    description:
+      "Заметки о брендинге, внедрении ИИ в процессы компаний и дизайне, который отстраивает.",
+  },
+  twitter: { card: "summary_large_image", title: "Журнал AICS-93" },
 };
 
 const CUT: React.CSSProperties = {
@@ -19,8 +33,39 @@ export default function BlogIndex() {
   const all = getAllPosts();
   const [lead, ...rest] = all;
 
+  const blogJsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "@id": `${SITE_URL}/blog#blog`,
+      name: "Журнал AICS-93",
+      description:
+        "Заметки Василия Аистова о брендинге, внедрении ИИ в процессы компаний и дизайне.",
+      url: `${SITE_URL}/blog`,
+      inLanguage: "ru-RU",
+      publisher: { "@id": `${SITE_URL}/#person` },
+      blogPost: all.map((p) => ({
+        "@type": "BlogPosting",
+        headline: p.title,
+        description: p.excerpt,
+        url: `${SITE_URL}/blog/${p.slug}`,
+        datePublished: new Date(p.date).toISOString(),
+        author: { "@id": `${SITE_URL}/#person` },
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Главная", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Журнал", item: `${SITE_URL}/blog` },
+      ],
+    },
+  ];
+
   return (
     <div className="mx-auto max-w-[1180px] px-4 py-12 sm:px-6 lg:py-16">
+      <JsonLd data={blogJsonLd} />
       {/* header */}
       <div className="flex items-end justify-between border-b border-line pb-6">
         <div>

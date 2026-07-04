@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getAllPosts, getPost, formatDate } from "@/lib/blog";
 import MarkdownLite from "@/components/blog/MarkdownLite";
 import GenerativeCover from "@/components/blog/GenerativeCover";
+import JsonLd from "@/components/seo/JsonLd";
+import { SITE_URL, SITE_NAME, AUTHOR } from "@/lib/site";
 
 export function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -17,11 +19,27 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return {};
+  const canonical = `/blog/${post.slug}`;
   return {
     title: `${post.title} — Журнал AICS-93`,
     description: post.excerpt,
-    alternates: { canonical: `/blog/${post.slug}` },
-    openGraph: { type: "article", title: post.title, description: post.excerpt },
+    keywords: [post.tag, "брендинг", "дизайн", "Василий Аистов"],
+    authors: [{ name: AUTHOR.name, url: SITE_URL }],
+    alternates: { canonical },
+    openGraph: {
+      type: "article",
+      url: canonical,
+      title: post.title,
+      description: post.excerpt,
+      siteName: SITE_NAME,
+      locale: "ru_RU",
+      publishedTime: new Date(post.date).toISOString(),
+      modifiedTime: new Date(post.date).toISOString(),
+      authors: [AUTHOR.name],
+      section: post.tag,
+      tags: [post.tag],
+    },
+    twitter: { card: "summary_large_image", title: post.title, description: post.excerpt },
   };
 }
 
@@ -36,8 +54,44 @@ export default async function BlogPostPage({
 
   const others = getAllPosts().filter((p) => p.slug !== post.slug).slice(0, 2);
 
+  const canonical = `${SITE_URL}/blog/${post.slug}`;
+  const published = new Date(post.date).toISOString();
+  const articleJsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "@id": `${canonical}#article`,
+      headline: post.title,
+      description: post.excerpt,
+      inLanguage: "ru-RU",
+      datePublished: published,
+      dateModified: published,
+      wordCount: post.body.split(/\s+/).length,
+      articleSection: post.tag,
+      keywords: post.tag,
+      // Per-post OG route is content-hashed by Next (not a stable URL); the
+      // og:image meta tag carries the exact per-post image. Structured-data
+      // image points at the stable site OG so it never 404s.
+      image: `${SITE_URL}/opengraph-image`,
+      url: canonical,
+      mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+      author: { "@id": `${SITE_URL}/#person` },
+      publisher: { "@id": `${SITE_URL}/#person` },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Главная", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Журнал", item: `${SITE_URL}/blog` },
+        { "@type": "ListItem", position: 3, name: post.title, item: canonical },
+      ],
+    },
+  ];
+
   return (
     <article className="mx-auto max-w-[1180px] px-4 pb-16 sm:px-6">
+      <JsonLd data={articleJsonLd} />
       {/* cover */}
       <div className="relative mt-6 flex min-h-[300px] items-end overflow-hidden rounded-[24px] p-7 sm:p-10 lg:min-h-[380px]">
         <GenerativeCover seed={post.slug} accent={post.accent} className="absolute inset-0" density={1.15} />
