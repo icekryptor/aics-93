@@ -3,11 +3,11 @@
 import Script from "next/script";
 import { Suspense, useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { YM_ID } from "@/lib/metrika";
 
 // Яндекс.Метрика. Счётчик + отслеживание виртуальных переходов (SPA): при
 // клиентской навигации между роутами Метрика сама хит не шлёт, поэтому шлём
 // вручную на смену pathname/query.
-const YM_ID = 110384489;
 
 declare global {
   interface Window {

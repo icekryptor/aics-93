@@ -3,6 +3,7 @@
 import { useState } from "react";
 import CubeMorph from "./system/CubeMorph";
 import { projectTypes } from "@/lib/content";
+import { reachGoal } from "@/lib/metrika";
 
 const CUT: React.CSSProperties = {
   clipPath:
@@ -27,6 +28,7 @@ export default function ContactConsole() {
     e.preventDefault();
     // STUB: backend not wired yet. Replace with POST /api/lead → Telegram.
     console.log("[lead]", { ...form, projectTypes: selected });
+    reachGoal("lead", { source: "contact_console", modules: selected.length });
     setDone(true);
   };
 

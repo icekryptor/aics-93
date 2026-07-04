@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { projectTypes, assets } from "@/lib/content";
+import { reachGoal } from "@/lib/metrika";
 
 export default function QuoteForm() {
   const [done, setDone] = useState(false);
@@ -23,6 +24,7 @@ export default function QuoteForm() {
     e.preventDefault();
     // STUB: backend not wired yet. Replace with POST /api/lead → Telegram.
     console.log("[lead]", { ...form, projectTypes: selected });
+    reachGoal("lead", { source: "quote_form", modules: selected.length });
     setDone(true);
   };
 
