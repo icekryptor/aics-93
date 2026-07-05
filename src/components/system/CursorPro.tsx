@@ -445,7 +445,7 @@ function CursorProInner() {
         </div>
       </div>
 
-      {/* X/Y instrument readout */}
+      {/* X/Y instrument readout — stacked, system monospace */}
       <div
         ref={readoutRef}
         className="hud"
@@ -453,23 +453,30 @@ function CursorProInner() {
           position: "fixed",
           top: 0,
           left: 0,
-          fontFamily: "var(--font-display, ui-monospace, monospace)",
-          fontSize: "9px",
-          letterSpacing: "0.12em",
-          lineHeight: 1.35,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          rowGap: "1px",
+          fontFamily:
+            "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace",
+          fontSize: "7.5px",
+          letterSpacing: "0.06em",
+          lineHeight: 1.15,
+          fontVariantNumeric: "tabular-nums",
           color: "var(--color-signal-2, #b57bff)",
           textShadow: "0 0 6px rgba(181, 123, 255,0.35)",
           whiteSpace: "nowrap",
           willChange: "transform",
         }}
       >
-        <span style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}>X</span>
-        &nbsp;
-        <span ref={readoutXRef}>0000</span>
-        &nbsp;&nbsp;
-        <span style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}>Y</span>
-        &nbsp;
-        <span ref={readoutYRef}>0000</span>
+        <span style={{ display: "flex", gap: "4px" }}>
+          <span style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}>X</span>
+          <span ref={readoutXRef}>0000</span>
+        </span>
+        <span style={{ display: "flex", gap: "4px" }}>
+          <span style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}>Y</span>
+          <span ref={readoutYRef}>0000</span>
+        </span>
       </div>
 
       {/* Lock-on label */}

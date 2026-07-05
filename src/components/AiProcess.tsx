@@ -1,208 +1,25 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
+import { PROCESS_VIDEO } from "@/lib/media";
 
 /* ------------------------------------------------------------------ *
  * AiProcess — dark "runtime" section dramatizing AI woven into a
- * company's processes. Interactive SVG schematic: a central AI core
- * routes a violet signal out to 6 department nodes in sequence.
+ * company's processes. The centrepiece is a looping render of a
+ * central processor-core routing signals out to peripheral nodes,
+ * framed in a cut-corner HUD panel (poster image as fallback).
  * Self-contained client component. No external deps.
  * ------------------------------------------------------------------ */
 
-type Dept = {
-  id: string;
-  label: string;
-  code: string;
-  /** angle in degrees, 0 = right, clockwise */
-  angle: number;
+// 4-corner chamfer matching the DS "chip" language.
+const FRAME_CUT: React.CSSProperties = {
+  clipPath:
+    "polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px)",
 };
 
-const VIEW_W = 900;
-const VIEW_H = 620;
-const CX = VIEW_W / 2;
-const CY = VIEW_H / 2;
-const RING_R = 232; // ring radius (node centers)
-
-const DEPARTMENTS: readonly Dept[] = [
-  { id: "mkt", label: "маркетинг", code: "NODE.01", angle: -90 },
-  { id: "content", label: "контент", code: "NODE.02", angle: -30 },
-  { id: "sales", label: "продажи", code: "NODE.03", angle: 30 },
-  { id: "analytics", label: "аналитика", code: "NODE.04", angle: 90 },
-  { id: "support", label: "поддержка", code: "NODE.05", angle: 150 },
-  { id: "hire", label: "найм", code: "NODE.06", angle: 210 },
-] as const;
-
-const NODE_W = 150;
-const NODE_H = 62;
-const CUT = 12; // cut-corner size for chip rects
-
-type Pt = { x: number; y: number };
-
-function polar(cx: number, cy: number, r: number, deg: number): Pt {
-  const rad = (deg * Math.PI) / 180;
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-}
-
-/** cut-corner (chip) rect path, top-left & bottom-right chamfered */
-function chipPath(x: number, y: number, w: number, h: number, c: number): string {
-  return [
-    `M ${x + c} ${y}`,
-    `L ${x + w} ${y}`,
-    `L ${x + w} ${y + h - c}`,
-    `L ${x + w - c} ${y + h}`,
-    `L ${x} ${y + h}`,
-    `L ${x} ${y + c}`,
-    "Z",
-  ].join(" ");
-}
-
 export default function AiProcess() {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const [mounted, setMounted] = useState(false);
-  const [reduced, setReduced] = useState(false);
-  const [active, setActive] = useState(false); // section in view
-  const [energized, setEnergized] = useState<boolean[]>(
-    () => DEPARTMENTS.map(() => false),
-  );
-  const [coreLive, setCoreLive] = useState(false);
-  const [pulseKey, setPulseKey] = useState(0);
-
-  const timers = useRef<number[]>([]);
-  const loopId = useRef<number | null>(null);
-
-  const clearTimers = useCallback(() => {
-    for (const t of timers.current) window.clearTimeout(t);
-    timers.current = [];
-    if (loopId.current !== null) {
-      window.clearTimeout(loopId.current);
-      loopId.current = null;
-    }
-  }, []);
-
-  // mount + reduced-motion detection (client only)
-  useEffect(() => {
-    setMounted(true);
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const apply = () => setReduced(mq.matches);
-    apply();
-    mq.addEventListener?.("change", apply);
-    return () => mq.removeEventListener?.("change", apply);
-  }, []);
-
-  // observe section visibility
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    if (typeof IntersectionObserver === "undefined") {
-      setActive(true);
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) setActive(e.isIntersecting);
-      },
-      { threshold: 0.28 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  // routing sequence
-  const runSequence = useCallback(() => {
-    clearTimers();
-    setCoreLive(false);
-    setEnergized(DEPARTMENTS.map(() => false));
-
-    // core spins up
-    timers.current.push(
-      window.setTimeout(() => setCoreLive(true), 240),
-    );
-
-    const STEP = 560; // ms between department arrivals
-    const START = 700; // when first arrival lands
-    DEPARTMENTS.forEach((_, i) => {
-      timers.current.push(
-        window.setTimeout(() => {
-          setEnergized((prev) => {
-            const next = prev.slice();
-            next[i] = true;
-            return next;
-          });
-        }, START + i * STEP),
-      );
-    });
-
-    // loop subtly: re-pulse traces after a beat (nodes stay online)
-    const total = START + DEPARTMENTS.length * STEP + 2600;
-    loopId.current = window.setTimeout(() => {
-      setPulseKey((k) => k + 1);
-      loopId.current = window.setTimeout(function again() {
-        setPulseKey((k) => k + 1);
-        loopId.current = window.setTimeout(again, 4200);
-      }, 4200);
-    }, total);
-  }, [clearTimers]);
-
-  // drive animation based on visibility + motion pref
-  useEffect(() => {
-    if (!mounted) return;
-
-    if (reduced) {
-      // static final state — everything online, no loop
-      clearTimers();
-      setCoreLive(true);
-      setEnergized(DEPARTMENTS.map(() => true));
-      return;
-    }
-
-    if (active) {
-      const onVis = () => {
-        if (document.hidden) clearTimers();
-        else runSequence();
-      };
-      document.addEventListener("visibilitychange", onVis);
-      if (!document.hidden) runSequence();
-      return () => {
-        document.removeEventListener("visibilitychange", onVis);
-        clearTimers();
-      };
-    }
-
-    // out of view: reset to dormant so re-entry replays
-    clearTimers();
-    setCoreLive(false);
-    setEnergized(DEPARTMENTS.map(() => false));
-    return;
-  }, [mounted, reduced, active, runSequence, clearTimers]);
-
-  useEffect(() => clearTimers, [clearTimers]);
-
-  // precompute geometry
-  const nodes = useMemo<NodeGeom[]>(() => {
-    return DEPARTMENTS.map((d) => {
-      const center = polar(CX, CY, RING_R, d.angle);
-      // trace endpoint sits on the node edge facing the core
-      const edge = polar(CX, CY, RING_R - NODE_W / 2 - 6, d.angle);
-      // core exit point
-      const start = polar(CX, CY, 74, d.angle);
-      const dx = edge.x - start.x;
-      const dy = edge.y - start.y;
-      const len = Math.hypot(dx, dy);
-      return { dept: d, center, edge, start, len };
-    });
-  }, []);
-
-  const rootStatic = mounted && reduced;
-
   return (
     <section
-      ref={sectionRef}
       id="ai"
       className="runtime relative isolate overflow-hidden"
       style={{
@@ -219,10 +36,8 @@ export default function AiProcess() {
         className="runtime-grid pointer-events-none absolute inset-0 opacity-[0.5]"
         aria-hidden="true"
         style={{
-          maskImage:
-            "radial-gradient(120% 80% at 50% 30%, #000 30%, transparent 92%)",
-          WebkitMaskImage:
-            "radial-gradient(120% 80% at 50% 30%, #000 30%, transparent 92%)",
+          maskImage: "radial-gradient(120% 80% at 50% 30%, #000 30%, transparent 92%)",
+          WebkitMaskImage: "radial-gradient(120% 80% at 50% 30%, #000 30%, transparent 92%)",
         }}
       />
 
@@ -272,7 +87,7 @@ export default function AiProcess() {
           </p>
         </header>
 
-        {/* ---------- SCHEMATIC ---------- */}
+        {/* ---------- MEDIA: process router ---------- */}
         <div className="relative mt-14 sm:mt-16">
           <div
             className="tech-label mb-4 flex items-center gap-2"
@@ -298,70 +113,12 @@ export default function AiProcess() {
             AICS-93 / PROCESS ROUTER
           </div>
 
-          {/* mobile: legible stacked chips (the SVG labels are too small on phones) */}
-          <div className="grid grid-cols-2 gap-2.5 sm:hidden">
-            <div
-              className="col-span-2 rounded-xl px-4 py-3 text-center"
-              style={{
-                border: "1px solid color-mix(in srgb, var(--color-signal) 45%, transparent)",
-                background: "rgba(151, 71, 255,0.10)",
-              }}
-            >
-              <p className="font-display text-[15px]" style={{ color: "var(--color-runtime-ink)" }}>
-                AI <span className="signal-text">ядро</span>
-              </p>
-              <p className="tech-label text-[9px]" style={{ color: "var(--color-runtime-ink-soft)" }}>
-                core.00 · маршрутизирует сигнал
-              </p>
-            </div>
-            {DEPARTMENTS.map((d, i) => (
-              <div
-                key={d.id}
-                className="rounded-xl px-3 py-3"
-                style={{
-                  border: "1px solid var(--color-runtime-line, #2c2247)",
-                  background: "rgba(23, 16, 41,0.5)",
-                }}
-              >
-                <p className="tech-label text-[9px]" style={{ color: "var(--color-runtime-ink-soft)" }}>
-                  {d.code}
-                </p>
-                <p className="mt-1 text-[13px]" style={{ color: "var(--color-runtime-ink)" }}>
-                  {d.label}
-                </p>
-                <p
-                  className="tech-label mt-1 text-[9px]"
-                  style={{ color: energized[i] ? "var(--color-signal)" : "var(--color-runtime-ink-soft)" }}
-                >
-                  {energized[i] ? "● online" : "○ standby"}
-                </p>
-              </div>
-            ))}
-          </div>
+          <ProcessMedia />
 
-          {/* desktop / tablet: interactive radial schematic */}
-          <div
-            className="relative hidden w-full overflow-hidden rounded-2xl sm:block"
-            style={{
-              border: "1px solid var(--color-runtime-line, #2c2247)",
-              background:
-                "linear-gradient(180deg, rgba(23, 16, 41,0.55), rgba(14, 10, 27,0.2))",
-            }}
-          >
-            <ProcessSVG
-              nodes={nodes}
-              energized={energized}
-              coreLive={coreLive}
-              reduced={rootStatic}
-              pulseKey={pulseKey}
-            />
-          </div>
-
-          {/* accessible textual description of the schematic */}
           <p className="sr-only">
-            Схема: центральное ядро ИИ соединено с шестью узлами — маркетинг,
-            контент, продажи, аналитика, поддержка и найм. Сигнал расходится из
-            ядра к каждому узлу.
+            Анимация: центральный процессор-ядро, к которому по светящимся
+            дорожкам сходятся периферийные узлы — маркетинг, контент, продажи,
+            аналитика, поддержка и найм. Сигнал циркулирует между ядром и узлами.
           </p>
         </div>
 
@@ -390,18 +147,16 @@ export default function AiProcess() {
               className="mt-4 space-y-3 text-[0.95rem] leading-relaxed"
               style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}
             >
-              {["ручные процессы", "разрозненные данные", "решения «на глаз»"].map(
-                (t) => (
-                  <li key={t} className="flex items-start gap-3">
-                    <span
-                      aria-hidden="true"
-                      className="mt-[0.55em] inline-block h-px w-4 shrink-0"
-                      style={{ background: "var(--color-runtime-line, #2c2247)" }}
-                    />
-                    {t}
-                  </li>
-                ),
-              )}
+              {["ручные процессы", "разрозненные данные", "решения «на глаз»"].map((t) => (
+                <li key={t} className="flex items-start gap-3">
+                  <span
+                    aria-hidden="true"
+                    className="mt-[0.55em] inline-block h-px w-4 shrink-0"
+                    style={{ background: "var(--color-runtime-line, #2c2247)" }}
+                  />
+                  {t}
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -429,22 +184,20 @@ export default function AiProcess() {
               className="mt-4 space-y-3 text-[0.95rem] leading-relaxed"
               style={{ color: "var(--color-runtime-ink, #efeaff)" }}
             >
-              {["агенты в каждом узле", "единый поток данных", "решения на данных"].map(
-                (t) => (
-                  <li key={t} className="flex items-start gap-3">
-                    <span
-                      aria-hidden="true"
-                      className="mt-[0.5em] inline-block h-[7px] w-[7px] shrink-0 rounded-full"
-                      style={{
-                        background:
-                          "linear-gradient(92deg, var(--color-signal, #9747ff), var(--color-signal-2, #b57bff))",
-                        boxShadow: "0 0 10px rgba(151, 71, 255,0.9)",
-                      }}
-                    />
-                    {t}
-                  </li>
-                ),
-              )}
+              {["агенты в каждом узле", "единый поток данных", "решения на данных"].map((t) => (
+                <li key={t} className="flex items-start gap-3">
+                  <span
+                    aria-hidden="true"
+                    className="mt-[0.5em] inline-block h-[7px] w-[7px] shrink-0 rounded-full"
+                    style={{
+                      background:
+                        "linear-gradient(92deg, var(--color-signal, #9747ff), var(--color-signal-2, #b57bff))",
+                      boxShadow: "0 0 10px rgba(151, 71, 255,0.9)",
+                    }}
+                  />
+                  {t}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -493,10 +246,7 @@ export default function AiProcess() {
 
         <p
           className="mt-5 text-[0.72rem]"
-          style={{
-            color: "var(--color-runtime-ink-soft, #a99fce)",
-            opacity: 0.7,
-          }}
+          style={{ color: "var(--color-runtime-ink-soft, #a99fce)", opacity: 0.7 }}
         >
           * Показатели иллюстративны и зависят от процессов конкретной компании.
         </p>
@@ -506,352 +256,136 @@ export default function AiProcess() {
 }
 
 /* ------------------------------------------------------------------ *
- * The SVG schematic. Pure presentational — driven by props.
+ * ProcessMedia — the looping render in a cut-corner HUD frame.
+ * Plays only while in view + honours prefers-reduced-motion (poster
+ * only). Poster image doubles as the fallback before the video loads.
  * ------------------------------------------------------------------ */
 
-type NodeGeom = {
-  dept: Dept;
-  center: Pt;
-  edge: Pt;
-  start: Pt;
-  len: number;
-};
+function ProcessMedia() {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [reduced, setReduced] = useState(false);
 
-function ProcessSVG({
-  nodes,
-  energized,
-  coreLive,
-  reduced,
-  pulseKey,
-}: {
-  nodes: NodeGeom[];
-  energized: boolean[];
-  coreLive: boolean;
-  reduced: boolean;
-  pulseKey: number;
-}) {
+  // reduced-motion → never autoplay; show the static poster instead.
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setReduced(mq.matches);
+    apply();
+    mq.addEventListener?.("change", apply);
+    return () => mq.removeEventListener?.("change", apply);
+  }, []);
+
+  // play only while on screen (perf + battery); pause offscreen.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v || reduced) return;
+    if (typeof IntersectionObserver === "undefined") {
+      v.play().catch(() => {});
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, [reduced]);
+
   return (
-    <svg
-      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-      className="block h-auto w-full"
-      role="img"
-      aria-hidden="true"
-      style={{ maxHeight: 620 }}
-    >
-      <defs>
-        <linearGradient id="aip-trace" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="var(--color-signal, #9747ff)" />
-          <stop offset="100%" stopColor="var(--color-signal-2, #b57bff)" />
-        </linearGradient>
-        <radialGradient id="aip-core" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="var(--color-signal-2, #b57bff)" />
-          <stop offset="55%" stopColor="var(--color-signal, #9747ff)" />
-          <stop offset="100%" stopColor="rgba(151, 71, 255,0)" />
-        </radialGradient>
-        <filter id="aip-glow" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="4.5" result="b" />
-          <feMerge>
-            <feMergeNode in="b" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-        <filter id="aip-softglow" x="-80%" y="-80%" width="260%" height="260%">
-          <feGaussianBlur stdDeviation="9" />
-        </filter>
-      </defs>
+    <div className="relative">
+      {/* gradient hairline border via a chamfered wrapper */}
+      <div
+        className="relative p-px"
+        style={{
+          ...FRAME_CUT,
+          background:
+            "linear-gradient(150deg, color-mix(in srgb, var(--color-signal) 55%, transparent), color-mix(in srgb, var(--color-signal-2) 20%, transparent) 45%, var(--color-runtime-line, #2c2247))",
+        }}
+      >
+        <div
+          className="relative overflow-hidden"
+          style={{ ...FRAME_CUT, background: "var(--color-runtime, #0e0a1b)" }}
+        >
+          <div className="relative aspect-video w-full">
+            {reduced ? (
+              // static frame when motion is reduced
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={PROCESS_VIDEO.poster}
+                alt="Схема процессов: ядро-процессор и периферийные узлы"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <video
+                ref={videoRef}
+                className="absolute inset-0 h-full w-full object-cover"
+                src={PROCESS_VIDEO.src}
+                poster={PROCESS_VIDEO.poster}
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                autoPlay
+                aria-hidden="true"
+              />
+            )}
 
-      {/* faint concentric ring for depth */}
-      <circle
-        cx={CX}
-        cy={CY}
-        r={RING_R}
-        fill="none"
-        stroke="var(--color-runtime-line, #2c2247)"
-        strokeWidth={1}
-        strokeDasharray="2 8"
-        opacity={0.55}
-      />
-
-      {/* traces */}
-      {nodes.map((n, i) => {
-        const on = energized[i];
-        const drawDur = 0.62;
-        const drawDelay = 0.7 + i * 0.56;
-        return (
-          <g key={`trace-${n.dept.id}`}>
-            {/* base rail */}
-            <line
-              x1={n.start.x}
-              y1={n.start.y}
-              x2={n.edge.x}
-              y2={n.edge.y}
-              stroke="var(--color-runtime-line, #2c2247)"
-              strokeWidth={2}
-              strokeLinecap="round"
-            />
-            {/* signal draw */}
-            <line
-              x1={n.start.x}
-              y1={n.start.y}
-              x2={n.edge.x}
-              y2={n.edge.y}
-              stroke="url(#aip-trace)"
-              strokeWidth={2.4}
-              strokeLinecap="round"
-              filter="url(#aip-glow)"
+            {/* subtle inner vignette so the frame reads as a screen */}
+            <div
+              className="pointer-events-none absolute inset-0"
+              aria-hidden="true"
               style={{
-                strokeDasharray: n.len,
-                strokeDashoffset: reduced ? 0 : on ? 0 : n.len,
-                opacity: reduced ? 1 : on ? 1 : 0,
-                transition: reduced
-                  ? "none"
-                  : `stroke-dashoffset ${drawDur}s cubic-bezier(0.4,0,0.2,1) ${
-                      on ? 0 : drawDelay
-                    }s, opacity 0.25s linear`,
+                background:
+                  "radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(14,10,27,0.55) 100%)",
               }}
             />
-            {/* traveling pulse */}
-            {!reduced && on && (
-              <circle
-                key={`pulse-${n.dept.id}-${pulseKey}`}
-                r={3.4}
-                fill="var(--color-signal-2, #b57bff)"
-                filter="url(#aip-glow)"
-              >
-                <animateMotion
-                  dur="1.5s"
-                  begin="0s"
-                  repeatCount="indefinite"
-                  path={`M ${n.start.x} ${n.start.y} L ${n.edge.x} ${n.edge.y}`}
-                  keyPoints="0;1"
-                  keyTimes="0;1"
-                  calcMode="linear"
-                />
-                <animate
-                  attributeName="opacity"
-                  values="0;1;1;0"
-                  keyTimes="0;0.12;0.82;1"
-                  dur="1.5s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-            )}
-          </g>
-        );
-      })}
 
-      {/* department nodes */}
-      {nodes.map((n, i) => (
-        <DeptNode key={n.dept.id} geom={n} on={energized[i]} reduced={reduced} />
-      ))}
+            {/* corner brackets — HUD accent */}
+            {(
+              [
+                { pos: "left-3 top-3", b: "border-l border-t" },
+                { pos: "right-3 top-3", b: "border-r border-t" },
+                { pos: "left-3 bottom-3", b: "border-l border-b" },
+                { pos: "right-3 bottom-3", b: "border-r border-b" },
+              ] as const
+            ).map((c) => (
+              <span
+                key={c.pos}
+                aria-hidden="true"
+                className={`pointer-events-none absolute ${c.pos} ${c.b} h-4 w-4`}
+                style={{ borderColor: "color-mix(in srgb, var(--color-signal) 55%, transparent)" }}
+              />
+            ))}
 
-      {/* ---- CORE ---- */}
-      <g>
-        {/* pulsing halo — scaled via transform (transitionable cross-browser) */}
-        <circle
-          cx={CX}
-          cy={CY}
-          r={96}
-          fill="url(#aip-core)"
-          filter="url(#aip-softglow)"
-          opacity={coreLive ? 0.55 : 0.2}
-          style={{
-            transformOrigin: `${CX}px ${CY}px`,
-            transformBox: "view-box",
-            transform: coreLive ? "scale(1)" : "scale(0.625)",
-            transition: reduced
-              ? "none"
-              : "transform 0.6s ease, opacity 0.6s ease",
-          }}
-        >
-          {coreLive && !reduced && (
-            <animate
-              attributeName="opacity"
-              values="0.42;0.62;0.42"
-              dur="3.4s"
-              repeatCount="indefinite"
-            />
-          )}
-        </circle>
-
-        {/* rotating ring accent */}
-        <g
-          style={{
-            transformOrigin: `${CX}px ${CY}px`,
-            animation:
-              reduced || !coreLive ? "none" : "aip-spin 14s linear infinite",
-          }}
-        >
-          <circle
-            cx={CX}
-            cy={CY}
-            r={64}
-            fill="none"
-            stroke="url(#aip-trace)"
-            strokeWidth={1.4}
-            strokeDasharray="4 10"
-            opacity={0.8}
-          />
-        </g>
-
-        {/* core chip */}
-        <circle
-          cx={CX}
-          cy={CY}
-          r={50}
-          fill="rgba(23, 16, 41,0.92)"
-          stroke="url(#aip-trace)"
-          strokeWidth={1.6}
-        />
-        <text
-          x={CX}
-          y={CY - 4}
-          textAnchor="middle"
-          fill="var(--color-runtime-ink, #efeaff)"
-          style={{
-            fontFamily: "var(--font-display, inherit)",
-            fontWeight: 700,
-            fontSize: 15,
-            letterSpacing: "0.08em",
-          }}
-        >
-          AI ЯДРО
-        </text>
-        <text
-          x={CX}
-          y={CY + 14}
-          textAnchor="middle"
-          fill="var(--color-signal, #9747ff)"
-          style={{
-            fontFamily: "var(--font-display, inherit)",
-            fontSize: 8.5,
-            letterSpacing: "0.22em",
-          }}
-        >
-          CORE.00
-        </text>
-      </g>
-
-      <style>{`
-        @keyframes aip-spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
-    </svg>
-  );
-}
-
-function DeptNode({
-  geom,
-  on,
-  reduced,
-}: {
-  geom: NodeGeom;
-  on: boolean;
-  reduced: boolean;
-}) {
-  const { center, dept } = geom;
-  const x = center.x - NODE_W / 2;
-  const y = center.y - NODE_H / 2;
-
-  return (
-    <g style={{ transition: reduced ? "none" : "opacity 0.4s ease" }}>
-      {/* halo when on */}
-      {on && (
-        <path
-          d={chipPath(x - 4, y - 4, NODE_W + 8, NODE_H + 8, CUT + 2)}
-          fill="none"
-          stroke="url(#aip-trace)"
-          strokeWidth={1.2}
-          opacity={0.5}
-          filter="url(#aip-softglow)"
-        />
-      )}
-
-      <path
-        d={chipPath(x, y, NODE_W, NODE_H, CUT)}
-        fill={on ? "rgba(24,18,40,0.95)" : "rgba(23, 16, 41,0.9)"}
-        stroke={on ? "url(#aip-trace)" : "var(--color-runtime-line, #2c2247)"}
-        strokeWidth={on ? 1.6 : 1.2}
-        style={{
-          transition: reduced ? "none" : "stroke 0.35s ease, fill 0.35s ease",
-        }}
-      />
-
-      {/* label */}
-      <text
-        x={center.x - NODE_W / 2 + 14}
-        y={center.y - 4}
-        fill={
-          on
-            ? "var(--color-runtime-ink, #efeaff)"
-            : "var(--color-runtime-ink-soft, #a99fce)"
-        }
-        style={{
-          fontFamily: "var(--font-sans, inherit)",
-          fontSize: 13,
-          fontWeight: 600,
-          transition: reduced ? "none" : "fill 0.35s ease",
-        }}
-      >
-        {dept.label}
-      </text>
-
-      {/* code */}
-      <text
-        x={center.x - NODE_W / 2 + 14}
-        y={center.y + 14}
-        fill={
-          on
-            ? "var(--color-signal, #9747ff)"
-            : "var(--color-runtime-ink-soft, #a99fce)"
-        }
-        style={{
-          fontFamily: "var(--font-display, inherit)",
-          fontSize: 8,
-          letterSpacing: "0.16em",
-          transition: reduced ? "none" : "fill 0.35s ease",
-        }}
-      >
-        {dept.code}
-      </text>
-
-      {/* status dot + text (once energized) */}
-      <g
-        style={{
-          opacity: on ? 1 : 0,
-          transition: reduced ? "none" : "opacity 0.4s ease 0.1s",
-        }}
-      >
-        <circle
-          cx={center.x + NODE_W / 2 - 40}
-          cy={center.y + 10}
-          r={2.6}
-          fill="var(--color-signal-2, #b57bff)"
-        >
-          {on && !reduced && (
-            <animate
-              attributeName="opacity"
-              values="1;0.35;1"
-              dur="2s"
-              repeatCount="indefinite"
-            />
-          )}
-        </circle>
-        <text
-          x={center.x + NODE_W / 2 - 34}
-          y={center.y + 13}
-          fill="var(--color-signal, #9747ff)"
-          style={{
-            fontFamily: "var(--font-display, inherit)",
-            fontSize: 7.5,
-            letterSpacing: "0.1em",
-          }}
-        >
-          online
-        </text>
-      </g>
-    </g>
+            {/* status label bottom-left */}
+            <div
+              className="tech-label pointer-events-none absolute bottom-3 left-6 flex items-center gap-2"
+              aria-hidden="true"
+              style={{
+                fontFamily: "var(--font-display, inherit)",
+                fontSize: "0.6rem",
+                letterSpacing: "0.2em",
+                color: "var(--color-runtime-ink-soft, #a99fce)",
+              }}
+            >
+              <span
+                className="hud-dot"
+                style={{
+                  display: "inline-block",
+                  width: 5,
+                  height: 5,
+                  borderRadius: 999,
+                  background: "var(--color-signal, #9747ff)",
+                  boxShadow: "0 0 8px var(--color-signal, #9747ff)",
+                }}
+              />
+              CORE.00 · SIGNAL ROUTING
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
