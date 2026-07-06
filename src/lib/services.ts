@@ -12,6 +12,7 @@ export type Service = {
   slug: string;
   order: string; // "01"
   nav: string; // short nav label
+  pipeline?: string[]; // short stage labels for the overview schematic
   metaTitle: string;
   metaDescription: string;
   hero: {
@@ -35,6 +36,7 @@ export const services: Service[] = [
     slug: "razrabotka-sajtov",
     order: "01",
     nav: "Разработка сайтов",
+    pipeline: ["бриф", "анализ", "прототип", "концепция", "система", "сборка", "запуск", "поддержка", "аналитика"],
     metaTitle: "Разработка сайтов за 7-14 дней с ИИ | AICS-93",
     metaDescription:
       "Разработка сайтов любой сложности за 7-14 дней с экономией бюджета до 70%. Один специалист с ИИ вместо четверых, лёгкий код, SEO/GEO и сопровождение. Рассчитайте проект.",

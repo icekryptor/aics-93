@@ -1,4 +1,7 @@
 import type { Service } from "@/lib/services";
+import AlgoArt from "./AlgoArt";
+import CardSigil from "./CardSigil";
+import PipelineSchematic from "./PipelineSchematic";
 
 /* Server-rendered service detail — dark cyber-lab layout. Content-first
    (all copy in SSR HTML for SEO/GEO). No client JS: FAQ uses <details>. */
@@ -28,7 +31,30 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
     <div className="text-runtime-ink">
       {/* ================= HERO ================= */}
       <section className="relative overflow-hidden">
-        <div className={`${SHELL} pt-16 pb-14 sm:pt-24 sm:pb-20`}>
+        {/* algorithmic art backdrop — denser to the right, fades behind the text */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            maskImage:
+              "radial-gradient(70% 90% at 82% 30%, #000 5%, rgba(0,0,0,0.5) 45%, transparent 78%)",
+            WebkitMaskImage:
+              "radial-gradient(70% 90% at 82% 30%, #000 5%, rgba(0,0,0,0.5) 45%, transparent 78%)",
+          }}
+        >
+          <AlgoArt seed={`hero-${s.slug}`} density={1.1} className="h-full w-full" />
+        </div>
+        {/* legibility scrim over the text side */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(100deg, var(--color-runtime) 18%, color-mix(in srgb, var(--color-runtime) 55%, transparent) 48%, transparent 82%)",
+          }}
+        />
+
+        <div className={`relative z-10 ${SHELL} pt-16 pb-14 sm:pt-24 sm:pb-20`}>
           <Eyebrow>{s.hero.eyebrow}</Eyebrow>
 
           <h1 className="mt-6 max-w-4xl text-balance font-display text-[clamp(2.1rem,5.4vw,4rem)] font-semibold leading-[1.02] tracking-tight">
@@ -97,7 +123,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
             {s.valueProps.map((v, i) => (
               <article
                 key={v.title}
-                className="group relative flex h-full flex-col p-6"
+                className="group relative flex h-full flex-col overflow-hidden p-6"
                 style={{
                   ...CHIP,
                   border: "1px solid var(--color-runtime-line)",
@@ -105,8 +131,12 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                     "linear-gradient(180deg, rgba(23,16,41,0.6), rgba(14,10,27,0.3))",
                 }}
               >
+                <CardSigil
+                  seed={`vp-${v.title}`}
+                  className="pointer-events-none absolute -right-2 -top-2 h-16 w-16 opacity-[0.28] transition-opacity duration-300 group-hover:opacity-60"
+                />
                 <span
-                  className="tech-label text-[0.7rem]"
+                  className="relative tech-label text-[0.7rem]"
                   style={{ color: "var(--color-signal-2)" }}
                 >
                   {String(i + 1).padStart(2, "0")}
@@ -131,6 +161,18 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
           <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
             От брифа до аналитического сопровождения — единый прозрачный контур
           </h2>
+
+          {s.pipeline?.length ? (
+            <div
+              className="mt-10 hidden overflow-hidden rounded-2xl px-6 py-7 sm:block"
+              style={{
+                border: "1px solid var(--color-runtime-line)",
+                background: "rgba(23,16,41,0.4)",
+              }}
+            >
+              <PipelineSchematic stages={s.pipeline.map((l) => ({ label: l }))} />
+            </div>
+          ) : null}
 
           <ol className="mt-12 space-y-0">
             {s.process.map((p, i) => {
@@ -272,7 +314,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
             {s.deliverables.map((d) => (
               <div
                 key={d.title}
-                className="signal-glow relative p-6"
+                className="signal-glow group relative overflow-hidden p-6"
                 style={{
                   ...CHIP,
                   border: "1px solid rgba(151,71,255,0.35)",
@@ -280,7 +322,12 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                     "linear-gradient(180deg, rgba(151,71,255,0.08), rgba(181,123,255,0.03))",
                 }}
               >
-                <h3 className="font-display text-[1.05rem] font-semibold leading-snug">
+                <CardSigil
+                  seed={`dl-${d.title}`}
+                  stroke="rgba(201,182,255,0.6)"
+                  className="pointer-events-none absolute -right-2 -top-2 h-16 w-16 opacity-[0.3] transition-opacity duration-300 group-hover:opacity-70"
+                />
+                <h3 className="relative font-display text-[1.05rem] font-semibold leading-snug">
                   {d.title}
                 </h3>
                 <p className="mt-2.5 text-[0.92rem] leading-relaxed text-runtime-ink-soft">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllServices } from "@/lib/services";
 import JsonLd from "@/components/seo/JsonLd";
+import AlgoArt from "@/components/services/AlgoArt";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -51,7 +52,18 @@ export default function ServicesIndex() {
   return (
     <div className="text-runtime-ink">
       <JsonLd data={jsonLd} />
-      <div className="mx-auto w-full max-w-6xl px-5 pb-20 pt-16 sm:px-8 sm:pt-24">
+      <div className="relative mx-auto w-full max-w-6xl overflow-hidden px-5 pb-20 pt-16 sm:px-8 sm:pt-24">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            maskImage: "radial-gradient(58% 68% at 85% 14%, #000 4%, transparent 70%)",
+            WebkitMaskImage: "radial-gradient(58% 68% at 85% 14%, #000 4%, transparent 70%)",
+          }}
+        >
+          <AlgoArt seed="services-index" density={1} className="h-full w-full" />
+        </div>
+        <div className="relative z-10">
         <span
           className="tech-label inline-flex items-center gap-2 text-[0.72rem]"
           style={{ color: "var(--color-signal-2)", letterSpacing: "0.22em" }}
@@ -110,6 +122,7 @@ export default function ServicesIndex() {
               </article>
             </Link>
           ))}
+        </div>
         </div>
       </div>
     </div>
