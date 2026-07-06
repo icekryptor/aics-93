@@ -94,15 +94,17 @@ export default function QuoteForm() {
                     value={form.about}
                     onChange={set("about")}
                     rows={3}
+                    aria-label="Коротко о проекте и приблизительный бюджет"
                     placeholder="Коротко о проекте и приблизительный бюджет"
                     className={inputCls}
                   />
                   <div className="grid gap-3 sm:grid-cols-3">
-                    <input value={form.name} onChange={set("name")} placeholder="Ваше имя" className={inputCls} />
+                    <input value={form.name} onChange={set("name")} aria-label="Ваше имя" placeholder="Ваше имя" className={inputCls} />
                     <input
                       value={form.phone}
                       onChange={set("phone")}
                       required
+                      aria-label="Телефон или мессенджер"
                       placeholder="Телефон или мессенджер"
                       className={inputCls}
                     />
@@ -110,6 +112,7 @@ export default function QuoteForm() {
                       value={form.email}
                       onChange={set("email")}
                       type="email"
+                      aria-label="Ваша почта"
                       placeholder="Ваша почта"
                       className={inputCls}
                     />

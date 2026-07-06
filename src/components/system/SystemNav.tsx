@@ -94,10 +94,16 @@ export default function SystemNav() {
               );
             })}
             <Link
+              href="/services"
+              className="tech-label text-[11px] text-ink-soft transition-colors hover:text-ink"
+            >
+              <span className="mr-1 opacity-40">06</span>услуги
+            </Link>
+            <Link
               href="/blog"
               className="tech-label text-[11px] text-ink-soft transition-colors hover:text-ink"
             >
-              <span className="mr-1 opacity-40">06</span>журнал
+              <span className="mr-1 opacity-40">07</span>журнал
             </Link>
           </nav>
 
@@ -177,11 +183,20 @@ export default function SystemNav() {
               })}
               <li>
                 <Link
+                  href="/services"
+                  onClick={() => setOpen(false)}
+                  className="tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[13px] text-ink-soft transition-colors hover:bg-ink/[0.04]"
+                >
+                  <span className="opacity-40">06</span>услуги
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/blog"
                   onClick={() => setOpen(false)}
                   className="tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[13px] text-ink-soft transition-colors hover:bg-ink/[0.04]"
                 >
-                  <span className="opacity-40">06</span>журнал
+                  <span className="opacity-40">07</span>журнал
                 </Link>
               </li>
             </ul>
