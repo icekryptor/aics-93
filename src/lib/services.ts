@@ -7,12 +7,14 @@ export type ProcessStep = { title: string; detail: string; benefit: string; dura
 export type Deliverable = { title: string; text: string };
 export type ComparisonRow = { metric: string; classic: string; aics: string };
 export type Faq = { q: string; a: string };
+export type HowItWorks = { lead: string; points: string[] };
 
 export type Service = {
   slug: string;
   order: string; // "01"
   nav: string; // short nav label
   pipeline?: string[]; // short stage labels for the overview schematic
+  howItWorks?: HowItWorks; // "как это работает" block (video + points)
   metaTitle: string;
   metaDescription: string;
   hero: {
@@ -37,6 +39,17 @@ export const services: Service[] = [
     order: "01",
     nav: "Разработка сайтов",
     pipeline: ["бриф", "анализ", "прототип", "концепция", "система", "сборка", "запуск", "поддержка", "аналитика"],
+    howItWorks: {
+      lead: "AI — и источник данных, и виртуальный исполнитель работ по сайту",
+      points: [
+        "Агенты компилируют данные о компании и результаты маркетингового анализа — и на их основе разрабатывают сервис.",
+        "Собственная административная harness-панель держит очевидную связь между документами и логикой работы.",
+        "Алгоритмы настроены на постоянное улучшение и уточнение данных.",
+        "Дизайн-система собрана под фирменный стиль сайта и генерирует блоки с высокой точностью.",
+        "Производительность и SEO в зелёной зоне Google PageSpeed Insights — нет прослоек в виде CMS.",
+        "UX-аналитика находит точки роста конверсии и улучшения пользовательского опыта.",
+      ],
+    },
     metaTitle: "Разработка сайтов за 7-14 дней с ИИ | AICS-93",
     metaDescription:
       "Разработка сайтов любой сложности за 7-14 дней с экономией бюджета до 70%. Один специалист с ИИ вместо четверых, лёгкий код, SEO/GEO и сопровождение. Рассчитайте проект.",

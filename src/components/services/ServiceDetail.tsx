@@ -3,6 +3,8 @@ import SiteBuilderGL from "./SiteBuilderGL";
 import StageCaption from "./StageCaption";
 import CardSigil from "./CardSigil";
 import PipelineSchematic from "./PipelineSchematic";
+import FramedVideo from "./FramedVideo";
+import { HOW_IT_WORKS_VIDEO } from "@/lib/media";
 
 /* Server-rendered service detail — dark cyber-lab layout. Content-first
    (all copy in SSR HTML for SEO/GEO). No client JS: FAQ uses <details>. */
@@ -143,6 +145,48 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
           </div>
         </div>
       </section>
+
+      {/* ================= КАК ЭТО РАБОТАЕТ ================= */}
+      {s.howItWorks ? (
+        <section className="relative py-16 sm:py-20">
+          <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
+          <div className={SHELL}>
+            <Eyebrow>как это работает</Eyebrow>
+            <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
+              {s.howItWorks.lead}
+            </h2>
+
+            <div className="mt-10 grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+              <FramedVideo
+                src={HOW_IT_WORKS_VIDEO.src}
+                poster={HOW_IT_WORKS_VIDEO.poster}
+                label="AI CORE · SITE ASSEMBLY"
+                alt="AI-ядро собирает интерфейсы сайта"
+              />
+
+              <ul className="grid gap-4">
+                {s.howItWorks.points.map((p, i) => (
+                  <li key={i} className="flex items-start gap-3.5">
+                    <span
+                      aria-hidden
+                      className="mt-1 grid size-6 shrink-0 place-items-center rounded-full text-[0.62rem] font-semibold"
+                      style={{
+                        border: "1px solid color-mix(in srgb, var(--color-signal) 45%, transparent)",
+                        background: "rgba(151,71,255,0.12)",
+                        color: "var(--color-signal-cool)",
+                        fontFamily: "var(--font-display, inherit)",
+                      }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-[0.95rem] leading-relaxed text-runtime-ink-soft">{p}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* ================= PROCESS ================= */}
       <section className="relative py-16 sm:py-20">
