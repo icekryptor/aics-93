@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 
 /* ------------------------------------------------------------------ *
  * SiteBuilderGL — raw-WebGL 3-stage morph for the web-dev service hero.
- *   0 · данные      : chaotic 3D point cloud wired by a dense web
+ *   0 · данные      : sparse graph — fewer, bigger nodes, bold links
  *   1 · прототип    : points gather into UI elements, wired node-to-node
  *   2 · реализация  : elements compose into a head-on website wireframe
- * Scroll-driven + click-to-cycle + idle auto-showcase. Project palette.
- * Auto-fits to the canvas aspect (no crop); edges softly masked.
+ * Lines are camera-facing quads (real screen-space width) so links read
+ * bold and the wireframe frame is crisp. Scroll + click + auto-showcase.
  * ------------------------------------------------------------------ */
 
 type Props = { className?: string };
@@ -60,6 +60,7 @@ const ELEMENTS: El[] = [
   { x0: -1.42, y0: -1.0, x1: 1.42, y1: -0.86, z: -0.05, kind: 2 }, // footer bar
 ];
 const OUTLINE = [0, 3, 8, 9, 10, 11, 12];
+type V3 = [number, number, number];
 
 type Geometry = {
   p0: Float32Array;
@@ -67,10 +68,15 @@ type Geometry = {
   p2: Float32Array;
   seed: Float32Array;
   kind: Float32Array;
-  lineP0: Float32Array;
-  lineP1: Float32Array;
-  lineP2: Float32Array;
-  lineKind: Float32Array; // 0 structure(outline) · 1 chaos web · 2 node connector
+  datavis: Float32Array;
+  self0: Float32Array;
+  self1: Float32Array;
+  self2: Float32Array;
+  other0: Float32Array;
+  other1: Float32Array;
+  other2: Float32Array;
+  side: Float32Array;
+  lkind: Float32Array; // 0 outline · 1 chaos · 2 connector · 3 frame
   lineVertexCount: number;
 };
 
@@ -82,17 +88,15 @@ function build(): Geometry {
   const p2 = new Float32Array(N * 3);
   const seed = new Float32Array(N);
   const kind = new Float32Array(N);
+  const datavis = new Float32Array(N);
 
+  // tighter scatter → UI blocks sit closer together in the prototype stage
   const off = ELEMENTS.map((_, e) => ({
-    x: (hash01(e * 5 + 1) - 0.5) * 2.1,
-    y: (hash01(e * 5 + 2) - 0.5) * 1.9,
-    z: (hash01(e * 5 + 3) - 0.5) * 1.7,
+    x: (hash01(e * 5 + 1) - 0.5) * 1.35,
+    y: (hash01(e * 5 + 2) - 0.5) * 1.2,
+    z: (hash01(e * 5 + 3) - 0.5) * 1.05,
   }));
-  const center = (el: El): [number, number, number] => [
-    (el.x0 + el.x1) / 2,
-    (el.y0 + el.y1) / 2,
-    el.z,
-  ];
+  const center = (el: El): V3 => [(el.x0 + el.x1) / 2, (el.y0 + el.y1) / 2, el.z];
 
   const areas = ELEMENTS.map((el) => (el.x1 - el.x0) * (el.y1 - el.y0));
   const totalA = areas.reduce((a, b) => a + b, 0);
@@ -111,12 +115,12 @@ function build(): Geometry {
     const c = counts[e];
     const w = el.x1 - el.x0;
     const h = el.y1 - el.y0;
-    // even jittered-grid fill → the composed blocks read as solid figures
     const cols = Math.max(1, Math.round(Math.sqrt((c * w) / h)));
     const rows = Math.max(1, Math.ceil(c / cols));
     for (let k = 0; k < c && i < N; k++, i++) {
       seed[i] = hash01(i * 7 + 5);
       kind[i] = el.kind;
+      datavis[i] = hash01(i * 3 + 91) < 0.3 ? 1 : 0; // ~42% shown in data stage
       const col = k % cols;
       const row = Math.floor(k / cols);
       const gx = (col + 0.5) / cols + (hash01(i * 9 + 1) - 0.5) * (0.9 / cols);
@@ -139,6 +143,7 @@ function build(): Geometry {
   for (; i < N; i++) {
     seed[i] = hash01(i * 7 + 5);
     kind[i] = 0;
+    datavis[i] = hash01(i * 3 + 91) < 0.3 ? 1 : 0;
     const [sx, sy, sz] = spherePoint(i + 1, SPHERE);
     p0[i * 3] = sx;
     p0[i * 3 + 1] = sy;
@@ -148,86 +153,88 @@ function build(): Geometry {
     p1[i * 3 + 2] = sz * 0.4;
   }
 
-  /* ---- lines ---- */
-  const L0: number[] = [];
-  const L1: number[] = [];
-  const L2: number[] = [];
+  /* ---- thick lines (camera-facing quads: 6 verts / segment) ---- */
+  const S0: number[] = [];
+  const S1: number[] = [];
+  const S2: number[] = [];
+  const O0: number[] = [];
+  const O1: number[] = [];
+  const O2: number[] = [];
+  const SIDE: number[] = [];
   const LK: number[] = [];
-  const seg = (
-    a2: number[],
-    b2: number[],
-    a1: number[],
-    b1: number[],
-    a0: number[],
-    b0: number[],
-    lk: number,
-  ) => {
-    L2.push(a2[0], a2[1], a2[2], b2[0], b2[1], b2[2]);
-    L1.push(a1[0], a1[1], a1[2], b1[0], b1[1], b1[2]);
-    L0.push(a0[0], a0[1], a0[2], b0[0], b0[1], b0[2]);
-    LK.push(lk, lk);
+  // endpoints given across the 3 states: a=(a0,a1,a2), b=(b0,b1,b2)
+  const line = (a0: V3, a1: V3, a2: V3, b0: V3, b1: V3, b2: V3, lk: number) => {
+    const push = (s0: V3, s1: V3, s2: V3, o0: V3, o1: V3, o2: V3, sd: number) => {
+      S0.push(...s0);
+      S1.push(...s1);
+      S2.push(...s2);
+      O0.push(...o0);
+      O1.push(...o1);
+      O2.push(...o2);
+      SIDE.push(sd);
+      LK.push(lk);
+    };
+    push(a0, a1, a2, b0, b1, b2, -1);
+    push(a0, a1, a2, b0, b1, b2, 1);
+    push(b0, b1, b2, a0, a1, a2, 1);
+    push(a0, a1, a2, b0, b1, b2, -1);
+    push(b0, b1, b2, a0, a1, a2, 1);
+    push(b0, b1, b2, a0, a1, a2, -1);
   };
-  const rnd = (base: number) => {
-    const [x, y, z] = spherePoint(base, SPHERE);
-    return [x, y, z];
-  };
+  const rnd = (base: number): V3 => spherePoint(base, SPHERE);
 
-  // element + frame outlines (structure)
   const FR: El = { x0: -1.55, y0: -1.12, x1: 1.55, y1: 1.12, z: -0.02, kind: 2 };
   const frameOff = { x: 0, y: 0, z: -0.55 };
-  const corners = (el: El) => [
+  const corners = (el: El): V3[] => [
     [el.x0, el.y0, el.z],
     [el.x1, el.y0, el.z],
     [el.x1, el.y1, el.z],
     [el.x0, el.y1, el.z],
   ];
-  const outline = (el: El, o: { x: number; y: number; z: number }) => {
+  const outline = (el: El, o: { x: number; y: number; z: number }, lk: number) => {
     const c2 = corners(el);
     for (let e = 0; e < 4; e++) {
       const a = c2[e];
       const b = c2[(e + 1) % 4];
-      const a1 = [a[0] + o.x, a[1] + o.y, a[2] * 0.4 + o.z];
-      const b1 = [b[0] + o.x, b[1] + o.y, b[2] * 0.4 + o.z];
-      seg(a, b, a1, b1, rnd(1000 + L2.length), rnd(2000 + L2.length), 0);
+      const a1: V3 = [a[0] + o.x, a[1] + o.y, a[2] * 0.4 + o.z];
+      const b1: V3 = [b[0] + o.x, b[1] + o.y, b[2] * 0.4 + o.z];
+      line(rnd(1000 + S0.length), a1, a, rnd(2000 + S0.length), b1, b, lk);
     }
   };
-  outline(FR, frameOff);
-  for (const idx of OUTLINE) outline(ELEMENTS[idx], off[idx]);
+  outline(FR, frameOff, 3); // frame — thickest, crisp
+  for (const idx of OUTLINE) outline(ELEMENTS[idx], off[idx], 0);
 
-  // node connectors — link each element to its 2 nearest neighbours. Visible in
-  // the prototype stage (floating anchors) so the "wiring" between nodes shows.
-  const cen2 = ELEMENTS.map(center);
+  // node connectors — each element to its 2 nearest, visible in prototype
+  const cen = ELEMENTS.map(center);
   const seen = new Set<string>();
   for (let a = 0; a < ELEMENTS.length; a++) {
-    const dists = ELEMENTS.map((_, b) => ({
+    const near = ELEMENTS.map((_, b) => ({
       b,
-      d: b === a ? 1e9 : (cen2[a][0] - cen2[b][0]) ** 2 + (cen2[a][1] - cen2[b][1]) ** 2,
+      d: b === a ? 1e9 : (cen[a][0] - cen[b][0]) ** 2 + (cen[a][1] - cen[b][1]) ** 2,
     })).sort((x, y) => x.d - y.d);
     for (let n = 0; n < 2; n++) {
-      const b = dists[n].b;
+      const b = near[n].b;
       const key = Math.min(a, b) + "-" + Math.max(a, b);
       if (seen.has(key)) continue;
       seen.add(key);
-      const a2 = cen2[a];
-      const b2 = cen2[b];
-      const a1 = [cen2[a][0] + off[a].x, cen2[a][1] + off[a].y, cen2[a][2] * 0.4 + off[a].z];
-      const b1 = [cen2[b][0] + off[b].x, cen2[b][1] + off[b].y, cen2[b][2] * 0.4 + off[b].z];
-      seg(a2, b2, a1, b1, rnd(3000 + a * 31 + b), rnd(3500 + a * 31 + b), 2);
+      const a1: V3 = [cen[a][0] + off[a].x, cen[a][1] + off[a].y, cen[a][2] * 0.4 + off[a].z];
+      const b1: V3 = [cen[b][0] + off[b].x, cen[b][1] + off[b].y, cen[b][2] * 0.4 + off[b].z];
+      line(rnd(3000 + a * 31 + b), a1, cen[a], rnd(3500 + a * 31 + b), b1, cen[b], 2);
     }
   }
 
-  // chaos web — dense random links, present in data stage, fade on assembly
-  const CHAOS = 420;
+  // chaos web — fewer but bolder links, present only in the data stage
+  const CHAOS = 210;
   for (let c = 0; c < CHAOS; c++) {
     const A = spherePoint(5000 + c, SPHERE);
-    const dl = 0.55;
-    const B: [number, number, number] = [
+    const dl = 0.6;
+    const B: V3 = [
       A[0] + (hash01(c * 13 + 1) - 0.5) * dl,
       A[1] + (hash01(c * 13 + 2) - 0.5) * dl,
       A[2] + (hash01(c * 13 + 3) - 0.5) * dl,
     ];
-    const col = (p: number[]) => [p[0] * 0.12, p[1] * 0.12, p[2] * 0.12];
-    seg(col(A), col(B), col(A), col(B), A, B, 1);
+    const col = (p: V3): V3 => [p[0] * 0.12, p[1] * 0.12, p[2] * 0.12];
+    line(A, col(A), col(A), B, col(B), col(B), 1);
   }
 
   return {
@@ -236,11 +243,16 @@ function build(): Geometry {
     p2,
     seed,
     kind,
-    lineP0: new Float32Array(L0),
-    lineP1: new Float32Array(L1),
-    lineP2: new Float32Array(L2),
-    lineKind: new Float32Array(LK),
-    lineVertexCount: LK.length,
+    datavis,
+    self0: new Float32Array(S0),
+    self1: new Float32Array(S1),
+    self2: new Float32Array(S2),
+    other0: new Float32Array(O0),
+    other1: new Float32Array(O1),
+    other2: new Float32Array(O2),
+    side: new Float32Array(SIDE),
+    lkind: new Float32Array(LK),
+    lineVertexCount: SIDE.length,
   };
 }
 
@@ -256,6 +268,7 @@ attribute vec3 a_pos1;
 attribute vec3 a_pos2;
 attribute float a_seed;
 attribute float a_kind;
+attribute float a_datavis;
 uniform mat4 u_proj;
 uniform float u_m01;
 uniform float u_m12;
@@ -267,6 +280,7 @@ varying float v_near;
 varying float v_seed;
 varying float v_kind;
 varying float v_compose;
+varying float v_vis;
 void main() {
   vec3 p = mix(mix(a_pos0, a_pos1, u_m01), a_pos2, u_m12) * u_scale;
   float cy = cos(u_yaw); float sy = sin(u_yaw);
@@ -275,11 +289,14 @@ void main() {
   q = vec3(q.x, q.y * cx - q.z * sx, q.y * sx + q.z * cx);
   float near = clamp((q.z + 1.6) / 3.2, 0.0, 1.0);
   gl_Position = u_proj * vec4(q.x, q.y, q.z - 3.2, 1.0);
-  gl_PointSize = clamp(u_dpr * mix(1.7, 3.9, near) * (1.0 + step(1.5, a_kind) * 0.18), 1.0, 34.0);
+  // data stage → fewer, bigger nodes
+  float dataAmt = 1.0 - smoothstep(0.0, 0.42, u_m01);
+  gl_PointSize = clamp(u_dpr * mix(1.7, 3.9, near) * (1.0 + dataAmt * 1.35) * (1.0 + step(1.5, a_kind) * 0.18), 1.0, 46.0);
   v_near = near;
   v_seed = a_seed;
   v_kind = a_kind;
   v_compose = u_m12;
+  v_vis = mix(a_datavis, 1.0, smoothstep(0.0, 0.5, u_m01));
 }
 `;
 const FRAG = `
@@ -288,6 +305,7 @@ varying float v_near;
 varying float v_seed;
 varying float v_kind;
 varying float v_compose;
+varying float v_vis;
 uniform float u_pointer;
 uniform float u_time;
 void main() {
@@ -308,14 +326,19 @@ void main() {
   a *= mix(tw, 1.0, v_compose);
   a *= mix(0.88, 1.12, v_compose);
   a *= fall * (1.0 + 0.3 * u_pointer);
-  a *= 0.82;
+  a *= 0.82 * v_vis;
   gl_FragColor = vec4(col * a, a);
 }
 `;
+// thick lines — expand each segment into a screen-space quad of pixel width
 const LVERT = `
-attribute vec3 a_p0;
-attribute vec3 a_p1;
-attribute vec3 a_p2;
+attribute vec3 a_self0;
+attribute vec3 a_self1;
+attribute vec3 a_self2;
+attribute vec3 a_other0;
+attribute vec3 a_other1;
+attribute vec3 a_other2;
+attribute float a_side;
 attribute float a_lkind;
 uniform mat4 u_proj;
 uniform float u_m01;
@@ -323,19 +346,38 @@ uniform float u_m12;
 uniform float u_yaw;
 uniform float u_pitch;
 uniform float u_scale;
+uniform float u_aspect;
+uniform float u_vph;
+uniform float u_dpr;
 varying float v_near;
 varying float v_lkind;
 varying float v_m01;
 varying float v_compose;
-void main() {
-  vec3 p = mix(mix(a_p0, a_p1, u_m01), a_p2, u_m12) * u_scale;
+vec3 tf(vec3 p) {
+  p *= u_scale;
   float cy = cos(u_yaw); float sy = sin(u_yaw);
   vec3 q = vec3(p.x * cy + p.z * sy, p.y, p.z * cy - p.x * sy);
   float cx = cos(u_pitch); float sx = sin(u_pitch);
-  q = vec3(q.x, q.y * cx - q.z * sx, q.y * sx + q.z * cx);
-  float near = clamp((q.z + 1.6) / 3.2, 0.0, 1.0);
-  gl_Position = u_proj * vec4(q.x, q.y, q.z - 3.2, 1.0);
-  v_near = near;
+  return vec3(q.x, q.y * cx - q.z * sx, q.y * sx + q.z * cx);
+}
+void main() {
+  vec3 s = tf(mix(mix(a_self0, a_self1, u_m01), a_self2, u_m12));
+  vec3 o = tf(mix(mix(a_other0, a_other1, u_m01), a_other2, u_m12));
+  vec4 cs = u_proj * vec4(s.x, s.y, s.z - 3.2, 1.0);
+  vec4 co = u_proj * vec4(o.x, o.y, o.z - 3.2, 1.0);
+  vec2 ns = cs.xy / cs.w;
+  vec2 no = co.xy / co.w;
+  vec2 diff = vec2((no.x - ns.x) * u_aspect, no.y - ns.y);
+  float len = length(diff);
+  vec2 dir = len > 0.0001 ? diff / len : vec2(1.0, 0.0);
+  vec2 perp = vec2(-dir.y, dir.x);
+  float w = 1.8;
+  if (a_lkind > 2.5) w = 2.9;       // frame
+  else if (a_lkind > 1.5) w = 2.1;  // connector
+  else if (a_lkind > 0.5) w = 2.4;  // chaos
+  vec2 offset = vec2(perp.x / u_aspect, perp.y) * (w * u_dpr / u_vph) * a_side;
+  gl_Position = vec4((ns + offset) * cs.w, cs.z, cs.w);
+  v_near = clamp((s.z + 1.6) / 3.2, 0.0, 1.0);
   v_lkind = a_lkind;
   v_m01 = u_m01;
   v_compose = u_m12;
@@ -351,15 +393,15 @@ void main() {
   vec3 deep = vec3(0.592, 0.278, 1.0);
   vec3 soft = vec3(0.788, 0.714, 1.0);
   vec3 col = mix(deep, soft, v_near);
-  // structure outlines: visible in prototype, crisp in build
-  float structA = (0.06 + 0.12 * v_near) * mix(0.85, 1.45, v_compose);
-  // chaos web: fades as points assemble
-  float chaosA = (0.05 + 0.09 * v_near) * (1.0 - v_m01);
-  // node connectors: peak in the prototype stage (assembled but not composed)
-  float connA = (0.09 + 0.16 * v_near) * v_m01 * (1.0 - v_compose);
-  float a = structA * step(v_lkind, 0.5)
-          + chaosA * step(0.5, v_lkind) * step(v_lkind, 1.5)
-          + connA * step(1.5, v_lkind);
+  float isOut = step(v_lkind, 0.5);
+  float isChaos = step(0.5, v_lkind) * step(v_lkind, 1.5);
+  float isConn = step(1.5, v_lkind) * step(v_lkind, 2.5);
+  float isFrame = step(2.5, v_lkind);
+  float structA = (0.09 + 0.15 * v_near) * mix(0.6, 1.5, v_compose);
+  float frameA = (0.13 + 0.22 * v_near) * mix(0.7, 1.75, v_compose);
+  float chaosA = (0.11 + 0.15 * v_near) * (1.0 - v_m01);
+  float connA = (0.14 + 0.2 * v_near) * v_m01 * (1.0 - v_compose);
+  float a = structA * isOut + chaosA * isChaos + connA * isConn + frameA * isFrame;
   gl_FragColor = vec4(col * a, a);
 }
 `;
@@ -448,6 +490,8 @@ export default function SiteBuilderGL({ className }: Props) {
     const lb: Binding[] = [];
     let lineVertexCount = 0;
     let dprNow = 1;
+    let aspectNow = 1;
+    let vphNow = 1;
 
     const disposeGL = () => {
       if (ctx.isContextLost()) return;
@@ -514,16 +558,21 @@ export default function SiteBuilderGL({ className }: Props) {
         !attr(prog, "a_pos1", g.p1, 3, pb) ||
         !attr(prog, "a_pos2", g.p2, 3, pb) ||
         !attr(prog, "a_seed", g.seed, 1, pb) ||
-        !attr(prog, "a_kind", g.kind, 1, pb)
+        !attr(prog, "a_kind", g.kind, 1, pb) ||
+        !attr(prog, "a_datavis", g.datavis, 1, pb)
       )
         return false;
       const lp = makeProgram(LVERT, LFRAG);
       if (lp) {
         const ok =
-          attr(lp, "a_p0", g.lineP0, 3, lb) &&
-          attr(lp, "a_p1", g.lineP1, 3, lb) &&
-          attr(lp, "a_p2", g.lineP2, 3, lb) &&
-          attr(lp, "a_lkind", g.lineKind, 1, lb);
+          attr(lp, "a_self0", g.self0, 3, lb) &&
+          attr(lp, "a_self1", g.self1, 3, lb) &&
+          attr(lp, "a_self2", g.self2, 3, lb) &&
+          attr(lp, "a_other0", g.other0, 3, lb) &&
+          attr(lp, "a_other1", g.other1, 3, lb) &&
+          attr(lp, "a_other2", g.other2, 3, lb) &&
+          attr(lp, "a_side", g.side, 1, lb) &&
+          attr(lp, "a_lkind", g.lkind, 1, lb);
         if (ok) {
           lineProgram = lp;
           lineVertexCount = g.lineVertexCount;
@@ -534,6 +583,9 @@ export default function SiteBuilderGL({ className }: Props) {
             yaw: ctx.getUniformLocation(lp, "u_yaw"),
             pitch: ctx.getUniformLocation(lp, "u_pitch"),
             scale: ctx.getUniformLocation(lp, "u_scale"),
+            aspect: ctx.getUniformLocation(lp, "u_aspect"),
+            vph: ctx.getUniformLocation(lp, "u_vph"),
+            dpr: ctx.getUniformLocation(lp, "u_dpr"),
           };
         } else {
           ctx.deleteProgram(lp);
@@ -604,6 +656,7 @@ export default function SiteBuilderGL({ className }: Props) {
     let autoT = 0;
     let lastP = 0;
     let lastStage = -1;
+    let overrideScrollY = 0;
 
     const shouldRun = () => !reduced && !contextLost && pageVisible && onScreen && !disposed;
 
@@ -640,8 +693,6 @@ export default function SiteBuilderGL({ className }: Props) {
       dispatchStage();
     };
 
-    // click over the canvas cycles данные → прототип → реализация
-    let overrideScrollY = 0;
     const onClick = (e: MouseEvent) => {
       const r = wrap.getBoundingClientRect();
       if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return;
@@ -666,7 +717,10 @@ export default function SiteBuilderGL({ className }: Props) {
         ctx.uniform1f(lu.yaw, yaw);
         ctx.uniform1f(lu.pitch, pitch);
         ctx.uniform1f(lu.scale, scale);
-        ctx.drawArrays(ctx.LINES, 0, lineVertexCount);
+        ctx.uniform1f(lu.aspect, aspectNow);
+        ctx.uniform1f(lu.vph, vphNow);
+        ctx.uniform1f(lu.dpr, dprNow);
+        ctx.drawArrays(ctx.TRIANGLES, 0, lineVertexCount);
       }
       ctx.useProgram(program);
       bindAll(pb);
@@ -703,11 +757,12 @@ export default function SiteBuilderGL({ className }: Props) {
       ctx.viewport(0, 0, bw, bh);
       const aspect = bw / bh;
       perspective(projMat, FOV, aspect, 0.1, 20);
-      // auto-fit: the whole wireframe must fit the frustum at any aspect → no crop
       const visH = Math.tan(FOV / 2) * CAM_DIST;
       const visW = visH * aspect;
       baseScale = Math.min(visW / 1.72, visH / 1.28) * 0.94;
       dprNow = dpr;
+      aspectNow = aspect;
+      vphNow = bh;
       scrollDirty = true;
       if (reduced) {
         updateRect();
@@ -753,7 +808,6 @@ export default function SiteBuilderGL({ className }: Props) {
       pitchOff += (pitchT - pitchOff) * 0.16;
       pointerS += (pointerT - pointerS) * 0.15;
       rot += dt * 0.08 * (1 - m12 * 0.96);
-      // fully release rotation/tilt as it composes → the screen faces the viewer
       const free = 1 - m12;
       const breathe = 1 + 0.018 * Math.sin(t * 0.8);
       draw((rot + yawOff) * free, (-0.1 + pitchOff) * free, breathe * baseScale);
@@ -865,8 +919,8 @@ export default function SiteBuilderGL({ className }: Props) {
       className={className ? `relative h-full w-full ${className}` : "relative h-full w-full"}
       style={{
         cursor: "pointer",
-        maskImage: "radial-gradient(125% 125% at 50% 46%, #000 68%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(125% 125% at 50% 46%, #000 68%, transparent 100%)",
+        maskImage: "radial-gradient(125% 125% at 50% 46%, #000 70%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(125% 125% at 50% 46%, #000 70%, transparent 100%)",
       }}
     >
       <canvas ref={canvasRef} className="absolute inset-0 block h-full w-full" />
