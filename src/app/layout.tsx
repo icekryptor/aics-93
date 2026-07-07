@@ -5,22 +5,22 @@ import JsonLd from "@/components/seo/JsonLd";
 import YandexMetrika from "@/components/analytics/YandexMetrika";
 import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION, AUTHOR } from "@/lib/site";
 
-// Self-hosted variable Unbounded (latin + cyrillic) — no network at build time.
+// Self-hosted variable Unbounded (latin + cyrillic) — woff2 (~253KB vs 760KB TTF).
 const unbounded = localFont({
   variable: "--font-unbounded",
   display: "swap",
-  src: [{ path: "./fonts/Unbounded-Variable.ttf", weight: "300 700", style: "normal" }],
+  src: [{ path: "./fonts/Unbounded-Variable.woff2", weight: "300 700", style: "normal" }],
 });
 
-// Neue Haas Grotesk Display — the original site's primary typeface.
+// Neue Haas Grotesk Display — the original site's primary typeface (woff2).
 const neueHaas = localFont({
   variable: "--font-neue",
   display: "swap",
   src: [
-    { path: "./fonts/NeueHaas-ExtraLight.woff", weight: "300", style: "normal" },
-    { path: "./fonts/NeueHaas-Roman.woff", weight: "400", style: "normal" },
-    { path: "./fonts/NeueHaas-Medium.woff", weight: "500", style: "normal" },
-    { path: "./fonts/NeueHaas-Bold.woff", weight: "700", style: "normal" },
+    { path: "./fonts/NeueHaas-ExtraLight.woff2", weight: "300", style: "normal" },
+    { path: "./fonts/NeueHaas-Roman.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/NeueHaas-Medium.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/NeueHaas-Bold.woff2", weight: "700", style: "normal" },
   ],
 });
 
