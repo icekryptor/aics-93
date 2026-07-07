@@ -1,5 +1,5 @@
 import type { Service } from "@/lib/services";
-import AlgoArt from "./AlgoArt";
+import SiteBuilderGL from "./SiteBuilderGL";
 import CardSigil from "./CardSigil";
 import PipelineSchematic from "./PipelineSchematic";
 
@@ -31,60 +31,53 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
     <div className="text-runtime-ink">
       {/* ================= HERO ================= */}
       <section className="relative overflow-hidden">
-        {/* algorithmic art backdrop — denser to the right, fades behind the text */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            maskImage:
-              "radial-gradient(70% 90% at 82% 30%, #000 5%, rgba(0,0,0,0.5) 45%, transparent 78%)",
-            WebkitMaskImage:
-              "radial-gradient(70% 90% at 82% 30%, #000 5%, rgba(0,0,0,0.5) 45%, transparent 78%)",
-          }}
-        >
-          <AlgoArt seed={`hero-${s.slug}`} density={1.1} className="h-full w-full" />
-        </div>
-        {/* legibility scrim over the text side */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(100deg, var(--color-runtime) 18%, color-mix(in srgb, var(--color-runtime) 55%, transparent) 48%, transparent 82%)",
-          }}
-        />
+        <div className={`${SHELL} pt-14 pb-14 sm:pt-20 sm:pb-20`}>
+          <div className="grid items-center gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:gap-4">
+            {/* copy — heading in Neue Haas (sans), not Unbounded */}
+            <div>
+              <Eyebrow>{s.hero.eyebrow}</Eyebrow>
 
-        <div className={`relative z-10 ${SHELL} pt-16 pb-14 sm:pt-24 sm:pb-20`}>
-          <Eyebrow>{s.hero.eyebrow}</Eyebrow>
+              <h1 className="mt-6 max-w-xl text-balance text-[clamp(2rem,4.6vw,3.5rem)] font-semibold leading-[1.04] tracking-tight">
+                {s.hero.h1}
+              </h1>
 
-          <h1 className="mt-6 max-w-4xl text-balance font-display text-[clamp(2.1rem,5.4vw,4rem)] font-semibold leading-[1.02] tracking-tight">
-            {s.hero.h1}
-          </h1>
+              <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-runtime-ink-soft sm:text-lg">
+                {s.hero.subhead}
+              </p>
 
-          <p className="mt-6 max-w-2xl text-[1.05rem] leading-relaxed text-runtime-ink-soft sm:text-lg">
-            {s.hero.subhead}
-          </p>
+              <div className="mt-9 flex flex-wrap items-center gap-3">
+                <a
+                  href="#upgrade"
+                  data-magnetic
+                  data-cursor="route signal"
+                  className="signal-grad inline-flex h-12 items-center rounded-full px-7 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+                >
+                  {s.hero.primaryCta} <span aria-hidden className="ml-2">→</span>
+                </a>
+                <a
+                  href="#upgrade"
+                  data-magnetic
+                  className="inline-flex h-12 items-center rounded-full border border-runtime-line px-7 text-sm text-runtime-ink transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)]"
+                >
+                  {s.hero.secondaryCta}
+                </a>
+              </div>
+            </div>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
-            <a
-              href="#upgrade"
-              data-magnetic
-              data-cursor="route signal"
-              className="signal-grad inline-flex h-12 items-center rounded-full px-7 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
-            >
-              {s.hero.primaryCta} <span aria-hidden className="ml-2">→</span>
-            </a>
-            <a
-              href="#upgrade"
-              data-magnetic
-              className="inline-flex h-12 items-center rounded-full border border-runtime-line px-7 text-sm text-runtime-ink transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)]"
-            >
-              {s.hero.secondaryCta}
-            </a>
+            {/* 3D site-builder: chaos cloud → UI elements → website wireframe */}
+            <div className="relative h-[300px] w-full sm:h-[380px] lg:h-[520px] lg:-mr-6 xl:-mr-10">
+              <SiteBuilderGL className="h-full w-full" />
+              <span
+                className="tech-label pointer-events-none absolute bottom-0 right-1 z-10 text-[0.56rem] text-runtime-ink-soft/70"
+                style={{ letterSpacing: "0.22em" }}
+              >
+                хаос · элементы · каркас
+              </span>
+            </div>
           </div>
 
           {/* stat strip */}
-          <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-2 gap-3 sm:mt-14 sm:gap-4 lg:grid-cols-4">
             {s.hero.stats.map((st) => (
               <div
                 key={st.label}
