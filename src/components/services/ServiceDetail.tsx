@@ -156,34 +156,36 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
               {s.howItWorks.lead}
             </h2>
 
-            <div className="mt-10 grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+            {/* video — full width, like the homepage block */}
+            <div className="mt-10">
               <FramedVideo
                 src={HOW_IT_WORKS_VIDEO.src}
                 poster={HOW_IT_WORKS_VIDEO.poster}
                 label="AI CORE · SITE ASSEMBLY"
                 alt="AI-ядро собирает интерфейсы сайта"
               />
-
-              <ul className="grid gap-4">
-                {s.howItWorks.points.map((p, i) => (
-                  <li key={i} className="flex items-start gap-3.5">
-                    <span
-                      aria-hidden
-                      className="mt-1 grid size-6 shrink-0 place-items-center rounded-full text-[0.62rem] font-semibold"
-                      style={{
-                        border: "1px solid color-mix(in srgb, var(--color-signal) 45%, transparent)",
-                        background: "rgba(151,71,255,0.12)",
-                        color: "var(--color-signal-cool)",
-                        fontFamily: "var(--font-display, inherit)",
-                      }}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="text-[0.95rem] leading-relaxed text-runtime-ink-soft">{p}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
+
+            {/* points — below the video */}
+            <ul className="mt-10 grid gap-x-8 gap-y-4 sm:mt-12 sm:grid-cols-2">
+              {s.howItWorks.points.map((p, i) => (
+                <li key={i} className="flex items-start gap-3.5">
+                  <span
+                    aria-hidden
+                    className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full text-[0.62rem] font-semibold"
+                    style={{
+                      border: "1px solid color-mix(in srgb, var(--color-signal) 45%, transparent)",
+                      background: "rgba(151,71,255,0.12)",
+                      color: "var(--color-signal-cool)",
+                      fontFamily: "var(--font-display, inherit)",
+                    }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="text-[0.95rem] leading-relaxed text-runtime-ink-soft">{p}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
       ) : null}
