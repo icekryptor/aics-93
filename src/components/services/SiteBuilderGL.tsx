@@ -4,16 +4,17 @@ import { useEffect, useRef, useState } from "react";
 
 /* ------------------------------------------------------------------ *
  * SiteBuilderGL — raw-WebGL 3-stage morph for the web-dev service hero.
- *   state 0: chaotic 3D point cloud, points wired by random links
- *   state 1: points gather into UI elements (bars, buttons, media, cards)
- *   state 2: elements compose into a website wireframe inside a screen frame
- * Scroll-driven (like BrainGL) + idle auto-showcase. Same violet palette.
- * Points + lines both morph across the 3 states via mix(mix(p0,p1),p2).
+ *   0 · данные      : chaotic 3D point cloud wired by a dense web
+ *   1 · прототип    : points gather into UI elements, wired node-to-node
+ *   2 · реализация  : elements compose into a head-on website wireframe
+ * Scroll-driven + click-to-cycle + idle auto-showcase. Project palette.
+ * Auto-fits to the canvas aspect (no crop); edges softly masked.
  * ------------------------------------------------------------------ */
 
 type Props = { className?: string };
 
-const N = 4600;
+const N = 9000;
+const SPHERE = 1.5;
 
 function hash01(n: number): number {
   let x = (n + 0x9e3779b9) >>> 0;
@@ -31,20 +32,17 @@ function smoothstepN(e0: number, e1: number, x: number) {
   const t = clampN((x - e0) / (e1 - e0), 0, 1);
   return t * t * (3 - 2 * t);
 }
-/** random point inside a unit sphere from a seed */
-function spherePoint(seedBase: number): [number, number, number] {
+function spherePoint(seedBase: number, r: number): [number, number, number] {
   const u = hash01(seedBase * 3 + 11);
   const v = hash01(seedBase * 3 + 23);
   const w = hash01(seedBase * 3 + 37);
   const cosT = 2 * u - 1;
   const sinT = Math.sqrt(Math.max(0, 1 - cosT * cosT));
   const ph = 2 * Math.PI * v;
-  const r = Math.pow(w, 1 / 3);
-  return [sinT * Math.cos(ph) * r, cosT * r, sinT * Math.sin(ph) * r];
+  const rr = Math.pow(w, 1 / 3) * r;
+  return [sinT * Math.cos(ph) * rr, cosT * rr, sinT * Math.sin(ph) * rr];
 }
 
-// UI elements of the target wireframe (screen space; y up). kind drives colour:
-// 0 generic · 1 CTA (lime) · 2 chrome bar (bright) · 3 media panel.
 type El = { x0: number; y0: number; x1: number; y1: number; z: number; kind: number };
 const ELEMENTS: El[] = [
   { x0: -1.42, y0: 0.82, x1: 1.42, y1: 0.98, z: -0.05, kind: 2 }, // header bar
@@ -61,7 +59,6 @@ const ELEMENTS: El[] = [
   { x0: 0.55, y0: -0.76, x1: 1.42, y1: -0.5, z: 0.0, kind: 0 }, // card 3
   { x0: -1.42, y0: -1.0, x1: 1.42, y1: -0.86, z: -0.05, kind: 2 }, // footer bar
 ];
-// which elements also get a drawn outline in the wireframe (bigger blocks)
 const OUTLINE = [0, 3, 8, 9, 10, 11, 12];
 
 type Geometry = {
@@ -73,7 +70,7 @@ type Geometry = {
   lineP0: Float32Array;
   lineP1: Float32Array;
   lineP2: Float32Array;
-  lineKind: Float32Array; // 0 structure · 1 chaos (fades as it assembles)
+  lineKind: Float32Array; // 0 structure(outline) · 1 chaos web · 2 node connector
   lineVertexCount: number;
 };
 
@@ -86,56 +83,66 @@ function build(): Geometry {
   const seed = new Float32Array(N);
   const kind = new Float32Array(N);
 
-  // per-element scatter anchor for the "assembled but floating" state
   const off = ELEMENTS.map((_, e) => ({
-    x: (hash01(e * 5 + 1) - 0.5) * 2.4,
-    y: (hash01(e * 5 + 2) - 0.5) * 2.1,
-    z: (hash01(e * 5 + 3) - 0.5) * 1.9,
+    x: (hash01(e * 5 + 1) - 0.5) * 2.1,
+    y: (hash01(e * 5 + 2) - 0.5) * 1.9,
+    z: (hash01(e * 5 + 3) - 0.5) * 1.7,
   }));
+  const center = (el: El): [number, number, number] => [
+    (el.x0 + el.x1) / 2,
+    (el.y0 + el.y1) / 2,
+    el.z,
+  ];
 
   const areas = ELEMENTS.map((el) => (el.x1 - el.x0) * (el.y1 - el.y0));
   const totalA = areas.reduce((a, b) => a + b, 0);
-  const counts = areas.map((a) => Math.max(6, Math.floor((N * a) / totalA)));
+  const counts = areas.map((a) => Math.max(10, Math.floor((N * a) / totalA)));
   let assigned = counts.reduce((a, b) => a + b, 0);
-  let ei = 0;
+  let bump = 0;
   while (assigned < N) {
-    counts[ei % counts.length]++;
+    counts[bump % counts.length]++;
     assigned++;
-    ei++;
+    bump++;
   }
 
   let i = 0;
   for (let e = 0; e < ELEMENTS.length && i < N; e++) {
     const el = ELEMENTS[e];
-    for (let k = 0; k < counts[e] && i < N; k++, i++) {
+    const c = counts[e];
+    const w = el.x1 - el.x0;
+    const h = el.y1 - el.y0;
+    // even jittered-grid fill → the composed blocks read as solid figures
+    const cols = Math.max(1, Math.round(Math.sqrt((c * w) / h)));
+    const rows = Math.max(1, Math.ceil(c / cols));
+    for (let k = 0; k < c && i < N; k++, i++) {
       seed[i] = hash01(i * 7 + 5);
       kind[i] = el.kind;
-      const rx = el.x0 + (el.x1 - el.x0) * hash01(i * 9 + 1);
-      const ry = el.y0 + (el.y1 - el.y0) * hash01(i * 9 + 2);
-      const jz = (hash01(i * 9 + 3) - 0.5) * 0.04;
-      // state 2 — composed layout (flat, slight per-element depth)
+      const col = k % cols;
+      const row = Math.floor(k / cols);
+      const gx = (col + 0.5) / cols + (hash01(i * 9 + 1) - 0.5) * (0.9 / cols);
+      const gy = (row + 0.5) / rows + (hash01(i * 9 + 2) - 0.5) * (0.9 / rows);
+      const rx = el.x0 + w * clampN(gx, 0, 1);
+      const ry = el.y0 + h * clampN(gy, 0, 1);
+      const jz = (hash01(i * 9 + 3) - 0.5) * 0.03;
       p2[i * 3] = rx;
       p2[i * 3 + 1] = ry;
       p2[i * 3 + 2] = el.z + jz;
-      // state 1 — rigidly translated to a floating anchor with real depth
       p1[i * 3] = rx + off[e].x;
       p1[i * 3 + 1] = ry + off[e].y;
       p1[i * 3 + 2] = el.z * 0.4 + off[e].z;
-      // state 0 — chaos: random point in a sphere
-      const [sx, sy, sz] = spherePoint(i + 1);
-      p0[i * 3] = sx * 1.7;
-      p0[i * 3 + 1] = sy * 1.5;
-      p0[i * 3 + 2] = sz * 1.7;
+      const [sx, sy, sz] = spherePoint(i + 1, SPHERE);
+      p0[i * 3] = sx;
+      p0[i * 3 + 1] = sy;
+      p0[i * 3 + 2] = sz;
     }
   }
-  // any leftover indices (rounding) → chaos points that collapse to origin
   for (; i < N; i++) {
     seed[i] = hash01(i * 7 + 5);
     kind[i] = 0;
-    const [sx, sy, sz] = spherePoint(i + 1);
-    p0[i * 3] = sx * 1.7;
-    p0[i * 3 + 1] = sy * 1.5;
-    p0[i * 3 + 2] = sz * 1.7;
+    const [sx, sy, sz] = spherePoint(i + 1, SPHERE);
+    p0[i * 3] = sx;
+    p0[i * 3 + 1] = sy;
+    p0[i * 3 + 2] = sz;
     p1[i * 3] = sx * 0.4;
     p1[i * 3 + 1] = sy * 0.4;
     p1[i * 3 + 2] = sz * 0.4;
@@ -146,62 +153,81 @@ function build(): Geometry {
   const L1: number[] = [];
   const L2: number[] = [];
   const LK: number[] = [];
-  const pushSeg = (
-    a2: [number, number, number],
-    b2: [number, number, number],
-    a1: [number, number, number],
-    b1: [number, number, number],
-    a0: [number, number, number],
-    b0: [number, number, number],
+  const seg = (
+    a2: number[],
+    b2: number[],
+    a1: number[],
+    b1: number[],
+    a0: number[],
+    b0: number[],
     lk: number,
   ) => {
-    L2.push(...a2, ...b2);
-    L1.push(...a1, ...b1);
-    L0.push(...a0, ...b0);
+    L2.push(a2[0], a2[1], a2[2], b2[0], b2[1], b2[2]);
+    L1.push(a1[0], a1[1], a1[2], b1[0], b1[1], b1[2]);
+    L0.push(a0[0], a0[1], a0[2], b0[0], b0[1], b0[2]);
     LK.push(lk, lk);
   };
+  const rnd = (base: number) => {
+    const [x, y, z] = spherePoint(base, SPHERE);
+    return [x, y, z];
+  };
 
-  // screen frame outline
+  // element + frame outlines (structure)
   const FR: El = { x0: -1.55, y0: -1.12, x1: 1.55, y1: 1.12, z: -0.02, kind: 2 };
-  const frameOff = { x: 0, y: 0, z: -0.6 };
-  const rectCorners = (el: El): [number, number, number][] => [
+  const frameOff = { x: 0, y: 0, z: -0.55 };
+  const corners = (el: El) => [
     [el.x0, el.y0, el.z],
     [el.x1, el.y0, el.z],
     [el.x1, el.y1, el.z],
     [el.x0, el.y1, el.z],
   ];
-  const addOutline = (el: El, o: { x: number; y: number; z: number }) => {
-    const c2 = rectCorners(el);
+  const outline = (el: El, o: { x: number; y: number; z: number }) => {
+    const c2 = corners(el);
     for (let e = 0; e < 4; e++) {
       const a = c2[e];
       const b = c2[(e + 1) % 4];
-      const a1: [number, number, number] = [a[0] + o.x, a[1] + o.y, a[2] * 0.4 + o.z];
-      const b1: [number, number, number] = [b[0] + o.x, b[1] + o.y, b[2] * 0.4 + o.z];
-      const [ax, ay, az] = spherePoint(1000 + L2.length);
-      const [bx, by, bz] = spherePoint(2000 + L2.length);
-      pushSeg(a, b, a1, b1, [ax * 1.7, ay * 1.5, az * 1.7], [bx * 1.7, by * 1.5, bz * 1.7], 0);
+      const a1 = [a[0] + o.x, a[1] + o.y, a[2] * 0.4 + o.z];
+      const b1 = [b[0] + o.x, b[1] + o.y, b[2] * 0.4 + o.z];
+      seg(a, b, a1, b1, rnd(1000 + L2.length), rnd(2000 + L2.length), 0);
     }
   };
-  addOutline(FR, frameOff);
-  for (const idx of OUTLINE) addOutline(ELEMENTS[idx], off[idx]);
+  outline(FR, frameOff);
+  for (const idx of OUTLINE) outline(ELEMENTS[idx], off[idx]);
 
-  // chaos web — random short links, present in state 0, fade out on assembly
-  const CHAOS = 300;
+  // node connectors — link each element to its 2 nearest neighbours. Visible in
+  // the prototype stage (floating anchors) so the "wiring" between nodes shows.
+  const cen2 = ELEMENTS.map(center);
+  const seen = new Set<string>();
+  for (let a = 0; a < ELEMENTS.length; a++) {
+    const dists = ELEMENTS.map((_, b) => ({
+      b,
+      d: b === a ? 1e9 : (cen2[a][0] - cen2[b][0]) ** 2 + (cen2[a][1] - cen2[b][1]) ** 2,
+    })).sort((x, y) => x.d - y.d);
+    for (let n = 0; n < 2; n++) {
+      const b = dists[n].b;
+      const key = Math.min(a, b) + "-" + Math.max(a, b);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const a2 = cen2[a];
+      const b2 = cen2[b];
+      const a1 = [cen2[a][0] + off[a].x, cen2[a][1] + off[a].y, cen2[a][2] * 0.4 + off[a].z];
+      const b1 = [cen2[b][0] + off[b].x, cen2[b][1] + off[b].y, cen2[b][2] * 0.4 + off[b].z];
+      seg(a2, b2, a1, b1, rnd(3000 + a * 31 + b), rnd(3500 + a * 31 + b), 2);
+    }
+  }
+
+  // chaos web — dense random links, present in data stage, fade on assembly
+  const CHAOS = 420;
   for (let c = 0; c < CHAOS; c++) {
-    const [ax, ay, az] = spherePoint(5000 + c);
-    const A: [number, number, number] = [ax * 1.7, ay * 1.5, az * 1.7];
-    const dl = 0.5;
+    const A = spherePoint(5000 + c, SPHERE);
+    const dl = 0.55;
     const B: [number, number, number] = [
       A[0] + (hash01(c * 13 + 1) - 0.5) * dl,
       A[1] + (hash01(c * 13 + 2) - 0.5) * dl,
       A[2] + (hash01(c * 13 + 3) - 0.5) * dl,
     ];
-    const collapse = (p: [number, number, number]): [number, number, number] => [
-      p[0] * 0.12,
-      p[1] * 0.12,
-      p[2] * 0.12,
-    ];
-    pushSeg(collapse(A), collapse(B), collapse(A), collapse(B), A, B, 1);
+    const col = (p: number[]) => [p[0] * 0.12, p[1] * 0.12, p[2] * 0.12];
+    seg(col(A), col(B), col(A), col(B), A, B, 1);
   }
 
   return {
@@ -249,7 +275,7 @@ void main() {
   q = vec3(q.x, q.y * cx - q.z * sx, q.y * sx + q.z * cx);
   float near = clamp((q.z + 1.6) / 3.2, 0.0, 1.0);
   gl_Position = u_proj * vec4(q.x, q.y, q.z - 3.2, 1.0);
-  gl_PointSize = clamp(u_dpr * mix(2.0, 4.6, near) * (1.0 + step(1.5, a_kind) * 0.2), 1.0, 40.0);
+  gl_PointSize = clamp(u_dpr * mix(1.7, 3.9, near) * (1.0 + step(1.5, a_kind) * 0.18), 1.0, 34.0);
   v_near = near;
   v_seed = a_seed;
   v_kind = a_kind;
@@ -275,18 +301,14 @@ void main() {
   vec3 lime = vec3(0.773, 1.0, 0.267);
   vec3 col = mix(deep, soft, v_near);
   float a = 0.26 + 0.5 * v_near;
-  // sparkle
   if (v_seed > 0.972) { col = ink; a = 0.8; }
-  // chrome bars brighter, CTA lime, media a touch cooler
   col = mix(col, ink, step(1.5, v_kind) * step(v_kind, 2.5) * 0.4);
-  col = mix(col, lime, step(0.5, v_kind) * step(v_kind, 1.5) * 0.75);
-  // gentle idle twinkle before it composes; solid once composed
-  float tw = 0.6 + 0.4 * sin(u_time * 1.6 + v_seed * 42.0);
+  col = mix(col, lime, step(0.5, v_kind) * step(v_kind, 1.5) * 0.78);
+  float tw = 0.62 + 0.38 * sin(u_time * 1.6 + v_seed * 42.0);
   a *= mix(tw, 1.0, v_compose);
-  // composed wireframe reads a bit crisper
-  a *= mix(0.9, 1.08, v_compose);
+  a *= mix(0.88, 1.12, v_compose);
   a *= fall * (1.0 + 0.3 * u_pointer);
-  a *= 0.8;
+  a *= 0.82;
   gl_FragColor = vec4(col * a, a);
 }
 `;
@@ -329,10 +351,15 @@ void main() {
   vec3 deep = vec3(0.592, 0.278, 1.0);
   vec3 soft = vec3(0.788, 0.714, 1.0);
   vec3 col = mix(deep, soft, v_near);
-  // structure lines: faint early, crisp when composed. chaos lines: fade as assembled.
-  float structA = (0.05 + 0.1 * v_near) * mix(0.5, 1.35, v_compose);
-  float chaosA = (0.05 + 0.08 * v_near) * (1.0 - v_m01);
-  float a = mix(structA, chaosA, v_lkind);
+  // structure outlines: visible in prototype, crisp in build
+  float structA = (0.06 + 0.12 * v_near) * mix(0.85, 1.45, v_compose);
+  // chaos web: fades as points assemble
+  float chaosA = (0.05 + 0.09 * v_near) * (1.0 - v_m01);
+  // node connectors: peak in the prototype stage (assembled but not composed)
+  float connA = (0.09 + 0.16 * v_near) * v_m01 * (1.0 - v_compose);
+  float a = structA * step(v_lkind, 0.5)
+          + chaosA * step(0.5, v_lkind) * step(v_lkind, 1.5)
+          + connA * step(1.5, v_lkind);
   gl_FragColor = vec4(col * a, a);
 }
 `;
@@ -357,6 +384,9 @@ function perspective(out: Float32Array, fovY: number, aspect: number, near: numb
   out[11] = -1;
   out[14] = (2 * far * near) / (near - far);
 }
+
+const FOV = (36 * Math.PI) / 180;
+const CAM_DIST = 3.2;
 
 export default function SiteBuilderGL({ className }: Props) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
@@ -487,7 +517,6 @@ export default function SiteBuilderGL({ className }: Props) {
         !attr(prog, "a_kind", g.kind, 1, pb)
       )
         return false;
-
       const lp = makeProgram(LVERT, LFRAG);
       if (lp) {
         const ok =
@@ -541,7 +570,6 @@ export default function SiteBuilderGL({ className }: Props) {
       };
     }
 
-    // debug hook: ?viz=0|1|2 pins a stage for screenshots (harmless in prod)
     let override = -1;
     try {
       const q = new URLSearchParams(window.location.search).get("viz");
@@ -570,18 +598,33 @@ export default function SiteBuilderGL({ className }: Props) {
     let cx = 0;
     let cy = 0;
     let halfDiag = 1;
+    let baseScale = 0.62;
     const projMat = new Float32Array(16);
     let autoState = override >= 0 ? override : 0;
     let autoT = 0;
     let lastP = 0;
+    let lastStage = -1;
 
     const shouldRun = () => !reduced && !contextLost && pageVisible && onScreen && !disposed;
+
+    const dispatchStage = () => {
+      const s = m12T > 0.5 ? 2 : m01T > 0.5 ? 1 : 0;
+      if (s !== lastStage) {
+        lastStage = s;
+        try {
+          window.dispatchEvent(new CustomEvent("aics:sitestate", { detail: s }));
+        } catch {
+          /* ignore */
+        }
+      }
+    };
 
     const updateRect = () => {
       const r = wrap.getBoundingClientRect();
       cx = r.left + r.width / 2;
       cy = r.top + r.height / 2;
       halfDiag = Math.sqrt(r.width * r.width + r.height * r.height) / 2;
+      if (override >= 0 && Math.abs(window.scrollY - overrideScrollY) > 160) override = -1;
       const p = clampN(-r.top / Math.max(1, r.height * 0.9), 0, 1);
       lastP = p;
       if (override >= 0) {
@@ -594,7 +637,22 @@ export default function SiteBuilderGL({ className }: Props) {
         m01T = smoothstepN(0, 0.5, p);
         m12T = smoothstepN(0.5, 1, p);
       }
+      dispatchStage();
     };
+
+    // click over the canvas cycles данные → прототип → реализация
+    let overrideScrollY = 0;
+    const onClick = (e: MouseEvent) => {
+      const r = wrap.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return;
+      const cur = override >= 0 ? override : m12T > 0.5 ? 2 : m01T > 0.5 ? 1 : 0;
+      override = (cur + 1) % 3;
+      overrideScrollY = window.scrollY;
+      autoState = override;
+      autoT = 0;
+      updateRect();
+    };
+    window.addEventListener("click", onClick);
 
     const draw = (yaw: number, pitch: number, scale: number) => {
       ctx.clearColor(0, 0, 0, 0);
@@ -626,9 +684,9 @@ export default function SiteBuilderGL({ className }: Props) {
 
     const renderStatic = () => {
       m01 = 1;
-      m12 = 0.62;
+      m12 = 1;
       pointerS = 0;
-      draw(0.32, -0.12, 0.96);
+      draw(0, 0, baseScale);
     };
 
     const resize = () => {
@@ -643,7 +701,12 @@ export default function SiteBuilderGL({ className }: Props) {
         canvas.height = bh;
       }
       ctx.viewport(0, 0, bw, bh);
-      perspective(projMat, (36 * Math.PI) / 180, bw / bh, 0.1, 20);
+      const aspect = bw / bh;
+      perspective(projMat, FOV, aspect, 0.1, 20);
+      // auto-fit: the whole wireframe must fit the frustum at any aspect → no crop
+      const visH = Math.tan(FOV / 2) * CAM_DIST;
+      const visW = visH * aspect;
+      baseScale = Math.min(visW / 1.72, visH / 1.28) * 0.94;
       dprNow = dpr;
       scrollDirty = true;
       if (reduced) {
@@ -663,9 +726,8 @@ export default function SiteBuilderGL({ className }: Props) {
         scrollDirty = false;
         updateRect();
       }
-      // idle auto-showcase at the top: cycle chaos → elements → wireframe
       autoT += dt;
-      if (autoT >= 3.4) {
+      if (autoT >= 3.8) {
         autoT = 0;
         if (override < 0 && lastP < 0.06) {
           autoState = (autoState + 1) % 3;
@@ -673,8 +735,8 @@ export default function SiteBuilderGL({ className }: Props) {
         }
       }
       if (coarse) {
-        yawT = Math.sin(t * 0.2) * 0.06;
-        pitchT = Math.cos(t * 0.16) * 0.04;
+        yawT = Math.sin(t * 0.2) * 0.05;
+        pitchT = Math.cos(t * 0.16) * 0.035;
         pointerT = 0;
       } else if (hasPointer) {
         const vw = window.innerWidth || 1;
@@ -685,16 +747,16 @@ export default function SiteBuilderGL({ className }: Props) {
         const ddy = py - cy;
         pointerT = Math.max(0, 1 - Math.sqrt(ddx * ddx + ddy * ddy) / Math.max(1, halfDiag * 1.4));
       }
-      m01 += (m01T - m01) * 0.14;
-      m12 += (m12T - m12) * 0.14;
+      m01 += (m01T - m01) * 0.13;
+      m12 += (m12T - m12) * 0.13;
       yawOff += (yawT - yawOff) * 0.16;
       pitchOff += (pitchT - pitchOff) * 0.16;
       pointerS += (pointerT - pointerS) * 0.15;
-      // base spin, damped hard as it composes so the screen faces the viewer
-      rot += dt * 0.09 * (1 - m12 * 0.92);
-      const compFace = 1 - m12; // release rotation influence when composed
-      const breathe = 1 + 0.02 * Math.sin(t * 0.8);
-      draw(rot * compFace + yawOff * (1 - 0.75 * m12), -0.12 + pitchOff * (1 - 0.6 * m12), breathe * 0.96);
+      rot += dt * 0.08 * (1 - m12 * 0.96);
+      // fully release rotation/tilt as it composes → the screen faces the viewer
+      const free = 1 - m12;
+      const breathe = 1 + 0.018 * Math.sin(t * 0.8);
+      draw((rot + yawOff) * free, (-0.1 + pitchOff) * free, breathe * baseScale);
       raf = requestAnimationFrame(frame);
     };
 
@@ -724,6 +786,7 @@ export default function SiteBuilderGL({ className }: Props) {
       return () => {
         disposed = true;
         ro.disconnect();
+        window.removeEventListener("click", onClick);
         canvas.removeEventListener("webglcontextlost", onLost, false);
         canvas.removeEventListener("webglcontextrestored", onRestored, false);
         disposeGL();
@@ -766,6 +829,7 @@ export default function SiteBuilderGL({ className }: Props) {
       ro.disconnect();
       if (io) io.disconnect();
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("click", onClick);
       if (!coarse) window.removeEventListener("pointermove", onMove);
       document.removeEventListener("visibilitychange", onVis);
       canvas.removeEventListener("webglcontextlost", onLost, false);
@@ -775,7 +839,6 @@ export default function SiteBuilderGL({ className }: Props) {
   }, [epoch]);
 
   if (failed) {
-    // static CSS wireframe fallback — always shows *something* on the right
     return (
       <div className={className} aria-hidden>
         <div className="relative h-full w-full">
@@ -800,6 +863,11 @@ export default function SiteBuilderGL({ className }: Props) {
       ref={wrapRef}
       aria-hidden
       className={className ? `relative h-full w-full ${className}` : "relative h-full w-full"}
+      style={{
+        cursor: "pointer",
+        maskImage: "radial-gradient(125% 125% at 50% 46%, #000 68%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(125% 125% at 50% 46%, #000 68%, transparent 100%)",
+      }}
     >
       <canvas ref={canvasRef} className="absolute inset-0 block h-full w-full" />
     </div>

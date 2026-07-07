@@ -1,5 +1,6 @@
 import type { Service } from "@/lib/services";
 import SiteBuilderGL from "./SiteBuilderGL";
+import StageCaption from "./StageCaption";
 import CardSigil from "./CardSigil";
 import PipelineSchematic from "./PipelineSchematic";
 
@@ -64,15 +65,12 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
               </div>
             </div>
 
-            {/* 3D site-builder: chaos cloud → UI elements → website wireframe */}
-            <div className="relative h-[300px] w-full sm:h-[380px] lg:h-[520px] lg:-mr-6 xl:-mr-10">
+            {/* 3D site-builder: данные → прототип → реализация (клик — сменить стадию) */}
+            <div className="relative h-[320px] w-full sm:h-[400px] lg:h-[560px]">
               <SiteBuilderGL className="h-full w-full" />
-              <span
-                className="tech-label pointer-events-none absolute bottom-0 right-1 z-10 text-[0.56rem] text-runtime-ink-soft/70"
-                style={{ letterSpacing: "0.22em" }}
-              >
-                хаос · элементы · каркас
-              </span>
+              <div className="pointer-events-none absolute inset-x-0 bottom-1 z-10 flex items-center justify-center">
+                <StageCaption className="tech-label text-[0.58rem] text-runtime-ink-soft/70" />
+              </div>
             </div>
           </div>
 
