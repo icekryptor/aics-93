@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
  * bold and the wireframe frame is crisp. Scroll + click + auto-showcase.
  * ------------------------------------------------------------------ */
 
-type Props = { className?: string };
+type Props = { className?: string; variant?: "site" | "brand" };
 
 const N = 9000;
 const SPHERE = 1.5;
@@ -44,22 +44,50 @@ function spherePoint(seedBase: number, r: number): [number, number, number] {
 }
 
 type El = { x0: number; y0: number; x1: number; y1: number; z: number; kind: number };
-const ELEMENTS: El[] = [
-  { x0: -1.42, y0: 0.82, x1: 1.42, y1: 0.98, z: -0.05, kind: 2 }, // header bar
-  { x0: -1.36, y0: 0.855, x1: -1.16, y1: 0.945, z: 0.06, kind: 2 }, // logo
-  { x0: 0.62, y0: 0.86, x1: 1.35, y1: 0.94, z: 0.06, kind: 0 }, // nav
-  { x0: -1.42, y0: 0.44, x1: -0.18, y1: 0.66, z: 0.02, kind: 0 }, // h1 bar 1
-  { x0: -1.42, y0: 0.2, x1: -0.55, y1: 0.4, z: 0.02, kind: 0 }, // h1 bar 2
-  { x0: -1.42, y0: 0.02, x1: -0.35, y1: 0.1, z: 0.0, kind: 0 }, // sub line 1
-  { x0: -1.42, y0: -0.12, x1: -0.5, y1: -0.04, z: 0.0, kind: 0 }, // sub line 2
-  { x0: -1.42, y0: -0.36, x1: -0.92, y1: -0.18, z: 0.05, kind: 1 }, // CTA button
-  { x0: -0.05, y0: -0.16, x1: 1.42, y1: 0.66, z: 0.09, kind: 3 }, // media panel
-  { x0: -1.42, y0: -0.76, x1: -0.55, y1: -0.5, z: 0.0, kind: 0 }, // card 1
-  { x0: -0.3, y0: -0.76, x1: 0.42, y1: -0.5, z: 0.0, kind: 0 }, // card 2
-  { x0: 0.55, y0: -0.76, x1: 1.42, y1: -0.5, z: 0.0, kind: 0 }, // card 3
-  { x0: -1.42, y0: -1.0, x1: 1.42, y1: -0.86, z: -0.05, kind: 2 }, // footer bar
-];
-const OUTLINE = [0, 3, 8, 9, 10, 11, 12];
+type Layout = { elements: El[]; outline: number[] };
+
+// composed target for the "реализация" stage. kind: 0 generic · 1 lime accent ·
+// 2 bright chrome · 3 media/panel.
+const LAYOUTS: Record<string, Layout> = {
+  // website wireframe (разработка сайтов)
+  site: {
+    elements: [
+      { x0: -1.42, y0: 0.82, x1: 1.42, y1: 0.98, z: -0.05, kind: 2 }, // header bar
+      { x0: -1.36, y0: 0.855, x1: -1.16, y1: 0.945, z: 0.06, kind: 2 }, // logo
+      { x0: 0.62, y0: 0.86, x1: 1.35, y1: 0.94, z: 0.06, kind: 0 }, // nav
+      { x0: -1.42, y0: 0.44, x1: -0.18, y1: 0.66, z: 0.02, kind: 0 }, // h1 bar 1
+      { x0: -1.42, y0: 0.2, x1: -0.55, y1: 0.4, z: 0.02, kind: 0 }, // h1 bar 2
+      { x0: -1.42, y0: 0.02, x1: -0.35, y1: 0.1, z: 0.0, kind: 0 }, // sub line 1
+      { x0: -1.42, y0: -0.12, x1: -0.5, y1: -0.04, z: 0.0, kind: 0 }, // sub line 2
+      { x0: -1.42, y0: -0.36, x1: -0.92, y1: -0.18, z: 0.05, kind: 1 }, // CTA button
+      { x0: -0.05, y0: -0.16, x1: 1.42, y1: 0.66, z: 0.09, kind: 3 }, // media panel
+      { x0: -1.42, y0: -0.76, x1: -0.55, y1: -0.5, z: 0.0, kind: 0 }, // card 1
+      { x0: -0.3, y0: -0.76, x1: 0.42, y1: -0.5, z: 0.0, kind: 0 }, // card 2
+      { x0: 0.55, y0: -0.76, x1: 1.42, y1: -0.5, z: 0.0, kind: 0 }, // card 3
+      { x0: -1.42, y0: -1.0, x1: 1.42, y1: -0.86, z: -0.05, kind: 2 }, // footer bar
+    ],
+    outline: [0, 3, 8, 9, 10, 11, 12],
+  },
+  // brandbook board (фирменный стиль / дизайн-система)
+  brand: {
+    elements: [
+      { x0: -1.42, y0: 0.32, x1: -0.6, y1: 0.98, z: 0.06, kind: 2 }, // 0 logo mark (big square)
+      { x0: -1.42, y0: 0.12, x1: -0.5, y1: 0.24, z: 0.0, kind: 0 }, // 1 wordmark bar
+      { x0: 0.5, y0: 0.4, x1: 1.16, y1: 0.98, z: 0.06, kind: 2 }, // 2 "Aa" type specimen
+      { x0: 0.5, y0: 0.22, x1: 1.42, y1: 0.32, z: 0.0, kind: 0 }, // 3 type line 1
+      { x0: 0.5, y0: 0.08, x1: 1.2, y1: 0.17, z: 0.0, kind: 0 }, // 4 type line 2
+      { x0: -1.42, y0: -0.14, x1: -1.2, y1: 0.04, z: 0.02, kind: 2 }, // 5 swatch
+      { x0: -1.14, y0: -0.14, x1: -0.92, y1: 0.04, z: 0.02, kind: 2 }, // 6 swatch
+      { x0: -0.86, y0: -0.14, x1: -0.64, y1: 0.04, z: 0.02, kind: 1 }, // 7 swatch (lime)
+      { x0: -0.58, y0: -0.14, x1: -0.36, y1: 0.04, z: 0.02, kind: 2 }, // 8 swatch
+      { x0: -0.3, y0: -0.14, x1: -0.08, y1: 0.04, z: 0.02, kind: 2 }, // 9 swatch
+      { x0: -1.42, y0: -0.78, x1: -0.5, y1: -0.16, z: 0.05, kind: 0 }, // 10 application mock
+      { x0: 0.28, y0: -0.78, x1: 1.42, y1: -0.06, z: 0.09, kind: 3 }, // 11 pattern panel
+      { x0: -1.42, y0: -1.0, x1: 1.42, y1: -0.9, z: -0.05, kind: 2 }, // 12 footer strip
+    ],
+    outline: [0, 2, 10, 11, 12],
+  },
+};
 type V3 = [number, number, number];
 
 type Geometry = {
@@ -80,9 +108,10 @@ type Geometry = {
   lineVertexCount: number;
 };
 
-let cache: Geometry | null = null;
+const cache = new Map<string, Geometry>();
 
-function build(): Geometry {
+function build(variant: string): Geometry {
+  const { elements: ELEMENTS, outline: OUTLINE } = LAYOUTS[variant] || LAYOUTS.site;
   const p0 = new Float32Array(N * 3);
   const p1 = new Float32Array(N * 3);
   const p2 = new Float32Array(N * 3);
@@ -256,9 +285,13 @@ function build(): Geometry {
   };
 }
 
-function getGeometry(): Geometry {
-  if (!cache) cache = build();
-  return cache;
+function getGeometry(variant: string): Geometry {
+  let g = cache.get(variant);
+  if (!g) {
+    g = build(variant);
+    cache.set(variant, g);
+  }
+  return g;
 }
 
 /* ---- shaders ---- */
@@ -430,7 +463,7 @@ function perspective(out: Float32Array, fovY: number, aspect: number, near: numb
 const FOV = (36 * Math.PI) / 180;
 const CAM_DIST = 3.2;
 
-export default function SiteBuilderGL({ className }: Props) {
+export default function SiteBuilderGL({ className, variant = "site" }: Props) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [failed, setFailed] = useState(false);
@@ -552,7 +585,7 @@ export default function SiteBuilderGL({ className }: Props) {
       if (!prog) return false;
       program = prog;
       ctx.useProgram(prog);
-      const g = getGeometry();
+      const g = getGeometry(variant);
       if (
         !attr(prog, "a_pos0", g.p0, 3, pb) ||
         !attr(prog, "a_pos1", g.p1, 3, pb) ||
@@ -890,7 +923,7 @@ export default function SiteBuilderGL({ className }: Props) {
       canvas.removeEventListener("webglcontextrestored", onRestored, false);
       disposeGL();
     };
-  }, [epoch]);
+  }, [epoch, variant]);
 
   if (failed) {
     return (

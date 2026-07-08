@@ -69,7 +69,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
 
             {/* 3D site-builder: данные → прототип → реализация (клик — сменить стадию) */}
             <div className="relative h-[320px] w-full sm:h-[400px] lg:h-[560px]">
-              <SiteBuilderGL className="h-full w-full" />
+              <SiteBuilderGL className="h-full w-full" variant={s.heroVisual ?? "site"} />
               <div className="pointer-events-none absolute inset-x-0 bottom-1 z-10 flex items-center justify-center">
                 <StageCaption className="tech-label text-[0.58rem] text-runtime-ink-soft/70" />
               </div>
