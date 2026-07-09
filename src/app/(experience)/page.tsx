@@ -3,6 +3,7 @@ import { Intro, Frameworks, Reasons, SalesEngine, About } from "@/components/Sec
 import AiProcess from "@/components/AiProcess";
 import CaseSlider from "@/components/CaseSlider";
 import ContactConsole from "@/components/ContactConsole";
+import ServicesTeaser from "@/components/ServicesTeaser";
 import BlogTeaser from "@/components/BlogTeaser";
 import Footer from "@/components/Footer";
 import SignalTransition from "@/components/system/SignalTransition";
@@ -40,6 +41,7 @@ export default function Experience() {
         <Reasons />
         <AiProcess />
         <SalesEngine />
+        <ServicesTeaser />
 
         {/* ACT IV — THE OPERATOR & THE PROOF */}
         <SignalTransition id="act-proof" index="04" label="// оператор · доказательства" compact />
