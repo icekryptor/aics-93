@@ -3,14 +3,17 @@
 import { useEffect, useRef } from "react";
 
 /**
- * GenerativeCover — deterministic algorithmic art for blog covers.
+ * GenerativeCover — deterministic algorithmic art for covers.
  *
  * A seeded flow-field of fine strokes over an accent-tinted dark base. The same
- * `seed` always yields the same image (no flicker); the palette is driven by the
- * post's `accent` colour + the DS spectrum. Drawn once (static), DPR-aware.
+ * `seed` always yields the same field (no flicker). DPR-aware. Static by
+ * default; with `animate` a soft light gently drifts over the (still static)
+ * field — cheap: the strokes are painted once to an offscreen buffer and only a
+ * couple of additive glows move per frame. Pauses offscreen / on hidden tab /
+ * under prefers-reduced-motion.
  */
 
-type Props = { seed: string; accent: string; className?: string; density?: number };
+type Props = { seed: string; accent: string; className?: string; density?: number; animate?: boolean };
 
 function hashStr(s: string): number {
   let h = 2166136261;
@@ -30,7 +33,7 @@ function hexToRgb(hex: string): [number, number, number] {
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
-export default function GenerativeCover({ seed, accent, className, density = 1 }: Props) {
+export default function GenerativeCover({ seed, accent, className, density = 1, animate = false }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
 
@@ -41,21 +44,20 @@ export default function GenerativeCover({ seed, accent, className, density = 1 }
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const base = hashStr(seed);
     const [ar, ag, ab] = hexToRgb(accent);
-    // DS spectrum companions
     const palette: [number, number, number][] = [
       [ar, ag, ab],
-      [181, 123, 255], // b57bff
-      [201, 182, 255], // c9b6ff
-      [239, 234, 255], // near-white sparks
+      [181, 123, 255],
+      [201, 182, 255],
+      [239, 234, 255],
     ];
 
-    // seeded value noise
     const vhash = (ix: number, iy: number) => {
-      let h = (Math.imul(ix, 374761393) + Math.imul(iy, 668265263)) ^ base;
-      h = Math.imul(h ^ (h >>> 13), 1274126177);
-      return ((h >>> 0) % 100000) / 100000;
+      let hh = (Math.imul(ix, 374761393) + Math.imul(iy, 668265263)) ^ base;
+      hh = Math.imul(hh ^ (hh >>> 13), 1274126177);
+      return ((hh >>> 0) % 100000) / 100000;
     };
     const vnoise = (x: number, y: number) => {
       const ix = Math.floor(x),
@@ -71,57 +73,45 @@ export default function GenerativeCover({ seed, accent, className, density = 1 }
       return (a * (1 - u) + b * u) * (1 - v) + (c * (1 - u) + d * u) * v;
     };
 
-    let w = 0,
-      h = 0;
+    let w = 0;
+    let h = 0;
+    let dpr = 1;
 
-    const draw = () => {
-      const rect = wrap.getBoundingClientRect();
-      w = Math.max(1, Math.round(rect.width));
-      h = Math.max(1, Math.round(rect.height));
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      canvas.style.width = w + "px";
-      canvas.style.height = h + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      // base: accent-tinted dark gradient (keeps overlaid chips readable)
-      const g = ctx.createRadialGradient(w * 0.78, h * 0.1, 0, w * 0.78, h * 0.1, Math.hypot(w, h));
+    // paint the static field (base + strokes + nodes) into any 2D context
+    const paintField = (c: CanvasRenderingContext2D) => {
+      const g = c.createRadialGradient(w * 0.78, h * 0.1, 0, w * 0.78, h * 0.1, Math.hypot(w, h));
       g.addColorStop(0, `rgba(${ar},${ag},${ab},1)`);
       g.addColorStop(0.5, `rgb(${Math.round(ar * 0.32 + 24)},${Math.round(ag * 0.26 + 16)},${Math.round(ab * 0.4 + 30)})`);
       g.addColorStop(1, "#171029");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
+      c.fillStyle = g;
+      c.fillRect(0, 0, w, h);
 
-      // flow field of fine strokes
       const rng = mulberry32(base ^ 0x51ed);
       const scale = 0.008 + (w > 500 ? 0.001 : 0.003);
       const count = Math.round((w / 3) * density);
       const steps = 26;
       const stepLen = Math.max(2.2, w / 240);
-      ctx.lineCap = "round";
+      c.lineCap = "round";
       for (let p = 0; p < count; p++) {
         let x = rng() * w;
         let y = rng() * h;
         const ci = rng();
-        const col =
-          ci > 0.965 ? palette[3] : ci > 0.86 ? palette[1] : ci > 0.7 ? palette[2] : palette[0];
+        const col = ci > 0.965 ? palette[3] : ci > 0.86 ? palette[1] : ci > 0.7 ? palette[2] : palette[0];
         const bright = ci > 0.965 ? 0.5 : 0.06 + rng() * 0.09;
-        ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${bright})`;
-        ctx.lineWidth = ci > 0.965 ? 1.4 : 0.8 + rng() * 0.7;
-        ctx.beginPath();
-        ctx.moveTo(x, y);
+        c.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${bright})`;
+        c.lineWidth = ci > 0.965 ? 1.4 : 0.8 + rng() * 0.7;
+        c.beginPath();
+        c.moveTo(x, y);
         for (let s = 0; s < steps; s++) {
           const ang = vnoise(x * scale, y * scale) * Math.PI * 4;
           x += Math.cos(ang) * stepLen;
           y += Math.sin(ang) * stepLen;
           if (x < -20 || x > w + 20 || y < -20 || y > h + 20) break;
-          ctx.lineTo(x, y);
+          c.lineTo(x, y);
         }
-        ctx.stroke();
+        c.stroke();
       }
 
-      // a few bright signal nodes
       const nodeRng = mulberry32(base ^ 0x9a21);
       const nodes = Math.max(3, Math.round(w / 140));
       for (let i = 0; i < nodes; i++) {
@@ -129,24 +119,118 @@ export default function GenerativeCover({ seed, accent, className, density = 1 }
         const ny = nodeRng() * h;
         const col = nodeRng() > 0.5 ? palette[0] : palette[1];
         const r = 5 + nodeRng() * 8;
-        const rg = ctx.createRadialGradient(nx, ny, 0, nx, ny, r);
+        const rg = c.createRadialGradient(nx, ny, 0, nx, ny, r);
         rg.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},0.85)`);
         rg.addColorStop(1, `rgba(${col[0]},${col[1]},${col[2]},0)`);
-        ctx.fillStyle = rg;
-        ctx.beginPath();
-        ctx.arc(nx, ny, r, 0, Math.PI * 2);
-        ctx.fill();
+        c.fillStyle = rg;
+        c.beginPath();
+        c.arc(nx, ny, r, 0, Math.PI * 2);
+        c.fill();
       }
     };
 
-    draw();
+    let field: HTMLCanvasElement | null = null; // offscreen buffer (animate mode)
+
+    const size = () => {
+      const rect = wrap.getBoundingClientRect();
+      w = Math.max(1, Math.round(rect.width));
+      h = Math.max(1, Math.round(rect.height));
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const rebuild = () => {
+      size();
+      if (animate && !reduce) {
+        field = document.createElement("canvas");
+        field.width = canvas.width;
+        field.height = canvas.height;
+        const fctx = field.getContext("2d");
+        if (fctx) {
+          fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          paintField(fctx);
+        }
+        composite(performance.now());
+      } else {
+        field = null;
+        paintField(ctx); // static: straight to the visible canvas
+      }
+    };
+
+    function composite(time: number) {
+      if (!field || !ctx) return;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(field, 0, 0, w, h);
+      const t = (time - t0) / 1000;
+      ctx.globalCompositeOperation = "lighter";
+      const rad = Math.max(w, h);
+      const glow = (cx: number, cy: number, r: number, al: number, col: [number, number, number]) => {
+        const gg = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        gg.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},${al})`);
+        gg.addColorStop(1, `rgba(${col[0]},${col[1]},${col[2]},0)`);
+        ctx.fillStyle = gg;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      };
+      glow(w * (0.5 + 0.34 * Math.sin(t * 0.22)), h * (0.45 + 0.32 * Math.cos(t * 0.17)), rad * 0.5, 0.1, [ar, ag, ab]);
+      glow(w * (0.5 + 0.3 * Math.cos(t * 0.16 + 1.5)), h * (0.5 + 0.28 * Math.sin(t * 0.13 + 2)), rad * 0.32, 0.08, [201, 182, 255]);
+      ctx.globalCompositeOperation = "source-over";
+    }
+
+    let raf = 0;
+    let running = false;
+    let t0 = 0;
+    const loop = (time: number) => {
+      if (!t0) t0 = time;
+      composite(time);
+      if (running) raf = requestAnimationFrame(loop);
+    };
+    const start = () => {
+      if (running || !animate || reduce || !field) return;
+      running = true;
+      raf = requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      running = false;
+      if (raf) cancelAnimationFrame(raf);
+    };
+
+    rebuild();
+    start();
+
+    let rebuildTimer = 0;
+    const scheduleRebuild = () => {
+      window.clearTimeout(rebuildTimer);
+      rebuildTimer = window.setTimeout(rebuild, 130);
+    };
+
+    const onVis = () => (document.hidden ? stop() : start());
+    document.addEventListener("visibilitychange", onVis);
+    let io: IntersectionObserver | undefined;
+    if (typeof IntersectionObserver !== "undefined") {
+      io = new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0 });
+      io.observe(wrap);
+    }
     let ro: ResizeObserver | undefined;
     if (typeof ResizeObserver !== "undefined") {
-      ro = new ResizeObserver(() => draw());
+      ro = new ResizeObserver(scheduleRebuild);
       ro.observe(wrap);
     }
-    return () => ro?.disconnect();
-  }, [seed, accent, density]);
+
+    return () => {
+      stop();
+      window.clearTimeout(rebuildTimer);
+      document.removeEventListener("visibilitychange", onVis);
+      io?.disconnect();
+      ro?.disconnect();
+    };
+  }, [seed, accent, density, animate]);
 
   return (
     <div ref={wrapRef} className={className} aria-hidden>

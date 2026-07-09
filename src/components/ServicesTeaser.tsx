@@ -33,11 +33,12 @@ export default function ServicesTeaser() {
             return (
               <Link key={s.slug} href={`/services/${s.slug}`} className="group block">
                 <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-bg transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_45%,transparent)]">
-                  <div className="relative h-40 overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden">
                     <GenerativeCover
                       seed={`svc-${s.slug}`}
                       accent={accent}
                       density={1.15}
+                      animate
                       className="absolute inset-0"
                     />
                     <span
