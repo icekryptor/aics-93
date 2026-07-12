@@ -72,7 +72,7 @@ export default function NeuralHero() {
               <LogoMark />
             </span>
             <div>
-              <p className="font-display text-[1.55rem] leading-none tracking-tight text-runtime-ink sm:text-[1.9rem]">
+              <p className="font-bold text-[1.55rem] leading-none tracking-tight text-runtime-ink sm:text-[1.9rem]">
                 AICS<span className="signal-text">-93</span>
               </p>
               <p className="tech-label mt-1.5 text-[10px] leading-tight text-runtime-ink-soft">

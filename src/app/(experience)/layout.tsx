@@ -1,5 +1,4 @@
 import ScrollProvider from "@/components/system/ScrollProvider";
-import MeshGradient from "@/components/system/MeshGradient";
 import ModularGrid from "@/components/system/ModularGrid";
 import CursorPro from "@/components/system/CursorPro";
 import MetaHUD from "@/components/system/MetaHUD";
@@ -7,9 +6,9 @@ import BootSequence from "@/components/system/BootSequence";
 import SystemNav from "@/components/system/SystemNav";
 import VerifyScroll from "@/components/system/VerifyScroll";
 import ExperienceRoot from "@/components/system/ExperienceRoot";
-import SoundToggle from "@/components/system/SoundToggle";
-import ColorToggle from "@/components/ColorToggle";
 import QuizPanel from "@/components/QuizPanel";
+// Colour + sound toggles and the mesh-gradient are parked for now — the site
+// uses a clean white background (the grid stays). Components kept, not deleted.
 
 // Chrome for the immersive AICS-93 experience (route "/").
 export default function ExperienceLayout({ children }: { children: React.ReactNode }) {
@@ -22,8 +21,7 @@ export default function ExperienceLayout({ children }: { children: React.ReactNo
         К содержимому
       </a>
       <ExperienceRoot />
-      {/* ambient world (fixed, behind everything): fluid mesh under the grid */}
-      <MeshGradient />
+      {/* ambient: clean white background + blueprint grid (mesh parked) */}
       <ModularGrid />
       {/* boot / POST — self-manages, shows once per tab */}
       <BootSequence />
@@ -31,8 +29,6 @@ export default function ExperienceLayout({ children }: { children: React.ReactNo
       <CursorPro />
       <SystemNav />
       <MetaHUD />
-      <ColorToggle />
-      <SoundToggle />
       <VerifyScroll />
       <QuizPanel />
       <div className="quiz-shift">{children}</div>

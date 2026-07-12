@@ -139,7 +139,7 @@ export default async function BlogPostPage({
                   <span className="tech-label text-[10px]" style={{ color: p.accent }}>
                     {p.tag}
                   </span>
-                  <p className="mt-2 font-display text-[1rem] font-normal leading-snug tracking-tight text-ink transition-colors group-hover:text-accent-ink">
+                  <p className="mt-2 text-[1rem] font-bold leading-snug tracking-tight text-ink transition-colors group-hover:text-accent-ink">
                     {p.title}
                   </p>
                 </div>

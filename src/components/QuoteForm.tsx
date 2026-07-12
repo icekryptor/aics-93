@@ -50,7 +50,7 @@ export default function QuoteForm() {
                     <span className="hud-dot mr-2 inline-block align-middle" />
                     // neural link established
                   </p>
-                  <p className="mt-4 font-display text-2xl">
+                  <p className="mt-4 font-bold text-2xl">
                     Связь <span className="signal-text">установлена</span>.
                   </p>
                   <p className="mt-2 max-w-sm text-sm text-white/55">
@@ -62,7 +62,7 @@ export default function QuoteForm() {
                 </div>
               ) : (
                 <div className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.04] p-10 text-center">
-                  <p className="font-display text-xl">Заявка принята ✦</p>
+                  <p className="font-bold text-xl">Заявка принята ✦</p>
                   <p className="mt-2 text-sm text-white/55">
                     Спасибо! Свяжусь с вами в ближайшее время. (Демо-режим — отправка пока не подключена.)
                   </p>

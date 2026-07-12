@@ -2,7 +2,7 @@
 
 @theme {
   /* AICS-93 brand design system palette */
-  --color-bg: #fcfbff;        /* main background */
+  --color-bg: #ffffff;        /* main background — clean white */
   --color-bg-soft: #f1ecfa;   /* soft inset / panel */
   --color-ink: #302055;       /* deep dark — primary text */
   --color-ink-soft: #554488;  /* light dark — secondary text */
@@ -57,8 +57,18 @@ body {
   background: transparent;
   color: var(--color-ink);
   font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 15px; /* body copy — 15px regular (14px read too light) */
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* Headings are Neue Haas Bold everywhere. Unbounded (--font-display) is kept
+   ONLY for numbers/accents, which live on non-heading elements or inner spans
+   (their own font-family wins, so this !important doesn't reach them). */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans), system-ui, sans-serif !important;
+  font-weight: 700 !important;
 }
 
 /* animated parallelogram progress bar */

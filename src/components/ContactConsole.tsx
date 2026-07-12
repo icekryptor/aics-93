@@ -74,7 +74,7 @@ export default function ContactConsole() {
                     <span className="hud-dot mr-2 inline-block align-middle" />
                     // neural link established
                   </p>
-                  <p className="mt-4 font-display text-2xl text-runtime-ink">
+                  <p className="mt-4 font-bold text-2xl text-runtime-ink">
                     Связь <span className="signal-text">установлена</span>.
                   </p>
                   <p className="mx-auto mt-3 max-w-sm text-sm text-runtime-ink-soft">

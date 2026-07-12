@@ -109,7 +109,7 @@ export default function QuizPanel() {
   const pct = (v: number) => ((v - BMIN) / (BMAX - BMIN)) * 100;
 
   const heading = (
-    <p className="mb-4 font-display text-[1.05rem] font-normal leading-snug tracking-tight text-ink">
+    <p className="mb-4 text-[1.05rem] font-bold leading-snug tracking-tight text-ink">
       {[
         "Какая у вас задача?",
         "Коротко — какой замысел хотите реализовать?",
@@ -179,7 +179,7 @@ export default function QuizPanel() {
           {done ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
               <span className="signal-grad grid size-12 place-items-center rounded-full text-white">✓</span>
-              <p className="font-display text-lg text-ink">Бриф отправлен</p>
+              <p className="font-bold text-lg text-ink">Бриф отправлен</p>
               <p className="text-[12.5px] text-ink-soft">Разберу задачу и вернусь с расчётом в течение 2 часов.</p>
             </div>
           ) : (
@@ -354,7 +354,7 @@ export default function QuizPanel() {
             </svg>
             <span className="tech-label text-[10px] text-white/60">телеграм-канал</span>
           </div>
-          <p className="font-display text-[0.98rem] font-normal leading-snug">
+          <p className="text-[0.98rem] font-bold leading-snug">
             Разбираю бренд, ИИ и дизайн — <span className="signal-text">коротко и по делу</span>
           </p>
           <p className="text-[11.5px] leading-snug text-white/55">Кейсы, приёмы и мысли из практики. Без спама.</p>
