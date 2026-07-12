@@ -291,7 +291,6 @@ export default function CaseSlider() {
                         <h3
                           className="relative -mt-[0.55em] uppercase leading-[1.05] text-[#efeaff]"
                           style={{
-                            fontFamily: "var(--font-display)",
                             fontSize: "clamp(2rem,4.6vw,4.1rem)",
                           }}
                         >

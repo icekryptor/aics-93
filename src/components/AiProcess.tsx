@@ -48,7 +48,7 @@ export default function AiProcess() {
             className="tech-label"
             style={{
               color: "var(--color-signal, #9747ff)",
-              fontFamily: "var(--font-display, inherit)",
+              fontFamily: "var(--font-sans, inherit)",
               letterSpacing: "0.22em",
               fontSize: "0.72rem",
               textTransform: "uppercase",
@@ -93,7 +93,7 @@ export default function AiProcess() {
             className="tech-label mb-4 flex items-center gap-2"
             style={{
               color: "var(--color-runtime-ink-soft, #a99fce)",
-              fontFamily: "var(--font-display, inherit)",
+              fontFamily: "var(--font-sans, inherit)",
               fontSize: "0.66rem",
               letterSpacing: "0.2em",
             }}
@@ -135,7 +135,7 @@ export default function AiProcess() {
             <div
               className="tech-label"
               style={{
-                fontFamily: "var(--font-display, inherit)",
+                fontFamily: "var(--font-sans, inherit)",
                 fontSize: "0.68rem",
                 letterSpacing: "0.24em",
                 color: "var(--color-runtime-ink-soft, #a99fce)",
@@ -172,7 +172,7 @@ export default function AiProcess() {
             <div
               className="tech-label"
               style={{
-                fontFamily: "var(--font-display, inherit)",
+                fontFamily: "var(--font-sans, inherit)",
                 fontSize: "0.68rem",
                 letterSpacing: "0.24em",
                 color: "var(--color-signal, #9747ff)",
@@ -364,7 +364,7 @@ function ProcessMedia() {
               className="tech-label pointer-events-none absolute bottom-3 left-6 flex items-center gap-2"
               aria-hidden="true"
               style={{
-                fontFamily: "var(--font-display, inherit)",
+                fontFamily: "var(--font-sans, inherit)",
                 fontSize: "0.6rem",
                 letterSpacing: "0.2em",
                 color: "var(--color-runtime-ink-soft, #a99fce)",

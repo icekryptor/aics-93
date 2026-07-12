@@ -125,7 +125,7 @@ export default function AboutMe() {
 
               <div className="grid gap-6 md:grid-cols-[1fr_0.82fr] md:gap-8">
                 <div>
-                  <span className="inline-block rounded-md bg-ink px-4 py-1.5 font-display text-sm tracking-wide text-bg">
+                  <span className="inline-block rounded-md bg-ink px-4 py-1.5 text-sm tracking-wide text-bg">
                     КТО Я
                   </span>
                   <ul className="mt-6 space-y-5">

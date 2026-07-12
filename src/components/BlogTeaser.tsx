@@ -38,7 +38,7 @@ export default function BlogTeaser() {
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-display text-[1rem] font-normal leading-snug tracking-tight text-ink transition-colors group-hover:text-accent-ink">
+                  <h3 className="text-[1rem] font-normal leading-snug tracking-tight text-ink transition-colors group-hover:text-accent-ink">
                     {p.title}
                   </h3>
                   <p className="tech-label mt-auto pt-4 text-[10px] text-ink-soft">

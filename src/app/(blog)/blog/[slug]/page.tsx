@@ -108,7 +108,7 @@ export default async function BlogPostPage({
           <span className="tech-label rounded-full bg-white/90 px-3 py-1 text-[10px]" style={{ color: post.accent }}>
             {post.tag}
           </span>
-          <h1 className="mt-5 max-w-3xl font-display text-[clamp(1.8rem,4.2vw,3.2rem)] font-normal leading-[1.04] tracking-tight text-white">
+          <h1 className="mt-5 max-w-3xl text-[clamp(1.8rem,4.2vw,3.2rem)] font-normal leading-[1.04] tracking-tight text-white">
             {post.title}
           </h1>
           <p className="tech-label mt-5 text-[11px] text-white/70">

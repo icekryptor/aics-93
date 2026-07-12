@@ -71,7 +71,7 @@ export default function ServicesIndex() {
           <span className="hud-dot" style={{ display: "inline-block" }} />
           услуги · aics-93
         </span>
-        <h1 className="mt-6 max-w-3xl font-display text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.03] tracking-tight">
+        <h1 className="mt-6 max-w-3xl text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.03] tracking-tight">
           Что я делаю для <span className="signal-text">роста бизнеса</span>
         </h1>
         <p className="mt-5 max-w-2xl text-[1.05rem] leading-relaxed text-runtime-ink-soft">
@@ -99,7 +99,7 @@ export default function ServicesIndex() {
                     →
                   </span>
                 </div>
-                <h2 className="mt-4 font-display text-[1.35rem] font-semibold leading-snug transition-colors group-hover:text-[color-mix(in_srgb,var(--color-signal-cool)_80%,white)]">
+                <h2 className="mt-4 text-[1.35rem] font-semibold leading-snug transition-colors group-hover:text-[color-mix(in_srgb,var(--color-signal-cool)_80%,white)]">
                   {s.nav}
                 </h2>
                 <p className="mt-3 text-[0.95rem] leading-relaxed text-runtime-ink-soft">

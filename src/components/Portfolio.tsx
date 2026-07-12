@@ -110,7 +110,7 @@ export default function Portfolio() {
           <div>
             <p className="tech-label text-[11px] text-ink-soft">[ отобранные работы ]</p>
             <h2 className="mt-3 text-[clamp(1.55rem,3.4vw,2.9rem)] font-normal leading-tight tracking-[-0.015em]">
-              портфолио <span className="font-display text-accent">/</span> избранное
+              портфолио <span className="text-accent">/</span> избранное
             </h2>
           </div>
           <div className="hidden shrink-0 text-right sm:block">
@@ -139,7 +139,7 @@ export default function Portfolio() {
                 </div>
 
                 <p className="mt-6 text-sm text-ink-soft">моя главная гордость:</p>
-                <h3 className="mt-1 font-display text-[clamp(2.1rem,4.4vw,3.4rem)] font-normal leading-none tracking-tight">
+                <h3 className="mt-1 text-[clamp(2.1rem,4.4vw,3.4rem)] font-normal leading-none tracking-tight">
                   {featured.name}
                 </h3>
                 <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink-soft">
@@ -223,7 +223,7 @@ export default function Portfolio() {
                           {String(i + 1).padStart(2, "0")}
                         </span>
                         <div className="min-w-0">
-                          <h3 className="font-display text-[clamp(1.5rem,2.6vw,2.1rem)] font-normal leading-none tracking-tight">
+                          <h3 className="text-[clamp(1.5rem,2.6vw,2.1rem)] font-normal leading-none tracking-tight">
                             {c.name}
                           </h3>
                           <p className="mt-3 max-w-md text-[14.5px] leading-relaxed text-ink-soft">
@@ -305,7 +305,7 @@ export default function Portfolio() {
                     </div>
                   </div>
                   <p className="mt-3 text-xs text-ink-soft">{p.subtitle}</p>
-                  <p className="mt-0.5 font-display text-sm font-normal leading-tight">{p.name}</p>
+                  <p className="mt-0.5 text-sm font-normal leading-tight">{p.name}</p>
                   <span className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-accent-ink">
                     Смотреть сайт <span aria-hidden>→</span>
                   </span>

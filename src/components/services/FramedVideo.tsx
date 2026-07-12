@@ -111,7 +111,7 @@ export default function FramedVideo({ src, poster, label, alt, className }: Prop
                 className="tech-label pointer-events-none absolute bottom-3 left-6 flex items-center gap-2"
                 aria-hidden="true"
                 style={{
-                  fontFamily: "var(--font-display, inherit)",
+                  fontFamily: "var(--font-sans, inherit)",
                   fontSize: "0.6rem",
                   letterSpacing: "0.2em",
                   color: "var(--color-runtime-ink-soft, #a99fce)",

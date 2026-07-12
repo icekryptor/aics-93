@@ -139,7 +139,7 @@ export default function SalesGears() {
                   y={CORE.y + CORE.r + 16}
                   textAnchor="middle"
                   fill="#9747ff"
-                  style={{ font: "600 10px var(--font-display), monospace", letterSpacing: "0.12em", textTransform: "uppercase" }}
+                  style={{ font: "600 10px var(--font-sans), monospace", letterSpacing: "0.12em", textTransform: "uppercase" }}
                 >
                   ядро · core
                 </text>

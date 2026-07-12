@@ -487,7 +487,7 @@ function CursorProInner() {
           position: "fixed",
           top: 0,
           left: 0,
-          fontFamily: "var(--font-display, ui-monospace, monospace)",
+          fontFamily: "var(--font-sans, ui-monospace, monospace)",
           fontSize: "9px",
           letterSpacing: "0.18em",
           textTransform: "uppercase",

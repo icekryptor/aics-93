@@ -52,7 +52,7 @@ export default function ServicesTeaser() {
                     </span>
                   </div>
                   <div className="flex flex-1 flex-col p-6">
-                    <h3 className="font-display text-[1.25rem] font-normal leading-snug tracking-tight text-ink transition-colors group-hover:text-accent-ink">
+                    <h3 className="text-[1.25rem] font-normal leading-snug tracking-tight text-ink transition-colors group-hover:text-accent-ink">
                       {s.nav}
                     </h3>
                     <p className="mt-2.5 line-clamp-3 text-[13.5px] leading-relaxed text-ink-soft">

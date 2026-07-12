@@ -320,7 +320,6 @@ export default function NotFound() {
         <h1
           className="signal-text select-none leading-none"
           style={{
-            fontFamily: "var(--font-display)",
             fontSize: "clamp(5rem, 22vw, 12rem)",
             letterSpacing: "-0.03em",
           }}

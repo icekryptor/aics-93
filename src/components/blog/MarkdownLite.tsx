@@ -27,7 +27,7 @@ export default function MarkdownLite({ source }: { source: string }) {
       out.push(
         <h2
           key={bi}
-          className="mt-12 font-display text-[clamp(1.35rem,2.4vw,1.9rem)] font-normal leading-tight tracking-tight text-ink"
+          className="mt-12 text-[clamp(1.35rem,2.4vw,1.9rem)] font-normal leading-tight tracking-tight text-ink"
         >
           {block.slice(3)}
         </h2>

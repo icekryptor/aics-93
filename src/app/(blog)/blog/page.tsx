@@ -70,8 +70,8 @@ export default function BlogIndex() {
       <div className="flex items-end justify-between border-b border-line pb-6">
         <div>
           <p className="tech-label text-[11px] text-ink-soft">[ журнал · заметки ]</p>
-          <h1 className="mt-3 font-display text-[clamp(2rem,5vw,3.6rem)] font-normal leading-[1.02] tracking-tight text-ink">
-            Журнал <span className="signal-text">AICS-93</span>
+          <h1 className="mt-3 text-[clamp(2rem,5vw,3.6rem)] font-normal leading-[1.02] tracking-tight text-ink">
+            Журнал <span className="signal-text font-display">AICS-93</span>
           </h1>
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-soft">
             О брендинге, внедрении ИИ в процессы компаний и дизайне, который растёт на данных, а не на догадках.
@@ -98,7 +98,7 @@ export default function BlogIndex() {
                   <span className="tech-label text-[10px] text-ink-soft">свежее</span>
                 </div>
                 <div className="mt-8">
-                  <h2 className="font-display text-[clamp(1.5rem,2.6vw,2.4rem)] font-normal leading-[1.05] tracking-tight text-ink transition-colors group-hover:text-accent-ink">
+                  <h2 className="text-[clamp(1.5rem,2.6vw,2.4rem)] font-normal leading-[1.05] tracking-tight text-ink transition-colors group-hover:text-accent-ink">
                     {lead.title}
                   </h2>
                   <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-ink-soft">{lead.excerpt}</p>
@@ -133,7 +133,7 @@ export default function BlogIndex() {
                 </span>
               </div>
               <div className="flex flex-1 flex-col p-5">
-                <h3 className="font-display text-[1.05rem] font-normal leading-snug tracking-tight text-ink transition-colors group-hover:text-accent-ink">
+                <h3 className="text-[1.05rem] font-normal leading-snug tracking-tight text-ink transition-colors group-hover:text-accent-ink">
                   {p.title}
                 </h3>
                 <p className="mt-2 line-clamp-3 text-[13px] leading-relaxed text-ink-soft">{p.excerpt}</p>

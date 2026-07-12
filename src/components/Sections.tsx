@@ -100,7 +100,7 @@ export function SalesEngine() {
   return (
     <section id="engine" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-[30px] sm:px-6 lg:py-[50px]">
       <Reveal>
-        <h2 className="font-display text-[clamp(1.5rem,4.2vw,2.6rem)] font-semibold uppercase tracking-tight">
+        <h2 className="text-[clamp(1.5rem,4.2vw,2.6rem)] font-semibold uppercase tracking-tight">
           Двигатель продаж бизнеса
         </h2>
       </Reveal>
@@ -120,7 +120,7 @@ export function Gantt() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-[30px] sm:px-6 lg:py-[50px]">
       <Reveal>
-        <h2 className="font-display text-[clamp(1.5rem,3.6vw,2.4rem)] font-semibold uppercase tracking-tight">
+        <h2 className="text-[clamp(1.5rem,3.6vw,2.4rem)] font-semibold uppercase tracking-tight">
           {gantt.title}
         </h2>
         <p className="mt-2 text-[15px] font-medium text-ink">{gantt.project}</p>
@@ -182,7 +182,7 @@ export function Gantt() {
             <ul className="mt-4 space-y-4">
               {gantt.team.map((m) => (
                 <li key={m.name + m.role} className="flex items-center gap-3.5">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-full bg-ink font-display text-sm text-bg">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-full bg-ink text-sm text-bg">
                     {m.initial}
                   </span>
                   <span>

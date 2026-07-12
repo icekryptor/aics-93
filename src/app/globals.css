@@ -206,9 +206,9 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display), system-ui, sans-serif;
 }
 
-/* mono-ish technical labels */
+/* technical eyebrow labels — Neue Haas (Unbounded reserved for numbers/abbr) */
 .tech-label {
-  font-family: var(--font-display), monospace;
+  font-family: var(--font-sans), system-ui, sans-serif;
   letter-spacing: 0.04em;
   text-transform: lowercase;
 }
@@ -421,9 +421,9 @@ h1, h2, h3, h4, h5, h6 {
 .signal-glow { box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-signal) 40%, transparent), 0 0 28px -6px var(--color-signal); }
 .text-glow { text-shadow: 0 0 22px color-mix(in srgb, var(--color-signal) 55%, transparent); }
 
-/* --- mono HUD readouts --- */
+/* --- mono HUD readouts (true monospace, no Unbounded) --- */
 .hud {
-  font-family: var(--font-display), ui-monospace, monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   font-variant-numeric: tabular-nums;

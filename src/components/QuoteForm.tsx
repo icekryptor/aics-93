@@ -36,7 +36,7 @@ export default function QuoteForm() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
-            <h2 className="max-w-xl font-display text-[clamp(1.6rem,3.4vw,2.4rem)] font-medium leading-tight tracking-tight">
+            <h2 className="max-w-xl text-[clamp(1.6rem,3.4vw,2.4rem)] font-medium leading-tight tracking-tight">
               Пришлите данные о проекте, и мы свяжемся с вами для обсуждения в ближайшее время
             </h2>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-white/55">

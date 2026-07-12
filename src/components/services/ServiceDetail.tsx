@@ -134,7 +134,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-3 font-display text-[1.05rem] font-semibold leading-snug">
+                <h3 className="mt-3 text-[1.05rem] font-semibold leading-snug">
                   {v.title}
                 </h3>
                 <p className="mt-2.5 text-[0.92rem] leading-relaxed text-runtime-ink-soft">
@@ -245,7 +245,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                   {/* body */}
                   <div className={last ? "pb-0" : "pb-9"}>
                     <div className="flex flex-wrap items-center gap-3">
-                      <h3 className="font-display text-[1.1rem] font-semibold leading-snug">
+                      <h3 className="text-[1.1rem] font-semibold leading-snug">
                         {p.title}
                       </h3>
                       {p.duration && (
@@ -289,7 +289,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
         <div className={SHELL}>
           <Eyebrow>сравнение</Eyebrow>
           <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
-            Классическая студия и AICS-93
+            Классическая студия и <span className="font-display">AICS-93</span>
           </h2>
 
           <div className="mt-10 overflow-x-auto">
@@ -302,7 +302,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                 </div>
                 <div
                   className="tech-label rounded-t-xl px-4 pb-3 pt-3 text-[0.72rem]"
-                  style={{ color: "var(--color-signal-cool)", background: "rgba(151,71,255,0.08)" }}
+                  style={{ color: "var(--color-signal-cool)", background: "rgba(151,71,255,0.08)", fontFamily: "var(--font-display)" }}
                 >
                   AICS-93
                 </div>
@@ -364,7 +364,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                   stroke="rgba(201,182,255,0.6)"
                   className="pointer-events-none absolute -right-2 -top-2 h-16 w-16 opacity-[0.3] transition-opacity duration-300 group-hover:opacity-70"
                 />
-                <h3 className="relative font-display text-[1.05rem] font-semibold leading-snug">
+                <h3 className="relative text-[1.05rem] font-semibold leading-snug">
                   {d.title}
                 </h3>
                 <p className="mt-2.5 text-[0.92rem] leading-relaxed text-runtime-ink-soft">
@@ -389,7 +389,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
             {s.faq.map((f) => (
               <details key={f.q} className="group py-5">
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
-                  <span className="font-display text-[1.02rem] font-medium leading-snug text-runtime-ink">
+                  <span className="text-[1.02rem] font-medium leading-snug text-runtime-ink">
                     {f.q}
                   </span>
                   <span
@@ -422,7 +422,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                 "radial-gradient(120% 120% at 85% 0%, rgba(151,71,255,0.18), transparent 60%), rgba(23,16,41,0.6)",
             }}
           >
-            <h2 className="max-w-2xl font-display text-[clamp(1.6rem,3.6vw,2.6rem)] font-semibold leading-tight tracking-tight">
+            <h2 className="max-w-2xl text-[clamp(1.6rem,3.6vw,2.6rem)] font-semibold leading-tight tracking-tight">
               {s.closing.title}
             </h2>
             <p className="mt-4 max-w-xl text-runtime-ink-soft">{s.closing.text}</p>
