@@ -9,7 +9,7 @@ type Vec3 = { x: number; y: number; z: number };
 type RGB = readonly [number, number, number];
 
 const FOV = Math.PI / 3;
-const CAM_Z = 4.5; // closer camera → larger render
+const CAM_Z = 5.7; // camera distance — big render but the rotating cube stays inside the square frame
 const HALF = 0.5;
 const GRID_STEP = 1.04;
 
@@ -196,12 +196,16 @@ export default function CubeMorph({ className }: { className?: string }) {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     let reduced = mq.matches;
 
-    // debug hook: ?cubestate=net pins the network state for screenshots
+    // debug hooks: ?cubestate=net pins the network state; ?cuberot=<rad> pins a
+    // rotation offset (for verifying the widest silhouette fits the frame).
     try {
-      if (new URLSearchParams(window.location.search).get("cubestate") === "net") {
+      const qs = new URLSearchParams(window.location.search);
+      if (qs.get("cubestate") === "net") {
         m = 1;
         target = 1;
       }
+      const cr = qs.get("cuberot");
+      if (cr !== null) userRotY = parseFloat(cr) || 0;
     } catch {
       /* ignore */
     }
@@ -226,7 +230,7 @@ export default function CubeMorph({ className }: { className?: string }) {
     function drawScene() {
       ctx!.clearRect(0, 0, W, H);
       const em = easeInOutCubic(Math.min(1, Math.max(0, m)));
-      const sysScale = 1 + 0.1 * kick;
+      const sysScale = 1 + 0.05 * kick; // gentle click/morph pulse — stays within the frame
       const rotY = (reduced ? 0.62 : t * 0.25 + 0.62) + userRotY;
       const rotX = reduced ? 0.5 : 0.48 + Math.sin(t * 0.5) * 0.05;
       const bob = reduced ? 0 : Math.sin(t * 0.9) * 0.06;
