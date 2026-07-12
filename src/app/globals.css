@@ -526,3 +526,60 @@ html.lenis, html.lenis body { height: auto; }
   background: linear-gradient(90deg, transparent 0%, var(--color-signal) 50%, transparent 100%);
   animation: seamBreath 7s ease-in-out infinite;
 }
+
+/* =====================================================================
+   QUIZ DRAWER — right brief panel that pushes the content left
+   ===================================================================== */
+:root { --quiz-tab-right: 0px; }
+.quiz-shift { transition: padding-right 0.42s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* desktop: 320px panel pushes content + parks the tab at the panel edge */
+@media (min-width: 640px) {
+  html.quiz-open { --quiz-tab-right: 320px; }
+  html.quiz-open .quiz-shift { padding-right: 320px; }
+  html.quiz-open .sys-nav-wrap { padding-right: 320px; }
+}
+/* mobile: panel overlays (no push); hide the tab under it */
+@media (max-width: 639px) {
+  html.quiz-open .quiz-tab { opacity: 0; pointer-events: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quiz-shift { transition: none; }
+}
+
+/* dual-range budget slider — two overlapping range inputs, only thumbs grab */
+.dual-range {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  pointer-events: none;
+}
+.dual-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(48, 32, 85, 0.35);
+  cursor: grab;
+}
+.dual-range::-webkit-slider-thumb:active { cursor: grabbing; }
+.dual-range::-moz-range-thumb {
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(48, 32, 85, 0.35);
+  cursor: grab;
+}
+.dual-range::-moz-range-track { background: transparent; }

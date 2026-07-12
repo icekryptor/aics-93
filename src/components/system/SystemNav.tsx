@@ -55,7 +55,7 @@ export default function SystemNav() {
 
   return (
     <div
-      className={`pointer-events-none fixed inset-x-0 top-2.5 z-50 px-4 transition-all duration-500 sm:px-6 lg:px-8 ${
+      className={`sys-nav-wrap pointer-events-none fixed inset-x-0 top-2.5 z-50 px-4 transition-all duration-500 sm:px-6 lg:px-8 ${
         shown ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
       }`}
     >
