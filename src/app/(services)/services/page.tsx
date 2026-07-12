@@ -79,7 +79,7 @@ export default function ServicesIndex() {
           ИИ. Выберите направление — рассчитаю проект под вашу задачу.
         </p>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {all.map((s) => (
             <Link key={s.slug} href={`/services/${s.slug}`} className="group block">
               <article

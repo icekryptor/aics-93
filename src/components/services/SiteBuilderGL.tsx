@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
  * bold and the wireframe frame is crisp. Scroll + click + auto-showcase.
  * ------------------------------------------------------------------ */
 
-type Props = { className?: string; variant?: "site" | "brand" };
+type Props = { className?: string; variant?: "site" | "brand" | "service" };
 
 const N = 9000;
 const SPHERE = 1.5;
@@ -86,6 +86,23 @@ const LAYOUTS: Record<string, Layout> = {
       { x0: -1.42, y0: -1.0, x1: 1.42, y1: -0.9, z: -0.05, kind: 2 }, // 12 footer strip
     ],
     outline: [0, 2, 10, 11, 12],
+  },
+  // business app / dashboard (разработка сервисов)
+  service: {
+    elements: [
+      { x0: -1.44, y0: -0.95, x1: -1.16, y1: 0.95, z: 0.06, kind: 2 }, // 0 sidebar rail
+      { x0: -1.06, y0: 0.82, x1: 1.42, y1: 0.95, z: -0.03, kind: 2 }, // 1 top bar
+      { x0: -1.06, y0: 0.5, x1: -0.46, y1: 0.72, z: 0.02, kind: 0 }, // 2 KPI 1
+      { x0: -0.38, y0: 0.5, x1: 0.22, y1: 0.72, z: 0.02, kind: 1 }, // 3 KPI 2 (lime)
+      { x0: 0.3, y0: 0.5, x1: 0.9, y1: 0.72, z: 0.02, kind: 0 }, // 4 KPI 3
+      { x0: 0.98, y0: 0.5, x1: 1.42, y1: 0.72, z: 0.02, kind: 0 }, // 5 KPI 4
+      { x0: -1.06, y0: -0.5, x1: 0.52, y1: 0.4, z: 0.09, kind: 3 }, // 6 chart panel
+      { x0: 0.64, y0: -0.5, x1: 1.42, y1: 0.4, z: 0.03, kind: 0 }, // 7 side list
+      { x0: -1.06, y0: -0.92, x1: -0.2, y1: -0.62, z: 0.0, kind: 0 }, // 8 module card
+      { x0: -0.12, y0: -0.92, x1: 0.64, y1: -0.62, z: 0.0, kind: 0 }, // 9 module card
+      { x0: 0.72, y0: -0.92, x1: 1.42, y1: -0.62, z: 0.0, kind: 0 }, // 10 module card
+    ],
+    outline: [0, 1, 6, 7, 8, 9, 10],
   },
 };
 type V3 = [number, number, number];

@@ -27,7 +27,7 @@ export default function ServicesTeaser() {
           </Link>
         </div>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s, i) => {
             const accent = ACCENTS[i % ACCENTS.length];
             return (
