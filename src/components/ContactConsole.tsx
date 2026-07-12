@@ -58,7 +58,7 @@ export default function ContactConsole() {
           </p>
         </div>
 
-        <div className="mt-12 grid items-start gap-10 lg:grid-cols-[1.05fr_0.8fr] lg:gap-14">
+        <div className="mt-12 grid items-center gap-10 lg:grid-cols-[1fr_0.92fr] lg:gap-14">
           {/* form console */}
           <div className="relative bg-[color-mix(in_srgb,var(--color-signal)_28%,transparent)] p-px" style={CUT}>
             <div
@@ -158,7 +158,7 @@ export default function ContactConsole() {
           </div>
 
           {/* the machine — cube ⇄ network */}
-          <div className="relative mx-auto hidden w-full max-w-[420px] lg:block">
+          <div className="relative mx-auto hidden w-full max-w-[540px] lg:block">
             <div className="relative aspect-square">
               <CubeMorph className="absolute inset-0 h-full w-full" />
             </div>

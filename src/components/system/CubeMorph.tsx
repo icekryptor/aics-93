@@ -9,7 +9,7 @@ type Vec3 = { x: number; y: number; z: number };
 type RGB = readonly [number, number, number];
 
 const FOV = Math.PI / 3;
-const CAM_Z = 6.4;
+const CAM_Z = 4.5; // closer camera → larger render
 const HALF = 0.5;
 const GRID_STEP = 1.04;
 
@@ -75,7 +75,7 @@ function buildCubelets(): Cubelet[] {
         // Seeded scattered cloud (slightly flattened sphere shell).
         const u = rng() * 2 - 1;
         const th = rng() * Math.PI * 2;
-        const rad = 1.5 + rng() * 1.1;
+        const rad = 1.3 + rng() * 0.95; // keep the network in frame at the closer camera
         const q = Math.sqrt(Math.max(0, 1 - u * u));
         const net: Vec3 = {
           x: Math.cos(th) * q * rad,
@@ -184,6 +184,7 @@ export default function CubeMorph({ className }: { className?: string }) {
     let t = 0;
     let m = 0; // 0 = cube, 1 = network
     let target = 0;
+    let autoT = 0; // idle auto-morph timer (assemble ⇄ disassemble)
     let kick = 0; // click scale pulse
     let userRotY = 0;
     let intersecting = true;
@@ -194,6 +195,16 @@ export default function CubeMorph({ className }: { className?: string }) {
 
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     let reduced = mq.matches;
+
+    // debug hook: ?cubestate=net pins the network state for screenshots
+    try {
+      if (new URLSearchParams(window.location.search).get("cubestate") === "net") {
+        m = 1;
+        target = 1;
+      }
+    } catch {
+      /* ignore */
+    }
 
     const pulses: Pulse[] =
       EDGES.length > 0
@@ -357,6 +368,13 @@ export default function CubeMorph({ className }: { className?: string }) {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       t += dt;
+      // idle auto-morph: cube assembles into the network and back on its own
+      autoT += dt;
+      if (!dragging && autoT >= 5.5) {
+        autoT = 0;
+        target = target === 0 ? 1 : 0;
+        kick = 0.7;
+      }
       m += (target - m) * 0.08;
       kick *= 0.9;
       if (m > 0.5 && EDGES.length > 0) {
@@ -403,6 +421,7 @@ export default function CubeMorph({ className }: { className?: string }) {
 
     function toggle() {
       target = target === 0 ? 1 : 0;
+      autoT = 0; // reset idle timer so a click isn't immediately overridden
       kick = 1;
       if (reduced || !running) {
         // Static fallback: jump between the two static frames.
@@ -518,7 +537,6 @@ export default function CubeMorph({ className }: { className?: string }) {
         role="button"
         tabIndex={0}
         aria-label="переключить куб/сеть"
-        title="клик — переключить"
         className="block h-full w-full min-h-[44px] min-w-[44px] cursor-pointer touch-none select-none rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-[#9747ff]"
       />
     </div>
