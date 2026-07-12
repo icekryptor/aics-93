@@ -543,6 +543,20 @@ html.lenis, html.lenis body { height: auto; }
 @media (max-width: 639px) {
   html.quiz-open .quiz-tab { opacity: 0; pointer-events: none; }
 }
+
+/* restore the native cursor over the brief (the custom crosshair is hidden
+   there, so cursor:none would leave nothing visible) */
+html.cursor-none .quiz-panel,
+html.cursor-none .quiz-panel *,
+html.cursor-none .quiz-tab,
+html.cursor-none .quiz-tab * { cursor: auto !important; }
+html.cursor-none .quiz-panel a,
+html.cursor-none .quiz-panel button,
+html.cursor-none .quiz-tab { cursor: pointer !important; }
+html.cursor-none .quiz-panel input,
+html.cursor-none .quiz-panel textarea { cursor: text !important; }
+html.cursor-none .quiz-panel input[type="range"] { cursor: grab !important; }
+html.cursor-none .quiz-panel button:disabled { cursor: not-allowed !important; }
 @media (prefers-reduced-motion: reduce) {
   .quiz-shift { transition: none; }
 }

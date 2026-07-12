@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { reachGoal } from "@/lib/metrika";
+import { legal } from "@/lib/content";
 
 /**
- * QuizPanel — right-side brief drawer (320px) that pushes the page content
- * left (via `html.quiz-open .quiz-shift`). Opens from a sticky centre-right
- * tab. A single scrollable form (no glitchy slide-by-slide). Submit is a stub
- * (logs + fires the Metrika `lead` goal), like the other forms.
+ * QuizPanel — right-side brief drawer (320px) that pushes the page content left
+ * (`html.quiz-open .quiz-shift`). Opens from a sticky centre-right tab. A
+ * 5-step wizard (no scrolling slides). The panel is split: top 2/3 the brief,
+ * bottom 1/3 a Telegram-subscribe banner. Submit is a stub (logs + Metrika
+ * `lead` goal). Native cursor is restored over the panel (see globals.css).
  */
 
 const TASKS = ["ребрендинг", "разработка сайта", "разработка сервиса", "маркетинговая консультация", "другое"];
@@ -20,20 +22,13 @@ const CONTACTS: { id: string; label: string; disabled?: boolean; tip?: string }[
   { id: "max", label: "МАКС", disabled: true, tip: "этой фигнёй мы никогда не будем пользоваться" },
 ];
 
+const STEPS = ["задача", "замысел", "срок", "бюджет", "связь"];
 const BMIN = 0;
 const BMAX = 1_000_000;
 const BSTEP = 5000;
 const fmt = (n: number) => new Intl.NumberFormat("ru-RU").format(n);
 
-function Row({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
+function Row({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
       type="button"
@@ -53,17 +48,9 @@ function Row({
   );
 }
 
-function Label({ n, children }: { n: string; children: React.ReactNode }) {
-  return (
-    <p className="mb-3 flex gap-2 text-[13px] font-medium text-ink">
-      <span className="tech-label text-[11px] text-accent-ink">{n}</span>
-      {children}
-    </p>
-  );
-}
-
 export default function QuizPanel() {
   const [open, setOpen] = useState(false);
+  const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
 
   const [task, setTask] = useState("");
@@ -76,7 +63,6 @@ export default function QuizPanel() {
   const [contacts, setContacts] = useState<string[]>([]);
   const [contactInfo, setContactInfo] = useState("");
 
-  // deep-link / CTA: /?quiz=1 opens the brief
   useEffect(() => {
     try {
       if (new URLSearchParams(window.location.search).get("quiz") === "1") setOpen(true);
@@ -100,8 +86,7 @@ export default function QuizPanel() {
   const toggleContact = (id: string) =>
     setContacts((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id]));
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = () => {
     const payload = {
       task: task === "другое" ? `другое: ${taskOther}` : task,
       idea,
@@ -116,10 +101,24 @@ export default function QuizPanel() {
     setDone(true);
   };
 
+  const next = () => (step < STEPS.length - 1 ? setStep((s) => s + 1) : submit());
+  const back = () => setStep((s) => Math.max(0, s - 1));
+
   const inputCls =
     "w-full rounded-xl border border-line bg-bg px-3.5 py-2.5 text-[13px] text-ink outline-none transition-colors placeholder:text-ink-soft/60 focus:border-accent/70";
-
   const pct = (v: number) => ((v - BMIN) / (BMAX - BMIN)) * 100;
+
+  const heading = (
+    <p className="mb-4 font-display text-[1.05rem] font-normal leading-snug tracking-tight text-ink">
+      {[
+        "Какая у вас задача?",
+        "Коротко — какой замысел хотите реализовать?",
+        "Какой у вас срок на реализацию?",
+        "Определите диапазон бюджета",
+        "Удобный способ связи",
+      ][step]}
+    </p>
+  );
 
   return (
     <>
@@ -145,191 +144,230 @@ export default function QuizPanel() {
         id="quiz-panel"
         aria-label="Бриф на проект"
         aria-hidden={!open}
-        className="fixed inset-y-0 right-0 z-[70] flex w-[320px] max-w-[86vw] flex-col border-l border-line bg-bg shadow-[-16px_0_48px_-24px_rgba(48,32,85,0.5)] transition-transform duration-[420ms] [transition-timing-function:cubic-bezier(0.4,0,0.2,1)]"
+        className="quiz-panel fixed inset-y-0 right-0 z-[70] flex w-[320px] max-w-[86vw] flex-col border-l border-line bg-bg shadow-[-16px_0_48px_-24px_rgba(48,32,85,0.5)] transition-transform duration-[420ms] [transition-timing-function:cubic-bezier(0.4,0,0.2,1)]"
         style={{ transform: open ? "translateX(0)" : "translateX(100%)" }}
       >
-        {/* header */}
-        <div className="flex items-start justify-between border-b border-line px-5 py-4">
-          <div>
-            <p className="tech-label text-[11px] text-ink-soft">[ бриф · 5 вопросов ]</p>
-            <h3 className="mt-1 font-display text-[1.15rem] font-normal leading-tight tracking-tight text-ink">
-              Рассчитаю ваш проект
-            </h3>
-          </div>
-          <button
-            type="button"
-            onClick={() => setOpen(false)}
-            aria-label="Закрыть"
-            className="grid size-8 shrink-0 place-items-center rounded-lg border border-line text-ink-soft transition-colors hover:text-ink"
-          >
-            ✕
-          </button>
-        </div>
-
-        {done ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-            <span className="signal-grad grid size-12 place-items-center rounded-full text-white">✓</span>
-            <p className="font-display text-xl text-ink">Бриф отправлен</p>
-            <p className="text-[13px] text-ink-soft">Разберу задачу и вернусь с расчётом в течение 2 часов.</p>
+        {/* ---------- BRIEF (top 2/3) ---------- */}
+        <div className="flex min-h-0 flex-[2] flex-col">
+          {/* header */}
+          <div className="flex items-center justify-between px-5 pb-3 pt-4">
+            <p className="tech-label text-[11px] text-ink-soft">
+              бриф · шаг {done ? STEPS.length : step + 1}/{STEPS.length}
+            </p>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="tech-label mt-2 rounded-full border border-line px-5 py-2 text-[11px] text-ink-soft transition-colors hover:text-ink"
+              aria-label="Закрыть"
+              className="grid size-8 shrink-0 place-items-center rounded-lg border border-line text-ink-soft transition-colors hover:text-ink"
             >
-              закрыть
+              ✕
             </button>
           </div>
-        ) : (
-          <form onSubmit={submit} className="flex-1 overflow-y-auto px-5 py-5">
-            {/* Q1 */}
-            <fieldset className="mb-7">
-              <Label n="01">Какая у вас задача?</Label>
-              <div className="grid gap-2">
-                {TASKS.map((t) => (
-                  <Row key={t} active={task === t} onClick={() => setTask(t)}>
-                    {t}
-                  </Row>
-                ))}
-              </div>
-              {task === "другое" && (
-                <input
-                  value={taskOther}
-                  onChange={(e) => setTaskOther(e.target.value)}
-                  placeholder="Опишите задачу"
-                  aria-label="Опишите задачу"
-                  className={`${inputCls} mt-2`}
-                />
-              )}
-            </fieldset>
 
-            {/* Q2 */}
-            <fieldset className="mb-7">
-              <Label n="02">Коротко — какой замысел хотите реализовать?</Label>
-              <textarea
-                value={idea}
-                onChange={(e) => setIdea(e.target.value)}
-                rows={4}
-                placeholder="Пара предложений о проекте"
-                aria-label="Замысел проекта"
-                className={inputCls}
-              />
-            </fieldset>
+          {/* progress dots */}
+          {!done && (
+            <div className="flex gap-1.5 px-5 pb-1">
+              {STEPS.map((_, i) => (
+                <span
+                  key={i}
+                  className={`h-1 flex-1 rounded-full transition-colors ${i <= step ? "bg-accent" : "bg-line"}`}
+                />
+              ))}
+            </div>
+          )}
 
-            {/* Q3 */}
-            <fieldset className="mb-7">
-              <Label n="03">Какой у вас срок на реализацию?</Label>
-              <div className="grid gap-2">
-                {DEADLINES.map((d) => (
-                  <Row key={d} active={deadline === d} onClick={() => setDeadline(d)}>
-                    {d}
-                  </Row>
-                ))}
-              </div>
-              {deadline === "другое" && (
-                <input
-                  value={deadlineOther}
-                  onChange={(e) => setDeadlineOther(e.target.value)}
-                  placeholder="Укажите срок"
-                  aria-label="Укажите срок"
-                  className={`${inputCls} mt-2`}
-                />
-              )}
-            </fieldset>
+          {done ? (
+            <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
+              <span className="signal-grad grid size-12 place-items-center rounded-full text-white">✓</span>
+              <p className="font-display text-lg text-ink">Бриф отправлен</p>
+              <p className="text-[12.5px] text-ink-soft">Разберу задачу и вернусь с расчётом в течение 2 часов.</p>
+            </div>
+          ) : (
+            <>
+              {/* step content */}
+              <div className="flex-1 overflow-y-auto px-5 py-4">
+                {heading}
 
-            {/* Q4 — dual budget slider */}
-            <fieldset className="mb-7">
-              <Label n="04">Диапазон бюджета</Label>
-              <div className="flex items-center justify-between text-[12px] font-medium text-ink">
-                <span>от {fmt(bmin)} ₽</span>
-                <span>до {fmt(bmax)}{bmax === BMAX ? "+" : ""} ₽</span>
-              </div>
-              <div className="relative mt-3 h-5">
-                <div className="absolute top-1/2 h-1.5 w-full -translate-y-1/2 rounded-full bg-line" />
-                <div
-                  className="signal-grad absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full"
-                  style={{ left: `${pct(bmin)}%`, right: `${100 - pct(bmax)}%` }}
-                />
-                <input
-                  type="range"
-                  min={BMIN}
-                  max={BMAX}
-                  step={BSTEP}
-                  value={bmin}
-                  aria-label="Бюджет от"
-                  onChange={(e) => setBmin(Math.min(Number(e.target.value), bmax - BSTEP))}
-                  className="dual-range"
-                  style={{ zIndex: bmin > BMAX - BSTEP * 2 ? 5 : 3 }}
-                />
-                <input
-                  type="range"
-                  min={BMIN}
-                  max={BMAX}
-                  step={BSTEP}
-                  value={bmax}
-                  aria-label="Бюджет до"
-                  onChange={(e) => setBmax(Math.max(Number(e.target.value), bmin + BSTEP))}
-                  className="dual-range"
-                  style={{ zIndex: 4 }}
-                />
-              </div>
-              <p className="mt-2 text-[11px] text-ink-soft">шаг 5 000 ₽</p>
-            </fieldset>
+                {step === 0 && (
+                  <div className="grid gap-2">
+                    {TASKS.map((t) => (
+                      <Row key={t} active={task === t} onClick={() => setTask(t)}>
+                        {t}
+                      </Row>
+                    ))}
+                    {task === "другое" && (
+                      <input
+                        value={taskOther}
+                        onChange={(e) => setTaskOther(e.target.value)}
+                        placeholder="Опишите задачу"
+                        aria-label="Опишите задачу"
+                        className={`${inputCls} mt-1`}
+                      />
+                    )}
+                  </div>
+                )}
 
-            {/* Q5 — contact */}
-            <fieldset className="mb-6">
-              <Label n="05">Удобный способ связи</Label>
-              <div className="flex flex-wrap gap-2">
-                {CONTACTS.map((c) =>
-                  c.disabled ? (
-                    <span key={c.id} className="group relative">
-                      <button
-                        type="button"
-                        disabled
-                        aria-disabled
-                        className="cursor-not-allowed rounded-full border border-line px-3.5 py-2 text-[12px] text-ink-soft/45 line-through"
-                      >
-                        {c.label}
-                      </button>
-                      <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-40 -translate-x-1/2 rounded-lg bg-ink px-2.5 py-1.5 text-center text-[10px] leading-snug text-white group-hover:block">
-                        {c.tip}
-                      </span>
-                    </span>
-                  ) : (
-                    <button
-                      key={c.id}
-                      type="button"
-                      onClick={() => toggleContact(c.id)}
-                      aria-pressed={contacts.includes(c.id)}
-                      className={`rounded-full border px-3.5 py-2 text-[12px] transition-colors ${
-                        contacts.includes(c.id)
-                          ? "signal-grad border-transparent text-white"
-                          : "border-line text-ink-soft hover:border-accent/50 hover:text-ink"
-                      }`}
-                    >
-                      {c.label}
-                    </button>
-                  ),
+                {step === 1 && (
+                  <textarea
+                    value={idea}
+                    onChange={(e) => setIdea(e.target.value)}
+                    rows={6}
+                    placeholder="Пара предложений о проекте"
+                    aria-label="Замысел проекта"
+                    className={inputCls}
+                  />
+                )}
+
+                {step === 2 && (
+                  <div className="grid gap-2">
+                    {DEADLINES.map((d) => (
+                      <Row key={d} active={deadline === d} onClick={() => setDeadline(d)}>
+                        {d}
+                      </Row>
+                    ))}
+                    {deadline === "другое" && (
+                      <input
+                        value={deadlineOther}
+                        onChange={(e) => setDeadlineOther(e.target.value)}
+                        placeholder="Укажите срок"
+                        aria-label="Укажите срок"
+                        className={`${inputCls} mt-1`}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {step === 3 && (
+                  <div>
+                    <div className="flex items-center justify-between text-[12px] font-medium text-ink">
+                      <span>от {fmt(bmin)} ₽</span>
+                      <span>до {fmt(bmax)}{bmax === BMAX ? "+" : ""} ₽</span>
+                    </div>
+                    <div className="relative mt-3 h-5">
+                      <div className="absolute top-1/2 h-1.5 w-full -translate-y-1/2 rounded-full bg-line" />
+                      <div
+                        className="signal-grad absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full"
+                        style={{ left: `${pct(bmin)}%`, right: `${100 - pct(bmax)}%` }}
+                      />
+                      <input
+                        type="range"
+                        min={BMIN}
+                        max={BMAX}
+                        step={BSTEP}
+                        value={bmin}
+                        aria-label="Бюджет от"
+                        onChange={(e) => setBmin(Math.min(Number(e.target.value), bmax - BSTEP))}
+                        className="dual-range"
+                        style={{ zIndex: bmin > BMAX - BSTEP * 2 ? 5 : 3 }}
+                      />
+                      <input
+                        type="range"
+                        min={BMIN}
+                        max={BMAX}
+                        step={BSTEP}
+                        value={bmax}
+                        aria-label="Бюджет до"
+                        onChange={(e) => setBmax(Math.max(Number(e.target.value), bmin + BSTEP))}
+                        className="dual-range"
+                        style={{ zIndex: 4 }}
+                      />
+                    </div>
+                    <p className="mt-2 text-[11px] text-ink-soft">шаг 5 000 ₽ · двигайте оба ползунка</p>
+                  </div>
+                )}
+
+                {step === 4 && (
+                  <div>
+                    <div className="flex flex-wrap gap-2">
+                      {CONTACTS.map((c) =>
+                        c.disabled ? (
+                          <span key={c.id} className="group relative">
+                            <button
+                              type="button"
+                              disabled
+                              aria-disabled
+                              className="cursor-not-allowed rounded-full border border-line px-3.5 py-2 text-[12px] text-ink-soft/45 line-through"
+                            >
+                              {c.label}
+                            </button>
+                            <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-40 -translate-x-1/2 rounded-lg bg-ink px-2.5 py-1.5 text-center text-[10px] leading-snug text-white group-hover:block">
+                              {c.tip}
+                            </span>
+                          </span>
+                        ) : (
+                          <button
+                            key={c.id}
+                            type="button"
+                            onClick={() => toggleContact(c.id)}
+                            aria-pressed={contacts.includes(c.id)}
+                            className={`rounded-full border px-3.5 py-2 text-[12px] transition-colors ${
+                              contacts.includes(c.id)
+                                ? "signal-grad border-transparent text-white"
+                                : "border-line text-ink-soft hover:border-accent/50 hover:text-ink"
+                            }`}
+                          >
+                            {c.label}
+                          </button>
+                        ),
+                      )}
+                    </div>
+                    <textarea
+                      value={contactInfo}
+                      onChange={(e) => setContactInfo(e.target.value)}
+                      rows={3}
+                      placeholder="Ваши контакты: телефон, @ник, почта…"
+                      aria-label="Контактные данные"
+                      className={`${inputCls} mt-3`}
+                    />
+                  </div>
                 )}
               </div>
-              <textarea
-                value={contactInfo}
-                onChange={(e) => setContactInfo(e.target.value)}
-                rows={2}
-                placeholder="Ваши контакты: телефон, @ник, почта…"
-                aria-label="Контактные данные"
-                className={`${inputCls} mt-3`}
-              />
-            </fieldset>
 
-            <button
-              type="submit"
-              className="signal-grad w-full rounded-xl py-3.5 text-[13px] font-semibold text-white transition-transform hover:scale-[1.01]"
-            >
-              Отправить бриф →
-            </button>
-            <p className="mt-3 text-center text-[10px] text-ink-soft/70">Отвечу в течение 2 часов · без спама</p>
-          </form>
-        )}
+              {/* nav */}
+              <div className="flex items-center gap-2 border-t border-line px-5 py-3">
+                {step > 0 && (
+                  <button
+                    type="button"
+                    onClick={back}
+                    className="tech-label rounded-xl border border-line px-4 py-2.5 text-[11px] text-ink-soft transition-colors hover:text-ink"
+                  >
+                    назад
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={next}
+                  className="signal-grad flex-1 rounded-xl py-2.5 text-[13px] font-semibold text-white transition-transform hover:scale-[1.01]"
+                >
+                  {step < STEPS.length - 1 ? "далее →" : "отправить бриф →"}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* ---------- TELEGRAM BANNER (bottom 1/3) ---------- */}
+        <div className="flex min-h-0 flex-[1] flex-col justify-center gap-2 border-t border-line bg-ink px-5 py-4 text-white">
+          <div className="flex items-center gap-2">
+            <svg viewBox="0 0 24 24" className="size-5 fill-white" aria-hidden>
+              <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.14-3.05-1.99 1.93c-.23.23-.42.42-.83.42z" />
+            </svg>
+            <span className="tech-label text-[10px] text-white/60">телеграм-канал</span>
+          </div>
+          <p className="font-display text-[0.98rem] font-normal leading-snug">
+            Разбираю бренд, ИИ и дизайн — <span className="signal-text">коротко и по делу</span>
+          </p>
+          <p className="text-[11.5px] leading-snug text-white/55">Кейсы, приёмы и мысли из практики. Без спама.</p>
+          <a
+            href={legal.telegram}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => reachGoal("tg_subscribe", { source: "quiz" })}
+            className="signal-grad mt-1 inline-flex w-fit items-center rounded-full px-5 py-2 text-[12px] font-semibold text-white transition-transform hover:scale-105"
+          >
+            Подписаться →
+          </a>
+        </div>
       </aside>
     </>
   );
