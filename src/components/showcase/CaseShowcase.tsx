@@ -578,7 +578,7 @@ export default function CaseShowcase() {
                       </p>
 
                       {/* внутренняя стеклянная панель со списком */}
-                      <div className="mt-6 rounded-[30px] border border-white/10 bg-white/[0.07] p-5 sm:p-6">
+                      <div className="mt-6 rounded-[25px_55px_55px_5px] bg-white/[0.07] p-5 sm:p-6">
                         <p className="text-[16px] font-normal text-white/90">что было сделано:</p>
                         {/* заполнение по колонкам; колонки по контенту — длинные пункты
                             второй колонки в одну строку, без переносов */}
