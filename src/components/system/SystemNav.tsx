@@ -59,7 +59,7 @@ export default function SystemNav() {
         shown ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
       }`}
     >
-      <header className="pointer-events-auto mx-auto w-fit max-w-full rounded-[24px] border border-line/60 bg-white/85 shadow-[0_8px_32px_-14px_rgba(48,32,85,0.4)] backdrop-blur-md">
+      <header className="pointer-events-auto mx-auto w-fit max-w-full rounded-[24px] border border-line bg-white shadow-[0_8px_32px_-14px_rgba(48,32,85,0.4)]">
         <div className="flex h-11 items-center gap-3 pl-2.5 pr-2 sm:gap-4 sm:pl-3">
           {/* left: mark + live dot */}
           <a href="#top" aria-label="AICS-93 — наверх" className="flex items-center gap-2.5" data-magnetic>
@@ -72,18 +72,17 @@ export default function SystemNav() {
           </a>
 
           {/* center: nav (desktop) */}
-          <nav aria-label="Навигация" className="hidden items-center gap-4 md:flex lg:gap-5">
-            {LINKS.map((l, i) => {
+          <nav aria-label="Навигация" className="hidden items-center gap-4 lg:flex lg:gap-5">
+            {LINKS.map((l) => {
               const on = active === l.href;
               return (
                 <a
                   key={l.href}
                   href={l.href}
-                  className={`tech-label group relative text-[11px] transition-colors ${
+                  className={`tech-label group relative text-[15px] transition-colors ${
                     on ? "text-ink" : "text-ink-soft hover:text-ink"
                   }`}
                 >
-                  <span className="mr-1 opacity-40">{String(i + 1).padStart(2, "0")}</span>
                   {l.label}
                   <span
                     className={`signal-grad absolute -bottom-1.5 left-0 h-px transition-all duration-300 ${
@@ -95,15 +94,15 @@ export default function SystemNav() {
             })}
             <Link
               href="/services"
-              className="tech-label text-[11px] text-ink-soft transition-colors hover:text-ink"
+              className="tech-label text-[15px] text-ink-soft transition-colors hover:text-ink"
             >
-              <span className="mr-1 opacity-40">06</span>услуги
+              услуги
             </Link>
             <Link
               href="/blog"
-              className="tech-label text-[11px] text-ink-soft transition-colors hover:text-ink"
+              className="tech-label text-[15px] text-ink-soft transition-colors hover:text-ink"
             >
-              <span className="mr-1 opacity-40">07</span>журнал
+              журнал
             </Link>
           </nav>
 
@@ -113,7 +112,7 @@ export default function SystemNav() {
               href="#upgrade"
               data-magnetic
               data-cursor="route signal"
-              className="signal-grad grid h-11 place-items-center rounded-full px-4 text-[12px] font-semibold text-white transition-transform hover:scale-105 md:h-8 md:px-3.5"
+              className="signal-grad grid h-11 place-items-center rounded-none px-4 text-[12px] font-semibold text-white transition-transform hover:scale-105 md:h-8 md:px-3.5"
             >
               КП
             </a>
@@ -123,7 +122,7 @@ export default function SystemNav() {
               rel="noreferrer"
               data-magnetic
               aria-label="Telegram"
-              className="grid h-11 place-items-center rounded-full border border-line px-3 text-[12px] font-semibold text-ink transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)] md:h-8"
+              className="grid h-11 place-items-center rounded-none border border-line px-3 text-[12px] font-semibold text-ink transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)] md:h-8"
             >
               TG
             </a>
@@ -133,7 +132,7 @@ export default function SystemNav() {
               aria-label={open ? "Закрыть меню" : "Открыть меню"}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
-              className="grid size-11 place-items-center rounded-xl border border-line text-ink md:hidden"
+              className="grid size-11 place-items-center rounded-none border border-line text-ink lg:hidden"
             >
               <span className="relative block h-3 w-4" aria-hidden>
                 <span
@@ -164,18 +163,17 @@ export default function SystemNav() {
         >
           <nav aria-label="Навигация" className="min-h-0 min-w-[250px]">
             <ul className="flex flex-col gap-1 border-t border-line/70 px-2 py-2">
-              {LINKS.map((l, i) => {
+              {LINKS.map((l) => {
                 const on = active === l.href;
                 return (
                   <li key={l.href}>
                     <a
                       href={l.href}
                       onClick={() => setOpen(false)}
-                      className={`tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[13px] transition-colors ${
+                      className={`tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[15px] transition-colors ${
                         on ? "bg-ink/[0.06] text-ink" : "text-ink-soft hover:bg-ink/[0.04]"
                       }`}
                     >
-                      <span className="opacity-40">{String(i + 1).padStart(2, "0")}</span>
                       {l.label}
                     </a>
                   </li>
@@ -185,18 +183,18 @@ export default function SystemNav() {
                 <Link
                   href="/services"
                   onClick={() => setOpen(false)}
-                  className="tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[13px] text-ink-soft transition-colors hover:bg-ink/[0.04]"
+                  className="tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[15px] text-ink-soft transition-colors hover:bg-ink/[0.04]"
                 >
-                  <span className="opacity-40">06</span>услуги
+                  услуги
                 </Link>
               </li>
               <li>
                 <Link
                   href="/blog"
                   onClick={() => setOpen(false)}
-                  className="tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[13px] text-ink-soft transition-colors hover:bg-ink/[0.04]"
+                  className="tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[15px] text-ink-soft transition-colors hover:bg-ink/[0.04]"
                 >
-                  <span className="opacity-40">07</span>журнал
+                  журнал
                 </Link>
               </li>
             </ul>
