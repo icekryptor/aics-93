@@ -82,16 +82,16 @@ function BackdropFX({ hostRef }: { hostRef: React.RefObject<HTMLElement | null> 
     const LERP = 0.055; // инерция — круги «доезжают» после остановки скролла
     const cur = [0, 0, 0];
 
-    const parts: Particle[] = Array.from({ length: 46 }, () => ({
+    const parts: Particle[] = Array.from({ length: 64 }, () => ({
       x: rng(),
       y: rng(),
-      s: 1 + rng() * 2.4,
+      s: 1.5 + rng() * 3,
       depth: 0.35 + rng() * 0.85,
       k: 0.02 + rng() * 0.035,
       cur: 0,
       phase: rng() * Math.PI * 2,
       tw: 0.4 + rng() * 0.9,
-      fl: 2 + rng() * 5,
+      fl: 3 + rng() * 6,
       fs: 0.15 + rng() * 0.3,
       violet: rng() < 0.32,
     }));
@@ -101,10 +101,10 @@ function BackdropFX({ hostRef }: { hostRef: React.RefObject<HTMLElement | null> 
       for (const p of parts) {
         const x = p.x * W + Math.sin(t * p.fs + p.phase) * p.fl;
         const y = p.y * H + p.cur + Math.cos(t * p.fs * 0.8 + p.phase) * p.fl * 0.6;
-        const a = 0.08 + 0.5 * (0.5 + 0.5 * Math.sin(t * p.tw + p.phase * 1.7));
+        const a = 0.14 + 0.62 * (0.5 + 0.5 * Math.sin(t * p.tw + p.phase * 1.7));
         ctx!.fillStyle = p.violet
           ? `rgba(181,123,255,${a.toFixed(3)})`
-          : `rgba(239,234,255,${(a * 0.8).toFixed(3)})`;
+          : `rgba(239,234,255,${(a * 0.85).toFixed(3)})`;
         ctx!.fillRect(x, y, p.s, p.s);
       }
     }
@@ -117,9 +117,19 @@ function BackdropFX({ hostRef }: { hostRef: React.RefObject<HTMLElement | null> 
 
       const top = host!.getBoundingClientRect().top;
       for (let i = 0; i < 3; i++) cur[i] += (top * SPEED[i] - cur[i]) * LERP;
-      if (orbA.current) orbA.current.style.transform = `translate3d(0, ${cur[0].toFixed(2)}px, 0)`;
-      if (orbB.current) orbB.current.style.transform = `translate3d(0, ${cur[1].toFixed(2)}px, 0)`;
-      if (orbC.current) orbC.current.style.transform = `translate3d(0, ${cur[2].toFixed(2)}px, 0)`;
+      // автономный медленный дрейф (живут и без скролла) + инерционный параллакс
+      const ox = [Math.sin(t * 0.11) * 20, Math.cos(t * 0.09) * 16, Math.sin(t * 0.13 + 2) * 12];
+      const oy = [
+        cur[0] + Math.sin(t * 0.16) * 26,
+        cur[1] + Math.cos(t * 0.13 + 1) * 22,
+        cur[2] + Math.sin(t * 0.1 + 3) * 14,
+      ];
+      if (orbA.current)
+        orbA.current.style.transform = `translate3d(${ox[0].toFixed(2)}px, ${oy[0].toFixed(2)}px, 0)`;
+      if (orbB.current)
+        orbB.current.style.transform = `translate3d(${ox[1].toFixed(2)}px, ${oy[1].toFixed(2)}px, 0)`;
+      if (orbC.current)
+        orbC.current.style.transform = `translate3d(${ox[2].toFixed(2)}px, ${oy[2].toFixed(2)}px, 0)`;
 
       for (const p of parts) p.cur += (top * -0.09 * p.depth - p.cur) * p.k;
       drawParticles();
@@ -253,7 +263,7 @@ function ShotCell({
       ) : (
         <>
           <GenerativeCover seed={seed} accent={accent} className="absolute inset-0" />
-          <span className="tech-label absolute bottom-2 right-2 rounded-md border border-white/15 bg-black/40 px-2 py-1 text-[9px] text-white/70 backdrop-blur-sm">
+          <span className="tech-label absolute bottom-2 right-2 rounded-md border border-white/15 bg-black/60 px-2 py-1 text-[9px] text-white/70">
             {shot.kind === "mobile" ? "моб · скрин скоро" : "деск · скрин скоро"}
           </span>
         </>
@@ -459,13 +469,10 @@ export default function CaseShowcase() {
   const trackTransition = dragging || reduced || noTrans ? "none" : TRACK_TRANSITION;
   const shotParallax = reduced ? 0 : Math.max(-12, Math.min(12, -offset * 0.05));
 
-  // градиентные круги-стрелки (Ellipse1 из Figma)
+  // крупные тёмные круги-стрелки внизу справа, наложены на карточку (мокап).
+  // Вне transform-трека, поэтому backdrop-blur здесь работает стабильно.
   const arrowCls =
-    "inline-flex h-14 w-14 min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full text-xl leading-none text-white transition-transform hover:scale-105";
-  const arrowStyle: React.CSSProperties = {
-    background: "linear-gradient(140deg, #9a6bff 0%, #6d34e8 55%, #4c1fb0 100%)",
-    boxShadow: "0 14px 30px -12px rgba(103,3,255,0.65)",
-  };
+    "grid size-16 min-h-11 min-w-11 cursor-pointer place-items-center rounded-full border border-white/15 bg-[#1d1530]/75 text-2xl leading-none text-white backdrop-blur-md transition-[border-color,transform] hover:scale-105 hover:border-white/40 sm:size-20 lg:size-24 lg:text-3xl";
 
   return (
     <section
@@ -489,9 +496,13 @@ export default function CaseShowcase() {
       {/* фон: круги + частицы (инерционный параллакс) */}
       <BackdropFX hostRef={sectionRef} />
 
-      {/* верх: глазок */}
+      {/* верх: глазок + счётчик */}
       <header className="relative z-10 flex items-center justify-between gap-4 px-6 pt-7 lg:px-14 lg:pt-8">
         <p className="tech-label text-[#b3a8d9]">[ кейсы · избранное ]</p>
+        <div className="flex items-baseline gap-1.5 font-bold tabular-nums" aria-live="polite">
+          <span className="text-2xl leading-none text-[#efeaff]">{pad(displayIdx + 1)}</span>
+          <span className="text-sm leading-none text-white/35">/ {pad(total)}</span>
+        </div>
       </header>
 
       {/* сцена — карточки; соседние подглядывают с краёв */}
@@ -529,9 +540,21 @@ export default function CaseShowcase() {
                 }`}
                 style={{ transitionTimingFunction: "cubic-bezier(0.65,0,0.35,1)" }}
               >
-                {/* стеклянная карточка — тёмное стекло #261645 (Figma), размывает круги позади */}
-                <div className="relative h-full overflow-hidden rounded-[28px] border border-white/10 bg-[#261645]/45 shadow-[0_50px_100px_-50px_rgba(0,0,0,0.7)] backdrop-blur-xl lg:rounded-[40px]">
-                  <div className="grid h-full grid-cols-1 items-center gap-8 p-6 sm:p-8 lg:grid-cols-[1fr_1.08fr] lg:gap-12 lg:p-12">
+                {/* карточка: тёмное «стекло» БЕЗ backdrop-filter — он глючит внутри
+                    анимируемого transform-трека (blur пропадал при смене слайда).
+                    Глубину дают внутренние glow-слои с обычным filter:blur. */}
+                <div className="relative h-full overflow-hidden rounded-[36px] border border-white/10 bg-[#241540]/90 shadow-[0_50px_100px_-50px_rgba(0,0,0,0.7)] lg:rounded-[56px]">
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -right-24 -top-44 size-[30rem] rounded-full opacity-50 blur-3xl"
+                    style={{ background: "radial-gradient(circle, #ff4fae 0%, rgba(255,79,174,0) 70%)" }}
+                  />
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute -bottom-48 -left-28 size-[26rem] rounded-full opacity-45 blur-3xl"
+                    style={{ background: "radial-gradient(circle, #6703ff 0%, rgba(103,3,255,0) 70%)" }}
+                  />
+                  <div className="relative grid h-full grid-cols-1 items-center gap-8 p-6 sm:p-8 lg:grid-cols-[1fr_1.08fr] lg:gap-12 lg:p-12">
                     {/* ЛЕВО — номер, заголовок, описание, пункты, CTA */}
                     <div
                       key={`copy-${i}-${active ? "on" : "off"}`}
@@ -555,23 +578,28 @@ export default function CaseShowcase() {
                       </p>
 
                       {/* внутренняя стеклянная панель со списком */}
-                      <div className="mt-6 rounded-[22px] border border-white/10 bg-white/[0.05] p-5 backdrop-blur-md sm:p-6">
+                      <div className="mt-6 rounded-[30px] border border-white/10 bg-white/[0.07] p-5 sm:p-6">
                         <p className="text-[16px] font-normal text-white/90">что было сделано:</p>
-                        {/* заполнение по колонкам, как в мокапе (полколонки слева, полсправа) */}
+                        {/* заполнение по колонкам; колонки по контенту — длинные пункты
+                            второй колонки в одну строку, без переносов */}
                         <ul
-                          className="mt-4 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2 sm:[grid-auto-flow:column]"
+                          className="mt-4 grid grid-cols-1 gap-x-10 gap-y-3 sm:w-fit sm:grid-cols-[auto_auto] sm:[grid-auto-flow:column]"
                           style={{ gridTemplateRows: `repeat(${Math.ceil(c.bullets.length / 2)}, auto)` }}
                         >
                           {c.bullets.map((b) => (
                             <li
                               key={b}
-                              className="flex items-start gap-3 text-[16px] leading-snug text-white/85"
+                              className="flex items-start gap-3 text-[16px] leading-snug text-white/85 sm:whitespace-nowrap"
                             >
-                              <span
+                              <svg
                                 aria-hidden
-                                className="mt-[6px] block size-0 shrink-0 border-y-[5.5px] border-l-[9px] border-y-transparent"
-                                style={{ borderLeftColor: c.accent }}
-                              />
+                                className="mt-[5px] shrink-0"
+                                width="10"
+                                height="12"
+                                viewBox="0 0 10 12"
+                              >
+                                <path d="M0 0L10 6L0 12Z" fill={c.accent} />
+                              </svg>
                               {b}
                             </li>
                           ))}
@@ -579,15 +607,21 @@ export default function CaseShowcase() {
                       </div>
 
                       {c.href && (
+                        // пилюля с циановым градиентом и свечением (вариант A из макета)
                         <a
                           href={c.href}
                           target={isHttp ? "_blank" : undefined}
                           rel={isHttp ? "noopener noreferrer" : undefined}
-                          aria-label={`весь кейс ${c.title} — подробнее`}
+                          aria-label={`смотреть кейс ${c.title}`}
                           draggable={false}
-                          className="mt-6 inline-flex h-[54px] min-h-11 cursor-pointer items-center rounded-[16px] border border-white/15 bg-white/[0.08] px-9 text-[16px] font-bold text-white backdrop-blur-md transition-colors hover:border-white/35 hover:bg-white/[0.13]"
+                          className="mt-6 inline-flex h-[56px] min-h-11 cursor-pointer items-center rounded-full px-10 text-[16px] font-bold text-[#0b1e33] transition-transform hover:scale-[1.03]"
+                          style={{
+                            background: "linear-gradient(105deg, #a5f4ff 0%, #5fd9f5 55%, #3ec2ea 100%)",
+                            boxShadow:
+                              "0 16px 44px -12px rgba(80,215,255,0.55), 0 0 26px rgba(80,215,255,0.3)",
+                          }}
                         >
-                          Весь кейс — подробнее
+                          Смотреть кейс
                         </a>
                       )}
                     </div>
@@ -621,20 +655,14 @@ export default function CaseShowcase() {
         </div>
       </div>
 
-      {/* низ-лево: стрелки + счётчик (по мокапу) */}
-      <div className="relative z-10 flex items-center gap-5 px-6 pb-8 lg:px-14">
-        <div className="flex items-center gap-3">
-          <button type="button" onClick={prev} aria-label="предыдущий кейс" className={arrowCls} style={arrowStyle}>
-            ←
-          </button>
-          <button type="button" onClick={next} aria-label="следующий кейс" className={arrowCls} style={arrowStyle}>
-            →
-          </button>
-        </div>
-        <div className="flex items-baseline gap-1.5 font-bold tabular-nums" aria-live="polite">
-          <span className="text-2xl leading-none text-[#efeaff]">{pad(displayIdx + 1)}</span>
-          <span className="text-sm leading-none text-white/35">/ {pad(total)}</span>
-        </div>
+      {/* низ-право: крупные стрелки поверх угла карточки (по мокапу) */}
+      <div className="absolute bottom-5 right-4 z-30 flex items-center gap-3 sm:right-8 lg:bottom-10 lg:right-12 lg:gap-4">
+        <button type="button" onClick={prev} aria-label="предыдущий кейс" className={arrowCls}>
+          ←
+        </button>
+        <button type="button" onClick={next} aria-label="следующий кейс" className={arrowCls}>
+          →
+        </button>
       </div>
     </section>
   );

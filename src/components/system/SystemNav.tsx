@@ -59,60 +59,63 @@ export default function SystemNav() {
         shown ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
       }`}
     >
-      <header className="pointer-events-auto mx-auto w-fit max-w-full rounded-[10px] border border-line bg-white shadow-[0_8px_32px_-14px_rgba(48,32,85,0.4)]">
-        <div className="flex h-11 items-center gap-3 pl-2.5 pr-2 sm:gap-4 sm:pl-3">
-          {/* left: mark + live dot */}
-          <a href="#top" aria-label="AICS-93 — наверх" className="flex items-center gap-2.5" data-magnetic>
-            <span className="signal-grad grid size-7 place-items-center rounded-[8px] text-[11px] font-bold text-white">
-              A
-            </span>
-            <span className="hidden font-display text-[14px] tracking-tight text-ink sm:inline">
-              AICS<span className="signal-text">-93</span>
-            </span>
+      {/* тёмная «гантель»: круг-лого + капсула ссылок + капсулы-кнопки */}
+      <header className="pointer-events-auto mx-auto w-fit max-w-full rounded-full bg-[#17121f] p-1.5 shadow-[0_14px_44px_-14px_rgba(15,8,32,0.7)]">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* left: круг-лого */}
+          <a
+            href="#top"
+            aria-label="AICS-93 — наверх"
+            data-magnetic
+            className="signal-grad grid size-11 shrink-0 place-items-center rounded-full text-[15px] font-bold text-white"
+          >
+            A
           </a>
 
-          {/* center: nav (desktop) */}
-          <nav aria-label="Навигация" className="hidden items-center gap-4 lg:flex lg:gap-5">
-            {LINKS.map((l) => {
+          {/* center: капсула ссылок с разделителями (desktop) */}
+          <nav
+            aria-label="Навигация"
+            className="hidden items-center rounded-full border border-white/10 bg-white/[0.04] px-2 lg:flex"
+          >
+            {LINKS.map((l, i) => {
               const on = active === l.href;
               return (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  className={`tech-label group relative text-[15px] transition-colors ${
-                    on ? "text-ink" : "text-ink-soft hover:text-ink"
-                  }`}
-                >
-                  {l.label}
-                  <span
-                    className={`signal-grad absolute -bottom-1.5 left-0 h-px transition-all duration-300 ${
-                      on ? "w-full" : "w-0"
+                <span key={l.href} className="flex items-center">
+                  {i > 0 && <span aria-hidden className="h-4 w-px bg-white/15" />}
+                  <a
+                    href={l.href}
+                    className={`tech-label relative px-3.5 py-2.5 text-[15px] transition-colors xl:px-4 ${
+                      on ? "text-white" : "text-white/60 hover:text-white"
                     }`}
-                  />
-                </a>
+                  >
+                    {l.label}
+                  </a>
+                </span>
               );
             })}
+            <span aria-hidden className="h-4 w-px bg-white/15" />
             <Link
               href="/services"
-              className="tech-label text-[15px] text-ink-soft transition-colors hover:text-ink"
+              className="tech-label px-3.5 py-2.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-4"
             >
               услуги
             </Link>
+            <span aria-hidden className="h-4 w-px bg-white/15" />
             <Link
               href="/blog"
-              className="tech-label text-[15px] text-ink-soft transition-colors hover:text-ink"
+              className="tech-label px-3.5 py-2.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-4"
             >
               журнал
             </Link>
           </nav>
 
-          {/* right: actions */}
-          <div className="flex items-center gap-3 md:gap-2">
+          {/* right: капсулы-действия */}
+          <div className="flex items-center gap-1.5">
             <a
               href="#upgrade"
               data-magnetic
               data-cursor="route signal"
-              className="signal-grad grid h-11 place-items-center rounded-[5px] px-4 text-[12px] font-semibold text-white transition-transform hover:scale-105 md:h-8 md:px-3.5"
+              className="grid h-11 place-items-center rounded-full border border-white/12 bg-white/[0.07] px-5 text-[14px] font-semibold text-white transition-colors hover:bg-white/[0.14]"
             >
               КП
             </a>
@@ -122,7 +125,7 @@ export default function SystemNav() {
               rel="noreferrer"
               data-magnetic
               aria-label="Telegram"
-              className="grid h-11 place-items-center rounded-[5px] border border-line px-3 text-[12px] font-semibold text-ink transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)] md:h-8"
+              className="grid h-11 place-items-center rounded-full border border-white/12 bg-white/[0.07] px-4 text-[14px] font-semibold text-white transition-colors hover:bg-white/[0.14]"
             >
               TG
             </a>
@@ -132,7 +135,7 @@ export default function SystemNav() {
               aria-label={open ? "Закрыть меню" : "Открыть меню"}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
-              className="grid size-11 place-items-center rounded-[5px] border border-line text-ink lg:hidden"
+              className="grid size-11 place-items-center rounded-full border border-white/12 text-white lg:hidden"
             >
               <span className="relative block h-3 w-4" aria-hidden>
                 <span
@@ -162,7 +165,7 @@ export default function SystemNav() {
           }`}
         >
           <nav aria-label="Навигация" className="min-h-0 min-w-[250px]">
-            <ul className="flex flex-col gap-1 border-t border-line/70 px-2 py-2">
+            <ul className="flex flex-col gap-1 border-t border-white/10 px-3 py-2">
               {LINKS.map((l) => {
                 const on = active === l.href;
                 return (
@@ -170,8 +173,8 @@ export default function SystemNav() {
                     <a
                       href={l.href}
                       onClick={() => setOpen(false)}
-                      className={`tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[15px] transition-colors ${
-                        on ? "bg-ink/[0.06] text-ink" : "text-ink-soft hover:bg-ink/[0.04]"
+                      className={`tech-label flex items-center gap-2 rounded-full px-4 py-3 text-[15px] transition-colors ${
+                        on ? "bg-white/[0.09] text-white" : "text-white/60 hover:bg-white/[0.05] hover:text-white"
                       }`}
                     >
                       {l.label}
@@ -183,7 +186,7 @@ export default function SystemNav() {
                 <Link
                   href="/services"
                   onClick={() => setOpen(false)}
-                  className="tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[15px] text-ink-soft transition-colors hover:bg-ink/[0.04]"
+                  className="tech-label flex items-center gap-2 rounded-full px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-white/[0.05] hover:text-white"
                 >
                   услуги
                 </Link>
@@ -192,7 +195,7 @@ export default function SystemNav() {
                 <Link
                   href="/blog"
                   onClick={() => setOpen(false)}
-                  className="tech-label flex items-center gap-2 rounded-xl px-3 py-3 text-[15px] text-ink-soft transition-colors hover:bg-ink/[0.04]"
+                  className="tech-label flex items-center gap-2 rounded-full px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-white/[0.05] hover:text-white"
                 >
                   журнал
                 </Link>
