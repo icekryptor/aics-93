@@ -614,7 +614,7 @@ export default function CaseShowcase() {
                           rel={isHttp ? "noopener noreferrer" : undefined}
                           aria-label={`смотреть кейс ${c.title}`}
                           draggable={false}
-                          className="mt-6 inline-flex h-[56px] min-h-11 cursor-pointer items-center rounded-full px-10 text-[16px] font-bold text-[#0b1e33] transition-transform hover:scale-[1.03]"
+                          className="mt-6 inline-flex h-[56px] min-h-11 cursor-pointer items-center rounded-[5px_55px_55px_25px] px-10 text-[16px] font-bold text-[#0b1e33] transition-transform hover:scale-[1.03]"
                           style={{
                             background: "linear-gradient(105deg, #a5f4ff 0%, #5fd9f5 55%, #3ec2ea 100%)",
                             boxShadow:
