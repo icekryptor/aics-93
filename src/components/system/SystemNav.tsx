@@ -59,7 +59,7 @@ export default function SystemNav() {
         shown ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
       }`}
     >
-      <header className="pointer-events-auto mx-auto w-fit max-w-full rounded-[24px] border border-line bg-white shadow-[0_8px_32px_-14px_rgba(48,32,85,0.4)]">
+      <header className="pointer-events-auto mx-auto w-fit max-w-full rounded-[10px] border border-line bg-white shadow-[0_8px_32px_-14px_rgba(48,32,85,0.4)]">
         <div className="flex h-11 items-center gap-3 pl-2.5 pr-2 sm:gap-4 sm:pl-3">
           {/* left: mark + live dot */}
           <a href="#top" aria-label="AICS-93 — наверх" className="flex items-center gap-2.5" data-magnetic>
@@ -112,7 +112,7 @@ export default function SystemNav() {
               href="#upgrade"
               data-magnetic
               data-cursor="route signal"
-              className="signal-grad grid h-11 place-items-center rounded-none px-4 text-[12px] font-semibold text-white transition-transform hover:scale-105 md:h-8 md:px-3.5"
+              className="signal-grad grid h-11 place-items-center rounded-[5px] px-4 text-[12px] font-semibold text-white transition-transform hover:scale-105 md:h-8 md:px-3.5"
             >
               КП
             </a>
@@ -122,7 +122,7 @@ export default function SystemNav() {
               rel="noreferrer"
               data-magnetic
               aria-label="Telegram"
-              className="grid h-11 place-items-center rounded-none border border-line px-3 text-[12px] font-semibold text-ink transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)] md:h-8"
+              className="grid h-11 place-items-center rounded-[5px] border border-line px-3 text-[12px] font-semibold text-ink transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)] md:h-8"
             >
               TG
             </a>
@@ -132,7 +132,7 @@ export default function SystemNav() {
               aria-label={open ? "Закрыть меню" : "Открыть меню"}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
-              className="grid size-11 place-items-center rounded-none border border-line text-ink lg:hidden"
+              className="grid size-11 place-items-center rounded-[5px] border border-line text-ink lg:hidden"
             >
               <span className="relative block h-3 w-4" aria-hidden>
                 <span
