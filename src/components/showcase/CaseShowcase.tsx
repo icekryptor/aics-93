@@ -231,9 +231,14 @@ function ShotCell({
   className?: string;
   priority?: boolean;
 }) {
+  // по Figma: радиус 10px; деск-скрины с фиолетовой рамкой, мобильные — с тенью
+  const frame =
+    shot.kind === "desktop"
+      ? "border border-[#9057ff]/80"
+      : "shadow-[0_10px_25px_rgba(0,0,0,0.5)]";
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border border-white/10 bg-[#150e28] ${className ?? ""}`}
+      className={`relative overflow-hidden rounded-[10px] bg-[#150e28] ${frame} ${className ?? ""}`}
     >
       {shot.src ? (
         <Image
@@ -281,15 +286,15 @@ function ShotsGrid({
       }}
     >
       {four ? (
-        // сетка мокапа: [деск деск моб / моб деск деск]
-        <div className="grid aspect-[13/9] grid-cols-3 grid-rows-2 gap-3 sm:gap-4">
+        // сетка Figma: деск:моб = 4:1 по ширине, ряды 0.87:1, общий блок ≈13/12
+        <div className="grid aspect-[13/12] grid-cols-5 grid-rows-[0.87fr_1fr] gap-3 sm:gap-3.5">
           {shots.map((s, i) => (
             <ShotCell
               key={i}
               shot={s}
               accent={c.accent}
               seed={`${c.title}-${i}`}
-              className={s.kind === "desktop" ? "col-span-2" : ""}
+              className={s.kind === "desktop" ? "col-span-4" : "col-span-1"}
               priority={priority && i === 0}
             />
           ))}
@@ -454,8 +459,13 @@ export default function CaseShowcase() {
   const trackTransition = dragging || reduced || noTrans ? "none" : TRACK_TRANSITION;
   const shotParallax = reduced ? 0 : Math.max(-12, Math.min(12, -offset * 0.05));
 
+  // градиентные круги-стрелки (Ellipse1 из Figma)
   const arrowCls =
-    "inline-flex h-12 w-12 min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/[0.07] text-lg leading-none text-white backdrop-blur-md transition-colors hover:border-[#c77dff] hover:text-[#dfc3ff]";
+    "inline-flex h-14 w-14 min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full text-xl leading-none text-white transition-transform hover:scale-105";
+  const arrowStyle: React.CSSProperties = {
+    background: "linear-gradient(140deg, #9a6bff 0%, #6d34e8 55%, #4c1fb0 100%)",
+    boxShadow: "0 14px 30px -12px rgba(103,3,255,0.65)",
+  };
 
   return (
     <section
@@ -463,7 +473,7 @@ export default function CaseShowcase() {
       ref={sectionRef}
       aria-roledescription="карусель"
       aria-label="Кейсы — избранное"
-      className="runtime relative flex min-h-[100svh] scroll-mt-24 flex-col overflow-hidden"
+      className="runtime relative flex min-h-[100svh] scroll-mt-24 flex-col overflow-hidden bg-[#120e22]"
     >
       <style>{`
         @keyframes csEnter {
@@ -519,33 +529,34 @@ export default function CaseShowcase() {
                 }`}
                 style={{ transitionTimingFunction: "cubic-bezier(0.65,0,0.35,1)" }}
               >
-                {/* стеклянная карточка — тёмное стекло, размывает круги и частицы позади */}
-                <div className="relative h-full overflow-hidden rounded-[28px] border border-white/10 bg-[#150d28]/60 shadow-[0_50px_100px_-50px_rgba(0,0,0,0.7)] backdrop-blur-xl lg:rounded-[36px]">
+                {/* стеклянная карточка — тёмное стекло #261645 (Figma), размывает круги позади */}
+                <div className="relative h-full overflow-hidden rounded-[28px] border border-white/10 bg-[#261645]/45 shadow-[0_50px_100px_-50px_rgba(0,0,0,0.7)] backdrop-blur-xl lg:rounded-[40px]">
                   <div className="grid h-full grid-cols-1 items-center gap-8 p-6 sm:p-8 lg:grid-cols-[1fr_1.08fr] lg:gap-12 lg:p-12">
                     {/* ЛЕВО — номер, заголовок, описание, пункты, CTA */}
                     <div
                       key={`copy-${i}-${active ? "on" : "off"}`}
                       className={active && !reduced ? "cs-enter" : undefined}
                     >
+                      {/* номер — Neue Haas Bold 200px/1360, белый 10% (по Figma) */}
                       <span
                         aria-hidden
-                        className="font-display block select-none text-[clamp(3.4rem,8vw,6.6rem)] leading-none text-white/[0.13]"
+                        className="block select-none font-bold leading-none text-white/10 text-[clamp(4rem,10.5vw,9.5rem)]"
                       >
                         {pad(realIdx + 1)}
                       </span>
                       <h3
-                        className="-mt-[0.5em] max-w-xl uppercase leading-[1.04] text-[#f2edff]"
+                        className="-mt-[0.45em] max-w-xl uppercase leading-[1.04] tracking-[0.05em] text-[#f2edff]"
                         style={{ fontSize: "clamp(1.9rem,4.2vw,3.5rem)" }}
                       >
                         {c.title}
                       </h3>
-                      <p className="mt-4 max-w-md text-[15px] leading-relaxed text-white/65">
+                      <p className="mt-4 max-w-md text-[16px] leading-relaxed text-white/75">
                         {c.desc}
                       </p>
 
                       {/* внутренняя стеклянная панель со списком */}
                       <div className="mt-6 rounded-[22px] border border-white/10 bg-white/[0.05] p-5 backdrop-blur-md sm:p-6">
-                        <p className="text-[15px] font-semibold text-white/85">что было сделано:</p>
+                        <p className="text-[16px] font-normal text-white/90">что было сделано:</p>
                         {/* заполнение по колонкам, как в мокапе (полколонки слева, полсправа) */}
                         <ul
                           className="mt-4 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2 sm:[grid-auto-flow:column]"
@@ -554,11 +565,11 @@ export default function CaseShowcase() {
                           {c.bullets.map((b) => (
                             <li
                               key={b}
-                              className="flex items-start gap-2.5 text-[14.5px] leading-snug text-white/75"
+                              className="flex items-start gap-3 text-[16px] leading-snug text-white/85"
                             >
                               <span
                                 aria-hidden
-                                className="mt-[5px] block size-0 shrink-0 border-y-[4.5px] border-l-[7px] border-y-transparent"
+                                className="mt-[6px] block size-0 shrink-0 border-y-[5.5px] border-l-[9px] border-y-transparent"
                                 style={{ borderLeftColor: c.accent }}
                               />
                               {b}
@@ -574,7 +585,7 @@ export default function CaseShowcase() {
                           rel={isHttp ? "noopener noreferrer" : undefined}
                           aria-label={`весь кейс ${c.title} — подробнее`}
                           draggable={false}
-                          className="mt-6 inline-flex h-12 min-h-11 cursor-pointer items-center rounded-[14px] border border-white/15 bg-white/[0.08] px-7 text-[15px] font-semibold text-white backdrop-blur-md transition-colors hover:border-white/35 hover:bg-white/[0.13]"
+                          className="mt-6 inline-flex h-[54px] min-h-11 cursor-pointer items-center rounded-[16px] border border-white/15 bg-white/[0.08] px-9 text-[16px] font-bold text-white backdrop-blur-md transition-colors hover:border-white/35 hover:bg-white/[0.13]"
                         >
                           Весь кейс — подробнее
                         </a>
@@ -584,13 +595,14 @@ export default function CaseShowcase() {
                     {/* ПРАВО — wip-бейдж с pixel disintegration + сетка скринов */}
                     <div className="flex flex-col gap-5">
                       {c.wip && (
-                        <div className="hidden items-center gap-4 self-end rounded-2xl border border-white/15 bg-white/[0.05] py-3 pl-4 pr-3 backdrop-blur-md md:flex">
-                          <span className="text-[11px] font-semibold leading-[1.3] text-white/80">
+                        // по Figma: рамка white/50, радиус 5px, без заливки, текст Bold
+                        <div className="hidden items-center gap-4 self-end rounded-[5px] border border-white/50 px-4 py-3 md:flex">
+                          <span className="text-[15px] font-bold leading-[1.25] text-white">
                             work in
                             <br />
                             progress
                           </span>
-                          <PixelDissolve className="h-[46px] w-[200px]" seed={0x93 + realIdx} />
+                          <PixelDissolve className="h-[56px] w-[250px]" seed={0x93 + realIdx} rows={6} cols={26} />
                         </div>
                       )}
                       <ShotsGrid
@@ -611,15 +623,15 @@ export default function CaseShowcase() {
 
       {/* низ-лево: стрелки + счётчик (по мокапу) */}
       <div className="relative z-10 flex items-center gap-5 px-6 pb-8 lg:px-14">
-        <div className="flex items-center gap-2.5">
-          <button type="button" onClick={prev} aria-label="предыдущий кейс" className={arrowCls}>
+        <div className="flex items-center gap-3">
+          <button type="button" onClick={prev} aria-label="предыдущий кейс" className={arrowCls} style={arrowStyle}>
             ←
           </button>
-          <button type="button" onClick={next} aria-label="следующий кейс" className={arrowCls}>
+          <button type="button" onClick={next} aria-label="следующий кейс" className={arrowCls} style={arrowStyle}>
             →
           </button>
         </div>
-        <div className="font-display flex items-baseline gap-1.5 tabular-nums" aria-live="polite">
+        <div className="flex items-baseline gap-1.5 font-bold tabular-nums" aria-live="polite">
           <span className="text-2xl leading-none text-[#efeaff]">{pad(displayIdx + 1)}</span>
           <span className="text-sm leading-none text-white/35">/ {pad(total)}</span>
         </div>

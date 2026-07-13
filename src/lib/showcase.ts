@@ -25,7 +25,7 @@ export type ShowcaseCase = {
 export const showcaseCases: ShowcaseCase[] = [
   {
     title: "ХИМИЧКА",
-    desc: "Работаю на текущий момент сооснователем — выполняю функции CTO/CMO.",
+    desc: "работаю на текущий момент сооснователем, выполняю функции CTO/CMO",
     bullets: [
       "нейминг",
       "фирменный стиль",
@@ -36,15 +36,14 @@ export const showcaseCases: ShowcaseCase[] = [
       "свой интернет-магазин",
       "своя учебная платформа",
     ],
-    // 2 desktop + 2 mobile по сетке мокапа. Пустой src → плейсхолдер;
-    // заменить на реальные скрины: /public/assets/cases/ximichka/*.png
+    // реальные скрины из макета (Figma AICS-93 · Frame 1), сетка [деск|моб / моб|деск]
     shots: [
-      { src: "/assets/tild3862-643___-_Google_Chrome_2.png", kind: "desktop", alt: "Химичка — сайт" },
-      { src: "", kind: "mobile", alt: "Химичка — карточка на Wildberries" },
-      { src: "", kind: "mobile", alt: "Химичка — мобильная версия магазина" },
-      { src: "", kind: "desktop", alt: "Химичка — учебная платформа, тренажёр ОГЭ" },
+      { src: "/assets/cases/ximichka/oge-trainer.png", kind: "desktop", alt: "Химичка — учебная платформа, тренажёр ОГЭ" },
+      { src: "/assets/cases/ximichka/wb-card.jpg", kind: "mobile", alt: "Химичка — карточка набора на Wildberries" },
+      { src: "/assets/cases/ximichka/wb-app.jpg", kind: "mobile", alt: "Химичка — выдача Wildberries" },
+      { src: "/assets/cases/ximichka/site.png", kind: "desktop", alt: "Химичка — официальный интернет-магазин" },
     ],
-    accent: "#c856ff",
+    accent: "#9057ff",
     href: "https://ximi4ka.ru",
     wip: true,
   },
