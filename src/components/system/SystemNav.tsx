@@ -59,33 +59,40 @@ export default function SystemNav() {
         shown ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
       }`}
     >
-      {/* тёмная «гантель»: круг-лого + капсула ссылок + капсулы-кнопки */}
-      <header className="pointer-events-auto mx-auto w-fit max-w-full rounded-full bg-[#17121f] p-1.5 shadow-[0_14px_44px_-14px_rgba(15,8,32,0.7)]">
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* left: круг-лого */}
+      {/* «гантель»: залитые блобы (круг-лого · капсула ссылок · капсула действий),
+          соединённые перемычками того же цвета; без обводок. Единая тень —
+          drop-shadow на контейнере повторяет объединённый силуэт. */}
+      <header className="pointer-events-auto mx-auto w-fit max-w-full [filter:drop-shadow(0_14px_40px_rgba(15,8,32,0.55))]">
+        <div className="flex items-center">
+          {/* блоб 1: круг-лого (крупнее капсул — выпуклость гантели) */}
           <a
             href="#top"
             aria-label="AICS-93 — наверх"
             data-magnetic
-            className="signal-grad grid size-11 shrink-0 place-items-center rounded-full text-[15px] font-bold text-white"
+            className="z-[1] grid size-14 shrink-0 place-items-center rounded-full bg-[#17121f]"
           >
-            A
+            <span className="signal-grad grid size-9 place-items-center rounded-full text-[13px] font-bold text-white">
+              A
+            </span>
           </a>
 
-          {/* center: капсула ссылок с разделителями (desktop) */}
+          {/* перемычка */}
+          <span aria-hidden className="-mx-1.5 h-6 w-6 shrink-0 bg-[#17121f]" />
+
+          {/* блоб 2: капсула ссылок (desktop) */}
           <nav
             aria-label="Навигация"
-            className="hidden items-center rounded-full border border-white/10 bg-white/[0.04] px-2 lg:flex"
+            className="z-[1] hidden h-12 items-center rounded-full bg-[#17121f] px-3 lg:flex"
           >
             {LINKS.map((l, i) => {
               const on = active === l.href;
               return (
                 <span key={l.href} className="flex items-center">
-                  {i > 0 && <span aria-hidden className="h-4 w-px bg-white/15" />}
+                  {i > 0 && <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />}
                   <a
                     href={l.href}
-                    className={`tech-label relative px-3.5 py-2.5 text-[15px] transition-colors xl:px-4 ${
-                      on ? "text-white" : "text-white/60 hover:text-white"
+                    className={`tech-label rounded-[3px] px-3 py-1.5 text-[15px] transition-colors xl:px-3.5 ${
+                      on ? "bg-[#2b2538] text-white" : "text-white/60 hover:text-white"
                     }`}
                   >
                     {l.label}
@@ -93,39 +100,43 @@ export default function SystemNav() {
                 </span>
               );
             })}
-            <span aria-hidden className="h-4 w-px bg-white/15" />
+            <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
             <Link
               href="/services"
-              className="tech-label px-3.5 py-2.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-4"
+              className="tech-label rounded-[3px] px-3 py-1.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-3.5"
             >
               услуги
             </Link>
-            <span aria-hidden className="h-4 w-px bg-white/15" />
+            <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
             <Link
               href="/blog"
-              className="tech-label px-3.5 py-2.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-4"
+              className="tech-label rounded-[3px] px-3 py-1.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-3.5"
             >
               журнал
             </Link>
           </nav>
 
-          {/* right: капсулы-действия */}
-          <div className="flex items-center gap-1.5">
+          {/* перемычка */}
+          <span aria-hidden className="-mx-1.5 hidden h-6 w-6 shrink-0 bg-[#17121f] lg:block" />
+
+          {/* блоб 3: капсула действий */}
+          <div className="z-[1] flex h-12 items-center rounded-full bg-[#17121f] px-2.5">
             <a
               href="#upgrade"
               data-magnetic
               data-cursor="route signal"
-              className="grid h-11 place-items-center rounded-full border border-white/12 bg-white/[0.07] px-5 text-[14px] font-semibold text-white transition-colors hover:bg-white/[0.14]"
+              className="rounded-[3px] px-3.5 py-1.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#2b2538]"
             >
               КП
             </a>
+            <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
             <a
               href={legal.telegram}
               target="_blank"
               rel="noreferrer"
               data-magnetic
               aria-label="Telegram"
-              className="grid h-11 place-items-center rounded-full border border-white/12 bg-white/[0.07] px-4 text-[14px] font-semibold text-white transition-colors hover:bg-white/[0.14]"
+              className="rounded-[3px] px-3.5 py-1.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#2b2538]"
             >
               TG
             </a>
@@ -135,7 +146,7 @@ export default function SystemNav() {
               aria-label={open ? "Закрыть меню" : "Открыть меню"}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
-              className="grid size-11 place-items-center rounded-full border border-white/12 text-white lg:hidden"
+              className="ml-1 grid size-10 place-items-center rounded-full text-white lg:hidden"
             >
               <span className="relative block h-3 w-4" aria-hidden>
                 <span
@@ -158,14 +169,18 @@ export default function SystemNav() {
           </div>
         </div>
 
-        {/* mobile sheet */}
+        {/* mobile sheet — своя тёмная подложка (у гантели нет общего фона) */}
         <div
-          className={`grid overflow-hidden transition-all duration-300 md:hidden ${
-            open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          className={`grid overflow-hidden transition-all duration-300 lg:hidden ${
+            open ? "mt-2 grid-rows-[1fr]" : "grid-rows-[0fr]"
           }`}
         >
           <nav aria-label="Навигация" className="min-h-0 min-w-[250px]">
-            <ul className="flex flex-col gap-1 border-t border-white/10 px-3 py-2">
+            <ul
+              className={`flex flex-col gap-1 rounded-[22px] bg-[#17121f] px-3 transition-[padding] ${
+                open ? "py-3" : "py-0"
+              }`}
+            >
               {LINKS.map((l) => {
                 const on = active === l.href;
                 return (
@@ -173,8 +188,8 @@ export default function SystemNav() {
                     <a
                       href={l.href}
                       onClick={() => setOpen(false)}
-                      className={`tech-label flex items-center gap-2 rounded-full px-4 py-3 text-[15px] transition-colors ${
-                        on ? "bg-white/[0.09] text-white" : "text-white/60 hover:bg-white/[0.05] hover:text-white"
+                      className={`tech-label flex items-center gap-2 rounded-[3px] px-4 py-3 text-[15px] transition-colors ${
+                        on ? "bg-[#2b2538] text-white" : "text-white/60 hover:bg-[#221c2e] hover:text-white"
                       }`}
                     >
                       {l.label}
@@ -186,7 +201,7 @@ export default function SystemNav() {
                 <Link
                   href="/services"
                   onClick={() => setOpen(false)}
-                  className="tech-label flex items-center gap-2 rounded-full px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-white/[0.05] hover:text-white"
+                  className="tech-label flex items-center gap-2 rounded-[3px] px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-[#221c2e] hover:text-white"
                 >
                   услуги
                 </Link>
@@ -195,7 +210,7 @@ export default function SystemNav() {
                 <Link
                   href="/blog"
                   onClick={() => setOpen(false)}
-                  className="tech-label flex items-center gap-2 rounded-full px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-white/[0.05] hover:text-white"
+                  className="tech-label flex items-center gap-2 rounded-[3px] px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-[#221c2e] hover:text-white"
                 >
                   журнал
                 </Link>
