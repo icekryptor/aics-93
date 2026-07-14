@@ -9,13 +9,14 @@ const CANVAS_W = 1140;
 const CANVAS_H = 460;
 
 type G = { f: string; r: number; cx: number; cy: number; label: string };
+// силуэты — из Figma-листа «Gears» (нода 179:1736), очищены от noise-фильтров
 const TRAIN: G[] = [
-  { f: "gear1.svg", r: 115, cx: 130, cy: 200, label: "Маркетинг-стратегия" },
-  { f: "gear3.svg", r: 70, cx: 301, cy: 269, label: "Брендбук" },
-  { f: "gear2.svg", r: 100, cx: 459, cy: 206, label: "Контент и реклама" },
-  { f: "gear6.svg", r: 88, cx: 633, cy: 276, label: "Собственный сайт" },
-  { f: "gear5.svg", r: 95, cx: 803, cy: 208, label: "Продакт-дизайн" },
-  { f: "gear4.svg", r: 118, cx: 1006, cy: 273, label: "Удержание, LTV" },
+  { f: "fig-cross.svg", r: 115, cx: 130, cy: 200, label: "Маркетинг-стратегия" },
+  { f: "fig-clutch.svg", r: 70, cx: 301, cy: 269, label: "Брендбук" },
+  { f: "fig-teeth.svg", r: 100, cx: 459, cy: 206, label: "Контент и реклама" },
+  { f: "fig-chunky.svg", r: 88, cx: 633, cy: 276, label: "Собственный сайт" },
+  { f: "fig-fine.svg", r: 95, cx: 803, cy: 208, label: "Продакт-дизайн" },
+  { f: "fig-spoke.svg", r: 118, cx: 1006, cy: 273, label: "Удержание, LTV" },
 ];
 
 const K = 17; // rotation speed: deg ≈ scrollY * K / radius (bigger gear → slower)
@@ -159,7 +160,17 @@ export default function SalesGears() {
                   className="engine-gear size-full"
                   style={maskStyle(g.f)}
                 />
-                <span className="pointer-events-none absolute left-1/2 top-1/2 w-max max-w-[92%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-line bg-bg/90 px-3 py-1 text-center text-[12px] font-medium leading-tight text-ink shadow-[0_4px_16px_-8px_rgba(48,32,85,0.4)] backdrop-blur-sm">
+                {/* подложка-стекло (светлая формула glassmorphism, радиус-канон 25/55/55/5) */}
+                <span
+                  className="pointer-events-none absolute left-1/2 top-1/2 w-max max-w-[92%] -translate-x-1/2 -translate-y-1/2 rounded-[25px_55px_55px_5px] px-3.5 py-1.5 text-center text-[12px] font-medium leading-tight text-ink"
+                  style={{
+                    background: "rgba(255,255,255,0.45)",
+                    backdropFilter: "blur(24px) saturate(200%)",
+                    WebkitBackdropFilter: "blur(24px) saturate(200%)",
+                    boxShadow:
+                      "0 2px 0 0 rgba(255,255,255,0.8) inset, 0 8px 32px rgba(20,16,40,0.14)",
+                  }}
+                >
                   {g.label}
                 </span>
               </div>
