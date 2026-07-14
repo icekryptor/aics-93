@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import LogoMark from "@/components/LogoMark";
-import { legal } from "@/lib/content";
+import GearSolid from "@/components/GearSolid";
+import { assets, legal } from "@/lib/content";
 
 const LINKS = [
   { label: "разум", href: "#how" },
@@ -70,11 +71,27 @@ export default function SystemNav() {
             href="#top"
             aria-label="AICS-93 — наверх"
             data-magnetic
-            className="z-[1] grid size-14 shrink-0 place-items-center overflow-hidden rounded-full bg-[#17121f]"
+            className="z-[1] grid size-14 shrink-0 place-items-center rounded-full bg-[#17121f]"
           >
-            {/* белая шестерёнка-лого (как в хиро), ужата под круг 56px */}
-            <span className="scale-[0.58] [&_img]:brightness-0 [&_img]:invert">
-              <LogoMark />
+            {/* сплошная шестерёнка + тёмная X-монограмма, фикс-размер по центру */}
+            <span className="relative grid size-10 place-items-center">
+              <GearSolid hole={false} className="size-10 text-white" />
+              <span className="absolute inset-0 grid place-items-center">
+                <Image
+                  src={assets.monogramV}
+                  alt=""
+                  width={14}
+                  height={10}
+                  className="w-[14px] brightness-0 [grid-area:1/1]"
+                />
+                <Image
+                  src={assets.monogramA}
+                  alt=""
+                  width={14}
+                  height={10}
+                  className="w-[14px] brightness-0 [grid-area:1/1]"
+                />
+              </span>
             </span>
           </a>
 
