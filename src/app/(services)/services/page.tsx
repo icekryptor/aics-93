@@ -3,7 +3,10 @@ import Link from "next/link";
 import { getAllServices } from "@/lib/services";
 import JsonLd from "@/components/seo/JsonLd";
 import AlgoArt from "@/components/services/AlgoArt";
+import GenerativeCover from "@/components/blog/GenerativeCover";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
+
+const ACCENTS = ["#9747ff", "#c856ff", "#5ab8ff", "#c5ff44"];
 
 export const metadata: Metadata = {
   title: "Услуги — разработка сайтов, брендинг, ИИ в процессах | AICS-93",
@@ -79,49 +82,71 @@ export default function ServicesIndex() {
           ИИ. Выберите направление — рассчитаю проект под вашу задачу.
         </p>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {all.map((s) => (
-            <Link key={s.slug} href={`/services/${s.slug}`} className="group block">
-              <article
-                className="relative flex h-full flex-col p-7 transition-colors sm:p-8"
-                style={{
-                  ...CHIP,
-                  border: "1px solid var(--color-runtime-line)",
-                  background:
-                    "linear-gradient(180deg, rgba(23,16,41,0.65), rgba(14,10,27,0.35))",
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="tech-label text-[0.72rem]" style={{ color: "var(--color-signal-2)" }}>
-                    услуга {s.order}
-                  </span>
-                  <span className="text-runtime-ink-soft transition-transform group-hover:translate-x-1">
-                    →
-                  </span>
-                </div>
-                <h2 className="mt-4 text-[1.35rem] font-semibold leading-snug transition-colors group-hover:text-[color-mix(in_srgb,var(--color-signal-cool)_80%,white)]">
-                  {s.nav}
-                </h2>
-                <p className="mt-3 text-[0.95rem] leading-relaxed text-runtime-ink-soft">
-                  {s.metaDescription}
-                </p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {s.hero.stats.slice(0, 3).map((st) => (
+        <div className="mt-12 grid gap-5 sm:grid-cols-2">
+          {all.map((s, i) => {
+            const accent = ACCENTS[i % ACCENTS.length];
+            return (
+              <Link key={s.slug} href={`/services/${s.slug}`} className="group block">
+                <article
+                  className="relative flex h-full flex-col overflow-hidden transition-colors"
+                  style={{
+                    ...CHIP,
+                    border: "1px solid var(--color-runtime-line)",
+                    background:
+                      "linear-gradient(180deg, rgba(23,16,41,0.65), rgba(14,10,27,0.35))",
+                  }}
+                >
+                  {/* обложка */}
+                  <div className="relative aspect-[16/9] overflow-hidden">
+                    <GenerativeCover
+                      seed={`svc-${s.slug}`}
+                      accent={accent}
+                      density={1.15}
+                      className="absolute inset-0"
+                    />
                     <span
-                      key={st.label}
-                      className="tech-label rounded-full px-3 py-1.5 text-[0.66rem]"
-                      style={{
-                        border: "1px solid var(--color-runtime-line)",
-                        color: "var(--color-runtime-ink-soft)",
-                      }}
+                      className="tech-label absolute left-4 top-4 z-10 rounded-full bg-black/45 px-2.5 py-1 text-[10px]"
+                      style={{ color: "#fff" }}
                     >
-                      {st.value} · {st.label}
+                      услуга {s.order}
                     </span>
-                  ))}
-                </div>
-              </article>
-            </Link>
-          ))}
+                    <span className="absolute bottom-4 right-4 z-10 text-white/80 transition-transform group-hover:translate-x-1">
+                      →
+                    </span>
+                  </div>
+
+                  <div className="flex flex-1 flex-col p-6 sm:p-7">
+                    <h2 className="text-[1.35rem] font-semibold leading-snug transition-colors group-hover:text-[color-mix(in_srgb,var(--color-signal-cool)_80%,white)]">
+                      {s.nav}
+                    </h2>
+                    <p className="mt-3 line-clamp-3 text-[15px] leading-relaxed text-runtime-ink-soft">
+                      {s.metaDescription}
+                    </p>
+                    <span
+                      className="tech-label mt-2 inline-flex w-fit items-center gap-1 text-[11px] transition-colors"
+                      style={{ color: "var(--color-signal-cool)" }}
+                    >
+                      читать далее →
+                    </span>
+                    <div className="mt-auto flex flex-wrap gap-2 pt-5">
+                      {s.hero.stats.slice(0, 3).map((st) => (
+                        <span
+                          key={st.label}
+                          className="tech-label rounded-full px-3 py-1.5 text-[0.66rem]"
+                          style={{
+                            border: "1px solid var(--color-runtime-line)",
+                            color: "var(--color-runtime-ink-soft)",
+                          }}
+                        >
+                          {st.value} · {st.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              </Link>
+            );
+          })}
         </div>
         </div>
       </div>

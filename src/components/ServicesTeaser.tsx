@@ -27,7 +27,7 @@ export default function ServicesTeaser() {
           </Link>
         </div>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-5 sm:grid-cols-2">
           {services.map((s, i) => {
             const accent = ACCENTS[i % ACCENTS.length];
             return (
@@ -55,9 +55,12 @@ export default function ServicesTeaser() {
                     <h3 className="text-[1.25rem] font-normal leading-snug tracking-tight text-ink transition-colors group-hover:text-accent-ink">
                       {s.nav}
                     </h3>
-                    <p className="mt-2.5 line-clamp-3 text-[13.5px] leading-relaxed text-ink-soft">
+                    <p className="mt-2.5 line-clamp-3 text-[15px] leading-relaxed text-ink-soft">
                       {s.metaDescription}
                     </p>
+                    <span className="tech-label mt-2 inline-flex w-fit items-center gap-1 text-[11px] text-accent-ink">
+                      читать далее →
+                    </span>
                     <div className="mt-auto flex flex-wrap gap-2 pt-5">
                       {s.hero.stats.slice(0, 3).map((st) => (
                         <span
