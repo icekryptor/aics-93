@@ -9,7 +9,8 @@ const CANVAS_W = 1140;
 const CANVAS_H = 460;
 
 type G = { f: string; r: number; cx: number; cy: number; label: string };
-// силуэты — из Figma-листа «Gears» (нода 179:1736), очищены от noise-фильтров
+// шестерёнки — из Figma-листа «Gears» (нода 179:1736): голубое тело #5AB8FF
+// + двухцветный нойз (feTurbulence, #00FFEA/#9057FF) прямо в SVG
 const TRAIN: G[] = [
   { f: "fig-cross.svg", r: 115, cx: 130, cy: 200, label: "Маркетинг-стратегия" },
   { f: "fig-clutch.svg", r: 70, cx: 301, cy: 269, label: "Брендбук" },
@@ -21,17 +22,10 @@ const TRAIN: G[] = [
 
 const K = 17; // rotation speed: deg ≈ scrollY * K / radius (bigger gear → slower)
 
-function maskStyle(f: string): React.CSSProperties {
-  return {
-    WebkitMaskImage: `url(/assets/gears/${f})`,
-    maskImage: `url(/assets/gears/${f})`,
-  };
-}
-
 export default function SalesGears() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
-  const refsD = useRef<(HTMLDivElement | null)[]>([]);
-  const refsM = useRef<(HTMLDivElement | null)[]>([]);
+  const refsD = useRef<(HTMLImageElement | null)[]>([]);
+  const refsM = useRef<(HTMLImageElement | null)[]>([]);
   const [scale, setScale] = useState(1);
   const [experience, setExperience] = useState(false);
 
@@ -153,12 +147,15 @@ export default function SalesGears() {
                 className="absolute"
                 style={{ left: g.cx - g.r, top: g.cy - g.r, width: g.r * 2, height: g.r * 2 }}
               >
-                <div
+                {/* оригинальный SVG из Figma: голубое тело + цветной нойз (feTurbulence) */}
+                <img
                   ref={(el) => {
                     refsD.current[i] = el;
                   }}
-                  className="engine-gear size-full"
-                  style={maskStyle(g.f)}
+                  src={`/assets/gears/${g.f}`}
+                  alt=""
+                  draggable={false}
+                  className="size-full select-none will-change-transform"
                 />
                 {/* подложка-стекло (светлая формула glassmorphism, радиус-канон 25/55/55/5) */}
                 <span
@@ -183,12 +180,14 @@ export default function SalesGears() {
       <div className="grid grid-cols-2 gap-x-4 gap-y-7 sm:hidden">
         {TRAIN.map((g, i) => (
           <div key={g.f} className="flex items-center gap-3">
-            <div
+            <img
               ref={(el) => {
                 refsM.current[i] = el;
               }}
-              className="engine-gear size-16 shrink-0"
-              style={maskStyle(g.f)}
+              src={`/assets/gears/${g.f}`}
+              alt=""
+              draggable={false}
+              className="size-16 shrink-0 select-none will-change-transform"
             />
             <span className="text-[13px] font-medium leading-tight">{g.label}</span>
           </div>
