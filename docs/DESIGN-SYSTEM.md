@@ -119,7 +119,10 @@
 
 ## 13. Открытые слоты (заполнить по мере поступления)
 
-- Telegram-отправка форм: нужен `TELEGRAM_BOT_TOKEN` + `chat_id` (env на Vercel) → `POST /api/lead`; в коде стоят заглушки `// STUB: backend not wired`.
+- ✅ Telegram-отправка форм: `POST /api/lead` (бот @cntnm_clawbot; env
+  `TELEGRAM_BOT_TOKEN`+`TELEGRAM_CHAT_ID` в Vercel Production и `.env.local`).
+  Клиент — `lib/lead.ts → sendLead()`; успех-экран только после доставки;
+  honeypot `_hp`. Новые формы подключать через sendLead, не напрямую.
 - Реальный @handle телеграма в `lib/content.ts → legal.telegram` (сейчас плейсхолдер).
 - Тексты статей (5 шт) и структуры новых лендингов — от Василия или генерим по шаблону §8 и согласуем.
 - Кейсы 02–03: контент по модели `lib/showcase.ts` (для химички образец готов).

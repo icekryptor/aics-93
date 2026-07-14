@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { reachGoal } from "@/lib/metrika";
+import { sendLead } from "@/lib/lead";
 import { legal } from "@/lib/content";
 
 /**
@@ -52,6 +53,8 @@ export default function QuizPanel() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendErr, setSendErr] = useState(false);
 
   const [task, setTask] = useState("");
   const [taskOther, setTaskOther] = useState("");
@@ -86,22 +89,29 @@ export default function QuizPanel() {
   const toggleContact = (id: string) =>
     setContacts((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id]));
 
-  const submit = () => {
-    const payload = {
-      task: task === "другое" ? `другое: ${taskOther}` : task,
-      idea,
-      deadline: deadline === "другое" ? `другое: ${deadlineOther}` : deadline,
-      budget: [bmin, bmax],
-      contacts,
-      contactInfo,
-    };
-    // STUB: backend not wired yet — replace with POST /api/lead → Telegram.
-    console.log("[quiz]", payload);
-    reachGoal("lead", { source: "quiz", task: payload.task });
-    setDone(true);
+  const submit = async () => {
+    if (sending) return;
+    setSending(true);
+    setSendErr(false);
+    const taskV = task === "другое" ? `другое: ${taskOther}` : task;
+    const ok = await sendLead("квиз-бриф", {
+      задача: taskV,
+      замысел: idea,
+      срок: deadline === "другое" ? `другое: ${deadlineOther}` : deadline,
+      бюджет: `${fmt(bmin)} – ${fmt(bmax)} ₽`,
+      "способ связи": contacts,
+      контакты: contactInfo,
+    });
+    setSending(false);
+    if (ok) {
+      reachGoal("lead", { source: "quiz", task: taskV });
+      setDone(true);
+    } else {
+      setSendErr(true);
+    }
   };
 
-  const next = () => (step < STEPS.length - 1 ? setStep((s) => s + 1) : submit());
+  const next = () => (step < STEPS.length - 1 ? setStep((s) => s + 1) : void submit());
   const back = () => setStep((s) => Math.max(0, s - 1));
 
   const inputCls =
@@ -324,6 +334,11 @@ export default function QuizPanel() {
               </div>
 
               {/* nav */}
+              {sendErr && (
+                <p className="px-5 pb-1 text-[11px] leading-snug text-[#e35b3d]">
+                  не удалось отправить — попробуйте ещё раз или напишите в telegram
+                </p>
+              )}
               <div className="flex items-center gap-2 border-t border-line px-5 py-3">
                 {step > 0 && (
                   <button
@@ -337,9 +352,10 @@ export default function QuizPanel() {
                 <button
                   type="button"
                   onClick={next}
-                  className="btn-case flex-1 py-2.5 text-[13px] font-semibold"
+                  disabled={sending}
+                  className="btn-case flex-1 py-2.5 text-[13px] font-semibold disabled:opacity-60"
                 >
-                  {step < STEPS.length - 1 ? "далее →" : "отправить бриф →"}
+                  {step < STEPS.length - 1 ? "далее →" : sending ? "отправляю…" : "отправить бриф →"}
                 </button>
               </div>
             </>

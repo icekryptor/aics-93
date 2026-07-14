@@ -4,6 +4,7 @@ import { useState } from "react";
 import CubeMorph from "./system/CubeMorph";
 import { projectTypes } from "@/lib/content";
 import { reachGoal } from "@/lib/metrika";
+import { sendLead } from "@/lib/lead";
 
 const CUT: React.CSSProperties = {
   clipPath:
@@ -14,6 +15,8 @@ const CUT: React.CSSProperties = {
 // morphs into a data network on click (the machine, playful).
 export default function ContactConsole() {
   const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendErr, setSendErr] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [form, setForm] = useState({ name: "", phone: "", email: "", about: "" });
 
@@ -24,12 +27,25 @@ export default function ContactConsole() {
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((f) => ({ ...f, [k]: e.target.value }));
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // STUB: backend not wired yet. Replace with POST /api/lead → Telegram.
-    console.log("[lead]", { ...form, projectTypes: selected });
-    reachGoal("lead", { source: "contact_console", modules: selected.length });
-    setDone(true);
+    if (sending) return;
+    setSending(true);
+    setSendErr(false);
+    const ok = await sendLead("контакт-консоль (главная)", {
+      "тип проекта": selected,
+      "о проекте": form.about,
+      имя: form.name,
+      телефон: form.phone,
+      почта: form.email,
+    });
+    setSending(false);
+    if (ok) {
+      reachGoal("lead", { source: "contact_console", modules: selected.length });
+      setDone(true);
+    } else {
+      setSendErr(true);
+    }
   };
 
   const inputCls =
@@ -82,7 +98,7 @@ export default function ContactConsole() {
                     обработку системой.
                   </p>
                   <p className="hud mt-5 text-[10px] text-runtime-ink-soft/70">
-                    packet · {selected.length || 0} modules · status 200 · demo mode
+                    packet · {selected.length || 0} modules · status 200 · delivered
                   </p>
                 </div>
               ) : (
@@ -145,10 +161,16 @@ export default function ContactConsole() {
                     type="submit"
                     data-magnetic
                     data-cursor="route signal"
-                    className="btn-case mt-6 w-full py-4 text-sm font-semibold sm:w-auto sm:px-14"
+                    disabled={sending}
+                    className="btn-case mt-6 w-full py-4 text-sm font-semibold disabled:opacity-60 sm:w-auto sm:px-14"
                   >
-                    Обсудить проект <span aria-hidden>→</span>
+                    {sending ? "Отправляю…" : <>Обсудить проект <span aria-hidden>→</span></>}
                   </button>
+                  {sendErr && (
+                    <p className="mt-3 text-[12px] text-[#ff8f73]">
+                      не удалось отправить — попробуйте ещё раз или напишите в telegram
+                    </p>
+                  )}
                   <p className="hud mt-4 text-[9px] text-runtime-ink-soft/60">
                     // данные уходят напрямую оператору · без спама
                   </p>

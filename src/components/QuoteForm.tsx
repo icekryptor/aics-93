@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { projectTypes, assets } from "@/lib/content";
 import { reachGoal } from "@/lib/metrika";
+import { sendLead } from "@/lib/lead";
 
 export default function QuoteForm() {
   const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendErr, setSendErr] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [form, setForm] = useState({ name: "", phone: "", email: "", about: "" });
   const [experience, setExperience] = useState(false);
@@ -20,12 +23,25 @@ export default function QuoteForm() {
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // STUB: backend not wired yet. Replace with POST /api/lead → Telegram.
-    console.log("[lead]", { ...form, projectTypes: selected });
-    reachGoal("lead", { source: "quote_form", modules: selected.length });
-    setDone(true);
+    if (sending) return;
+    setSending(true);
+    setSendErr(false);
+    const ok = await sendLead("форма (classic)", {
+      "тип проекта": selected,
+      "о проекте": form.about,
+      имя: form.name,
+      телефон: form.phone,
+      почта: form.email,
+    });
+    setSending(false);
+    if (ok) {
+      reachGoal("lead", { source: "quote_form", modules: selected.length });
+      setDone(true);
+    } else {
+      setSendErr(true);
+    }
   };
 
   const inputCls =
@@ -57,14 +73,14 @@ export default function QuoteForm() {
                     Сигнал получен — отвечу в течение 2 часов. Ваш проект уже в очереди на обработку системой.
                   </p>
                   <p className="hud mt-5 text-[10px] text-white/40">
-                    packet · {selected.length || 0} modules · status 200 · demo mode
+                    packet · {selected.length || 0} modules · status 200 · delivered
                   </p>
                 </div>
               ) : (
                 <div className="mt-8 rounded-[28px] border border-white/10 bg-white/[0.04] p-10 text-center">
                   <p className="font-bold text-xl">Заявка принята ✦</p>
                   <p className="mt-2 text-sm text-white/55">
-                    Спасибо! Свяжусь с вами в ближайшее время. (Демо-режим — отправка пока не подключена.)
+                    Спасибо! Свяжусь с вами в ближайшее время.
                   </p>
                 </div>
               )
@@ -121,10 +137,16 @@ export default function QuoteForm() {
 
                 <button
                   type="submit"
-                  className="mt-5 w-full rounded-2xl bg-gradient-accent py-4 text-sm font-semibold text-white transition-transform hover:scale-[1.01] sm:w-auto sm:px-16"
+                  disabled={sending}
+                  className="mt-5 w-full rounded-2xl bg-gradient-accent py-4 text-sm font-semibold text-white transition-transform hover:scale-[1.01] disabled:opacity-60 sm:w-auto sm:px-16"
                 >
-                  Обсудить проект
+                  {sending ? "Отправляю…" : "Обсудить проект"}
                 </button>
+                {sendErr && (
+                  <p className="mt-3 text-[12px] text-[#ff8f73]">
+                    не удалось отправить — попробуйте ещё раз или напишите в telegram
+                  </p>
+                )}
               </form>
             )}
           </div>
