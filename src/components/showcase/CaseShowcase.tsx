@@ -469,10 +469,11 @@ export default function CaseShowcase() {
   const trackTransition = dragging || reduced || noTrans ? "none" : TRACK_TRANSITION;
   const shotParallax = reduced ? 0 : Math.max(-12, Math.min(12, -offset * 0.05));
 
-  // крупные тёмные круги-стрелки внизу справа, наложены на карточку (мокап).
-  // Вне transform-трека, поэтому backdrop-blur здесь работает стабильно.
+  // крупные стеклянные круги-стрелки внизу справа, наложены на карточку (мокап).
+  // Вне transform-трека, поэтому настоящий backdrop-filter здесь стабилен:
+  // белая нейтральная заливка + blur+saturate — цвет дают орбы позади.
   const arrowCls =
-    "grid size-16 min-h-11 min-w-11 cursor-pointer place-items-center rounded-full border border-white/15 bg-[#1d1530]/75 text-2xl leading-none text-white backdrop-blur-md transition-[border-color,transform] hover:scale-105 hover:border-white/40 sm:size-20 lg:size-24 lg:text-3xl";
+    "grid size-16 min-h-11 min-w-11 cursor-pointer place-items-center rounded-full border border-white/12 bg-white/[0.08] text-2xl leading-none text-white shadow-[0_1px_0_0_rgba(255,255,255,0.2)_inset,0_12px_40px_rgba(0,0,0,0.35)] [backdrop-filter:blur(20px)_saturate(180%)] transition-[border-color,background-color,transform] hover:scale-105 hover:border-white/25 hover:bg-white/[0.13] active:translate-y-px active:scale-[0.97] sm:size-20 lg:size-24 lg:text-3xl";
 
   return (
     <section
@@ -543,7 +544,7 @@ export default function CaseShowcase() {
                 {/* карточка: тёмное «стекло» БЕЗ backdrop-filter — он глючит внутри
                     анимируемого transform-трека (blur пропадал при смене слайда).
                     Глубину дают внутренние glow-слои с обычным filter:blur. */}
-                <div className="relative h-full overflow-hidden rounded-[36px] border border-white/10 bg-[#241540]/90 shadow-[0_50px_100px_-50px_rgba(0,0,0,0.7)] lg:rounded-[56px]">
+                <div className="relative h-full overflow-hidden rounded-[36px] border border-white/10 bg-[#241540]/90 shadow-[0_1px_0_0_rgba(255,255,255,0.18)_inset,0_50px_100px_-50px_rgba(0,0,0,0.7)] lg:rounded-[56px]">
                   <div
                     aria-hidden
                     className="pointer-events-none absolute -right-24 -top-44 size-[30rem] rounded-full opacity-50 blur-3xl"
@@ -578,7 +579,7 @@ export default function CaseShowcase() {
                       </p>
 
                       {/* внутренняя стеклянная панель со списком */}
-                      <div className="mt-6 rounded-[25px_55px_55px_5px] bg-white/[0.07] p-5 sm:p-6">
+                      <div className="mt-6 rounded-[25px_55px_55px_5px] bg-white/[0.07] p-5 shadow-[0_1px_0_0_rgba(255,255,255,0.14)_inset] sm:p-6">
                         <p className="text-[16px] font-normal text-white/90">что было сделано:</p>
                         {/* заполнение по колонкам; колонки по контенту — длинные пункты
                             второй колонки в одну строку, без переносов */}
@@ -614,7 +615,7 @@ export default function CaseShowcase() {
                           rel={isHttp ? "noopener noreferrer" : undefined}
                           aria-label={`смотреть кейс ${c.title}`}
                           draggable={false}
-                          className="mt-6 inline-flex h-[56px] min-h-11 cursor-pointer items-center rounded-[5px_55px_55px_25px] px-10 text-[16px] font-bold text-[#0b1e33] transition-transform hover:scale-[1.03]"
+                          className="mt-6 inline-flex h-[56px] min-h-11 cursor-pointer items-center rounded-[5px_55px_55px_25px] px-10 text-[16px] font-bold text-[#0b1e33] transition-[transform,filter] duration-200 [transition-timing-function:cubic-bezier(.34,1.56,.64,1)] hover:-translate-y-0.5 hover:brightness-110 active:translate-y-px active:scale-[0.97]"
                           style={{
                             background: "linear-gradient(105deg, #a5f4ff 0%, #5fd9f5 55%, #3ec2ea 100%)",
                             boxShadow:
