@@ -67,7 +67,8 @@ export default function NeuralHero() {
       <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[1640px] flex-col px-6 pb-14 pt-[84px] sm:px-10 lg:px-14">
         {/* top: lockup + state HUD */}
         <div className="flex items-start justify-between gap-6">
-          <div className="flex items-center gap-4">
+          {/* гласс-подложка под лого (формула glassmorphism-скилла) */}
+          <div className="flex items-center gap-4 rounded-[20px] border border-white/[0.12] bg-white/[0.08] px-5 py-3.5 shadow-[0_1px_0_0_rgba(255,255,255,0.2)_inset,0_12px_40px_rgba(0,0,0,0.35)] [backdrop-filter:blur(20px)_saturate(180%)]">
             <span className="[&_img]:brightness-0 [&_img]:invert">
               <LogoMark />
             </span>
@@ -170,7 +171,8 @@ export default function NeuralHero() {
               <span className="signal-grad absolute left-4 top-0 z-10 rounded-md px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
                 человек-студия
               </span>
-              <div className="rounded-2xl border border-runtime-line bg-[color-mix(in_srgb,var(--color-runtime-2)_80%,transparent)] px-5 pb-5 pt-7 backdrop-blur-sm">
+              {/* гласс-подложка вместо контейнера с обводкой */}
+              <div className="rounded-[20px] border border-white/[0.12] bg-white/[0.08] px-5 pb-5 pt-7 shadow-[0_1px_0_0_rgba(255,255,255,0.2)_inset,0_12px_40px_rgba(0,0,0,0.35)] [backdrop-filter:blur(20px)_saturate(180%)]">
                 <p className="text-[12.5px] leading-relaxed text-runtime-ink-soft">
                   Я — Василий Аистов, co-founder / CMO в Химичке. Делаю яркие бренды,
                   запоминающиеся среди конкурентов.
