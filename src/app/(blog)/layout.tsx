@@ -36,7 +36,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
             </Link>
             <a
               href="/#upgrade"
-              className="signal-grad grid h-8 place-items-center rounded-full px-4 text-[12px] font-semibold text-white transition-transform hover:scale-105"
+              className="btn-case grid h-8 place-items-center px-4 text-[12px] font-semibold"
             >
               КП
             </a>

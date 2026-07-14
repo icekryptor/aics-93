@@ -145,7 +145,7 @@ export default function ContactConsole() {
                     type="submit"
                     data-magnetic
                     data-cursor="route signal"
-                    className="signal-grad mt-6 w-full cursor-pointer rounded-xl py-4 text-sm font-semibold text-white transition-transform hover:scale-[1.01] sm:w-auto sm:px-14"
+                    className="btn-case mt-6 w-full py-4 text-sm font-semibold sm:w-auto sm:px-14"
                   >
                     Обсудить проект <span aria-hidden>→</span>
                   </button>

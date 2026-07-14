@@ -357,7 +357,7 @@ export default function NotFound() {
 
         <a
           href="/"
-          className="signal-grad signal-glow mt-9 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5 sm:text-base"
+          className="btn-case mt-9 inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold sm:text-base"
           style={{ fontFamily: "var(--font-sans)" }}
         >
           вернуться в систему

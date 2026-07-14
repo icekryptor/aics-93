@@ -53,7 +53,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                   href="#upgrade"
                   data-magnetic
                   data-cursor="route signal"
-                  className="signal-grad inline-flex h-12 items-center rounded-full px-7 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+                  className="btn-case inline-flex h-12 items-center px-7 text-sm font-semibold"
                 >
                   {s.hero.primaryCta} <span aria-hidden className="ml-2">→</span>
                 </a>
@@ -430,7 +430,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
               href="#upgrade"
               data-magnetic
               data-cursor="route signal"
-              className="signal-grad mt-8 inline-flex h-12 items-center rounded-full px-8 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+              className="btn-case mt-8 inline-flex h-12 items-center px-8 text-sm font-semibold"
             >
               {s.hero.primaryCta} <span aria-hidden className="ml-2">→</span>
             </a>

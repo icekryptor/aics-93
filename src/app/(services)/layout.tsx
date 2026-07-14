@@ -59,7 +59,7 @@ export default function ServicesLayout({ children }: { children: React.ReactNode
               href="#upgrade"
               data-magnetic
               data-cursor="route signal"
-              className="signal-grad grid h-8 place-items-center rounded-full px-4 text-[12px] font-semibold text-white transition-transform hover:scale-105"
+              className="btn-case grid h-8 place-items-center px-4 text-[12px] font-semibold"
             >
               обсудить проект
             </a>

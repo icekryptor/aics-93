@@ -329,7 +329,7 @@ export default function QuizPanel() {
                   <button
                     type="button"
                     onClick={back}
-                    className="tech-label rounded-xl border border-line px-4 py-2.5 text-[11px] text-ink-soft transition-colors hover:text-ink"
+                    className="btn-case-glass-dark tech-label px-4 py-2.5 text-[11px] text-ink-soft hover:text-ink"
                   >
                     назад
                   </button>
@@ -337,7 +337,7 @@ export default function QuizPanel() {
                 <button
                   type="button"
                   onClick={next}
-                  className="signal-grad flex-1 rounded-xl py-2.5 text-[13px] font-semibold text-white transition-transform hover:scale-[1.01]"
+                  className="btn-case flex-1 py-2.5 text-[13px] font-semibold"
                 >
                   {step < STEPS.length - 1 ? "далее →" : "отправить бриф →"}
                 </button>
@@ -363,7 +363,7 @@ export default function QuizPanel() {
             target="_blank"
             rel="noreferrer"
             onClick={() => reachGoal("tg_subscribe", { source: "quiz" })}
-            className="signal-grad mt-1 inline-flex w-fit items-center rounded-full px-5 py-2 text-[12px] font-semibold text-white transition-transform hover:scale-105"
+            className="btn-case mt-1 inline-flex w-fit items-center px-5 py-2 text-[12px] font-semibold"
           >
             Подписаться →
           </a>

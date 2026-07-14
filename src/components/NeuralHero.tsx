@@ -126,7 +126,7 @@ export default function NeuralHero() {
                 href="#upgrade"
                 data-magnetic
                 data-cursor="route signal"
-                className="signal-grad inline-flex items-center gap-2 rounded-xl px-7 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.03]"
+                className="btn-case inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold"
               >
                 Получить КП <span aria-hidden>→</span>
               </a>
@@ -134,7 +134,7 @@ export default function NeuralHero() {
                 href="#prtf"
                 data-magnetic
                 data-cursor="open node"
-                className="inline-flex items-center gap-2 rounded-xl border border-runtime-line px-7 py-3.5 text-sm font-semibold text-runtime-ink transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)]"
+                className="btn-case-glass inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-runtime-ink"
               >
                 Смотреть работы
               </a>

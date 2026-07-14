@@ -213,6 +213,62 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: lowercase;
 }
 
+/* --- кнопки в стиле кейсов (showcase): углы 5/55/55/25, циан + стекло --- */
+.btn-case,
+.btn-case-glass,
+.btn-case-glass-dark {
+  border-radius: 5px 55px 55px 25px;
+  cursor: pointer;
+  transition:
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+.btn-case:hover,
+.btn-case-glass:hover,
+.btn-case-glass-dark:hover {
+  transform: translateY(-2px);
+}
+.btn-case:active,
+.btn-case-glass:active,
+.btn-case-glass-dark:active {
+  transform: translateY(1px) scale(0.97);
+  transition-duration: 0.08s;
+}
+/* primary — циановый градиент со свечением (как CTA кейса) */
+.btn-case {
+  background: linear-gradient(105deg, #a5f4ff 0%, #5fd9f5 55%, #3ec2ea 100%);
+  color: #0b1e33;
+  box-shadow:
+    0 16px 44px -12px rgba(80, 215, 255, 0.55),
+    0 0 26px rgba(80, 215, 255, 0.3);
+}
+.btn-case:hover {
+  filter: brightness(1.08);
+}
+/* secondary — стекло для тёмных секций (формула glassmorphism) */
+.btn-case-glass {
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
+}
+.btn-case-glass:hover {
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+/* secondary — тёмное стекло для светлых секций */
+.btn-case-glass-dark {
+  background: rgba(28, 21, 40, 0.05);
+  border: 1px solid rgba(28, 21, 40, 0.16);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset;
+}
+.btn-case-glass-dark:hover {
+  background: rgba(28, 21, 40, 0.09);
+}
+
 .text-gradient {
   background: linear-gradient(100deg, var(--color-accent) 0%, var(--color-accent-2) 100%);
   -webkit-background-clip: text;
