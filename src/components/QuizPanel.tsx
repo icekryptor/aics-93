@@ -375,7 +375,7 @@ export default function QuizPanel() {
           </p>
           <p className="text-[11.5px] leading-snug text-white/55">Кейсы, приёмы и мысли из практики. Без спама.</p>
           <a
-            href={legal.telegram}
+            href={legal.telegramChannel}
             target="_blank"
             rel="noreferrer"
             onClick={() => reachGoal("tg_subscribe", { source: "quiz" })}

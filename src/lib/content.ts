@@ -360,4 +360,5 @@ export const legal = {
   phoneHref: "+79859938311",
   email: "dpmnstudio@gmail.com",
   telegram: "https://t.me/ximik_ai",
+  telegramChannel: "https://t.me/aics93",
 };
