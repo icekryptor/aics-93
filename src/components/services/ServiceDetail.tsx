@@ -103,6 +103,64 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
         </div>
       </section>
 
+      {/* ================= МОДУЛИ (что оцифровываем) ================= */}
+      {s.modules ? (
+        <section className="relative py-16 sm:py-20">
+          <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
+          <div className={SHELL}>
+            <Eyebrow>что оцифровываем</Eyebrow>
+            <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
+              Модули, из которых собирается ваша система
+            </h2>
+
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {s.modules.items.map((m, i) => (
+                <article
+                  key={m.title}
+                  className="group relative flex h-full flex-col overflow-hidden p-6"
+                  style={{
+                    ...CHIP,
+                    border: "1px solid var(--color-runtime-line)",
+                    background:
+                      "linear-gradient(180deg, rgba(23,16,41,0.6), rgba(14,10,27,0.3))",
+                  }}
+                >
+                  <CardSigil
+                    seed={`md-${m.title}`}
+                    className="pointer-events-none absolute -right-2 -top-2 h-16 w-16 opacity-[0.28] transition-opacity duration-300 group-hover:opacity-60"
+                  />
+                  <span
+                    className="relative tech-label text-[0.7rem]"
+                    style={{ color: "var(--color-signal-2)" }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-3 text-[1.05rem] font-semibold leading-snug">{m.title}</h3>
+                  <p className="mt-2.5 text-[0.92rem] leading-relaxed text-runtime-ink-soft">
+                    {m.text}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            <p
+              className="mt-8 flex items-start gap-3 text-[1rem] leading-relaxed"
+              style={{ color: "var(--color-signal-cool)" }}
+            >
+              <span
+                aria-hidden
+                className="mt-[0.45em] inline-block h-[7px] w-[7px] shrink-0 rounded-full"
+                style={{
+                  background: "linear-gradient(92deg, var(--color-signal), var(--color-signal-2))",
+                  boxShadow: "0 0 10px rgba(151,71,255,0.8)",
+                }}
+              />
+              {s.modules.note}
+            </p>
+          </div>
+        </section>
+      ) : null}
+
       {/* ================= VALUE PROPS ================= */}
       <section className="relative py-16 sm:py-20">
         <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
@@ -283,13 +341,72 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
         </div>
       </section>
 
+      {/* ================= БИЗНЕС-КЕЙСЫ ================= */}
+      {s.bizCases ? (
+        <section className="relative py-16 sm:py-20">
+          <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
+          <div className={SHELL}>
+            <Eyebrow>бизнес-кейсы</Eyebrow>
+            <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
+              {s.bizCases.title}
+            </h2>
+
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {s.bizCases.items.map((c) => (
+                <article
+                  key={c.title}
+                  className="group relative flex h-full flex-col overflow-hidden p-6"
+                  style={{
+                    ...CHIP,
+                    border: "1px solid rgba(151,71,255,0.3)",
+                    background:
+                      "linear-gradient(180deg, rgba(151,71,255,0.07), rgba(14,10,27,0.3))",
+                  }}
+                >
+                  <CardSigil
+                    seed={`bc-${c.title}`}
+                    stroke="rgba(201,182,255,0.6)"
+                    className="pointer-events-none absolute -right-2 -top-2 h-16 w-16 opacity-[0.3] transition-opacity duration-300 group-hover:opacity-70"
+                  />
+                  <h3 className="relative text-[1.05rem] font-semibold leading-snug">{c.title}</h3>
+                  <p className="mt-2.5 flex-1 text-[0.92rem] leading-relaxed text-runtime-ink-soft">
+                    {c.text}
+                  </p>
+                  {c.metric && (
+                    <p
+                      className="tech-label mt-4 inline-flex w-fit rounded-full px-3 py-1.5 text-[0.66rem]"
+                      style={{
+                        border: "1px solid color-mix(in srgb, var(--color-signal) 45%, transparent)",
+                        background: "rgba(151,71,255,0.12)",
+                        color: "var(--color-signal-cool)",
+                      }}
+                    >
+                      {c.metric}
+                    </p>
+                  )}
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {/* ================= COMPARISON ================= */}
       <section className="relative py-16 sm:py-20">
         <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
         <div className={SHELL}>
           <Eyebrow>сравнение</Eyebrow>
           <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
-            Классическая студия и <span className="font-display">AICS-93</span>
+            {s.comparison.title ? (
+              <>
+                {s.comparison.title.replace(/ и AICS-93$/, "")} и{" "}
+                <span className="font-display">AICS-93</span>
+              </>
+            ) : (
+              <>
+                Классическая студия и <span className="font-display">AICS-93</span>
+              </>
+            )}
           </h2>
 
           <div className="mt-10 overflow-x-auto">
@@ -298,7 +415,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
               <div className="grid grid-cols-[1.2fr_1fr_1fr] gap-3">
                 <div />
                 <div className="tech-label px-4 pb-3 text-[0.72rem] text-runtime-ink-soft">
-                  классическая студия
+                  {s.comparison.classicLabel ?? "классическая студия"}
                 </div>
                 <div
                   className="tech-label rounded-t-xl px-4 pb-3 pt-3 text-[0.72rem]"
@@ -344,7 +461,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
         <div className={SHELL}>
           <Eyebrow>что вы получаете</Eyebrow>
           <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
-            Не просто сайт, а работающий актив с сопровождением
+            {s.deliverablesTitle ?? "Не просто сайт, а работающий актив с сопровождением"}
           </h2>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-2">
@@ -375,6 +492,47 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
           </div>
         </div>
       </section>
+
+      {/* ================= БАНК РЕШЕНИЙ ================= */}
+      {s.solutionBank ? (
+        <section className="relative py-16 sm:py-20">
+          <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
+          <div className={SHELL}>
+            <div
+              className="relative overflow-hidden p-8 sm:p-10"
+              style={{
+                ...CHIP,
+                border: "1px solid var(--color-runtime-line)",
+                background:
+                  "radial-gradient(120% 140% at 12% 0%, rgba(151,71,255,0.14), transparent 55%), rgba(23,16,41,0.55)",
+              }}
+            >
+              <Eyebrow>банк решений</Eyebrow>
+              <h2 className="mt-4 max-w-2xl text-[clamp(1.4rem,3vw,2.1rem)] font-semibold leading-tight tracking-tight">
+                {s.solutionBank.title}
+              </h2>
+              <p className="mt-4 max-w-2xl text-[0.98rem] leading-relaxed text-runtime-ink-soft">
+                {s.solutionBank.text}
+              </p>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {s.solutionBank.points.map((p) => (
+                  <span
+                    key={p}
+                    className="tech-label rounded-full px-3.5 py-2 text-[0.68rem]"
+                    style={{
+                      border: "1px solid color-mix(in srgb, var(--color-signal) 40%, transparent)",
+                      background: "rgba(151,71,255,0.1)",
+                      color: "var(--color-signal-cool)",
+                    }}
+                  >
+                    {p}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* ================= FAQ ================= */}
       <section className="relative py-16 sm:py-20">

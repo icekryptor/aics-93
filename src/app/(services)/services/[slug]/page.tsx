@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getAllServices, getService } from "@/lib/services";
 import ServiceDetail from "@/components/services/ServiceDetail";
 import ContactConsole from "@/components/ContactConsole";
+import QuizInline from "@/components/QuizInline";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
@@ -51,7 +52,7 @@ export default async function ServicePage({
       "@id": `${url}#service`,
       name: s.hero.h1,
       description: s.metaDescription,
-      serviceType: "Разработка сайтов",
+      serviceType: s.nav,
       areaServed: "RU",
       inLanguage: "ru-RU",
       url,
@@ -87,7 +88,15 @@ export default async function ServicePage({
     <>
       <JsonLd data={jsonLd} />
       <ServiceDetail service={s} />
-      <ContactConsole />
+      {s.ctaQuiz ? (
+        <QuizInline
+          source={`квиз лендинга «${s.nav}»`}
+          title="Посчитаем эффект для вашего бизнеса"
+          text="Пять коротких вопросов вместо длинной формы — на выходе бриф, по которому я вернусь с расчётом эффекта и планом внедрения."
+        />
+      ) : (
+        <ContactConsole />
+      )}
     </>
   );
 }

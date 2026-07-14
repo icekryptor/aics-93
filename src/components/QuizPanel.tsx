@@ -13,21 +13,17 @@ import { legal } from "@/lib/content";
  * `lead` goal). Native cursor is restored over the panel (see globals.css).
  */
 
-const TASKS = ["ребрендинг", "разработка сайта", "разработка сервиса", "маркетинговая консультация", "другое"];
-const DEADLINES = ["как можно скорее", "7-14 дней", "14-28 дней", "1-3 месяца", "другое"];
-const CONTACTS: { id: string; label: string; disabled?: boolean; tip?: string }[] = [
-  { id: "whatsapp", label: "WhatsApp" },
-  { id: "telegram", label: "Telegram" },
-  { id: "email", label: "Почта" },
-  { id: "fb", label: "Facebook" },
-  { id: "max", label: "МАКС", disabled: true, tip: "этой фигнёй мы никогда не будем пользоваться" },
-];
-
-const STEPS = ["задача", "замысел", "срок", "бюджет", "связь"];
-const BMIN = 0;
-const BMAX = 1_000_000;
-const BSTEP = 5000;
-const fmt = (n: number) => new Intl.NumberFormat("ru-RU").format(n);
+import {
+  QUIZ_TASKS as TASKS,
+  QUIZ_DEADLINES as DEADLINES,
+  QUIZ_CONTACTS as CONTACTS,
+  QUIZ_STEPS as STEPS,
+  QUIZ_HEADINGS,
+  BUDGET_MIN as BMIN,
+  BUDGET_MAX as BMAX,
+  BUDGET_STEP as BSTEP,
+  fmtRub as fmt,
+} from "@/lib/quiz";
 
 function Row({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
@@ -120,13 +116,7 @@ export default function QuizPanel() {
 
   const heading = (
     <p className="mb-4 text-[1.05rem] font-bold leading-snug tracking-tight text-ink">
-      {[
-        "Какая у вас задача?",
-        "Коротко — какой замысел хотите реализовать?",
-        "Какой у вас срок на реализацию?",
-        "Определите диапазон бюджета",
-        "Удобный способ связи",
-      ][step]}
+      {QUIZ_HEADINGS[step]}
     </p>
   );
 

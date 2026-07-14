@@ -78,11 +78,13 @@
 | `GearSolid` | `components/GearSolid.tsx` | сплошная шестерёнка (лого малых размеров; `hole` опц.) |
 | `SystemNav` | `components/system/SystemNav.tsx` | шапка-гантель (канон формы) |
 | `QuizPanel` | `components/QuizPanel.tsx` | квиз-дровер 320px, 5 шагов |
+| `QuizInline` | `components/QuizInline.tsx` | квиз отдельным блоком в конце лендинга (вместо формы; `Service.ctaQuiz`) |
+| Конфиг квиза | `lib/quiz.ts` | общие вопросы/шаги/бюджет для дровера и инлайна — менять здесь |
 | `BackdropFX` (внутри CaseShowcase) | — | орбы+частицы; при переиспользовании — выделить |
 | `GenerativeCover` | `components/blog/GenerativeCover.tsx` | генеративные обложки-плейсхолдеры |
 | `SignalTransition` | `components/system/SignalTransition.tsx` | переходы между актами главной |
 | Данные кейсов | `lib/showcase.ts` | title/desc/bullets(4·6·8)/shots(2деск+2моб)/accent/href/wip |
-| Данные услуг | `lib/services.ts` | реестр лендингов продуктов |
+| Данные услуг | `lib/services.ts` | реестр лендингов продуктов; опц. блоки: `modules` (что оцифровываем), `bizCases`, `solutionBank`, `ctaQuiz`, `deliverablesTitle`, `comparison.title/classicLabel` |
 
 ## 8. Грамматика страниц
 
