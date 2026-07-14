@@ -11,17 +11,22 @@ export type HowItWorks = { lead: string; points: string[] };
 export type Module = { title: string; text: string };
 export type BizCase = { title: string; text: string; metric?: string };
 export type SolutionBank = { title: string; text: string; points: string[] };
+export type GanttPhase = { name: string; days: number; start: number; color: string };
+export type ServiceGantt = { project: string; phases: GanttPhase[]; total: number };
+export type Training = { title: string; text: string; points: Deliverable[] };
 
 export type Service = {
   slug: string;
   order: string; // "01"
   nav: string; // short nav label
-  heroVisual?: "site" | "brand" | "service"; // which 3D morph in the hero (default "site")
+  heroVisual?: "site" | "brand" | "service" | "evolution"; // 3D в хиро ("evolution" — частицы ДНК→клетки→единорог)
   pipeline?: string[]; // short stage labels for the overview schematic
   howItWorks?: HowItWorks; // "как это работает" block (video + points)
   modules?: { note: string; items: Module[] }; // «что оцифровываем» — сетка модулей
   bizCases?: { title: string; items: BizCase[] }; // бизнес-кейсы применения
   solutionBank?: SolutionBank; // банк готовых решений
+  gantt?: ServiceGantt; // пример сметы в виде Ганта (после прогресс-бара)
+  training?: Training; // блок «обучение» — рендерится вместо closing
   ctaQuiz?: boolean; // финал страницы — инлайн-квиз вместо контактной формы
   metaTitle: string;
   metaDescription: string;
@@ -249,14 +254,25 @@ export const services: Service[] = [
     slug: "firmennyj-stil",
     order: "02",
     nav: "Фирменный стиль и дизайн-система",
-    heroVisual: "brand",
+    heroVisual: "evolution",
     pipeline: ["бриф", "анализ", "платформа", "нейминг", "концепция", "айдентика", "система", "носители", "поддержка"],
+    gantt: {
+      project: "Пример: фирменный стиль + дизайн-система для D2C-бренда",
+      total: 14,
+      phases: [
+        { name: "Исследование и стратегия", days: 3, start: 0, color: "#ff3d92" },
+        { name: "Платформа бренда и нейминг", days: 2, start: 3, color: "#d94fe6" },
+        { name: "Визуальная концепция", days: 3, start: 5, color: "#b15cff" },
+        { name: "Айдентика и дизайн-система", days: 4, start: 8, color: "#8b67ff" },
+        { name: "Носители и внедрение", days: 2, start: 12, color: "#5fd9f5" },
+      ],
+    },
     metaTitle: "Фирменный стиль и дизайн-система | AICS-93",
     metaDescription:
       "Разработка фирменного стиля и дизайн-системы на данных: стратегия, айдентика, брендбук и готовые блоки. Один специалист с ИИ вместо агентства — отстройка от конкурентов и рост узнаваемости.",
     hero: {
       eyebrow: "услуга 02 / фирменный стиль",
-      h1: "Не логотип, а система. Фирменный стиль и дизайн-система, которые отстраивают вас от рынка",
+      h1: "Фирменный стиль и дизайн-система, которые выделят вас на рынке",
       subhead:
         "Собираю бренд как связную систему смыслов и визуала — от стратегии и айдентики до гайдлайнов и готовых блоков. На данных исследования рынка, а не на вкусовщине. Один специалист с AI-ЯДРОМ делает работу агентства — быстрее и дешевле.",
       stats: [
@@ -385,6 +401,29 @@ export const services: Service[] = [
         text: "Пакет для развития бренда командой и нейроагентами — самостоятельность вместо зависимости от подрядчика.",
       },
     ],
+    deliverablesTitle: "Единый визуальный язык бренда на всех уровнях",
+    training: {
+      title: "Обучение работе с дизайн-системой",
+      text: "Систему мало получить — ей нужно пользоваться каждый день. Поэтому финальный этап проекта — обучение вашей команды: как жить в гайдлайнах, собирать носители из готовых блоков и генерировать новые макеты с ИИ, не размывая бренд.",
+      points: [
+        {
+          title: "Гайдлайны на практике",
+          text: "Разбираем правила системы — логотип, цвет, типографика, сетки — на ваших реальных задачах, а не на абстрактных примерах.",
+        },
+        {
+          title: "Сборка из готовых блоков",
+          text: "Посты, презентации, посадочные и документы собираются из компонентов системы за минуты — учим команду делать это самостоятельно.",
+        },
+        {
+          title: "Генерация с ИИ по промптам",
+          text: "Передаём промпты и манифесты бренда: нейроагенты выпускают макеты в вашем стиле, команда только принимает работу.",
+        },
+        {
+          title: "Контроль консистентности",
+          text: "Чек-лист проверки макетов и процесс ревью: бренд не расползается, даже когда контент делают десять разных рук.",
+        },
+      ],
+    },
     comparison: {
       rows: [
         { metric: "Срок до брендбука", classic: "1-2 месяца и дольше", aics: "от 10 дней" },

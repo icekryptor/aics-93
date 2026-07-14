@@ -1,5 +1,6 @@
 import type { Service } from "@/lib/services";
 import SiteBuilderGL from "./SiteBuilderGL";
+import BrandEvolution from "./BrandEvolution";
 import StageCaption from "./StageCaption";
 import CardSigil from "./CardSigil";
 import PipelineSchematic from "./PipelineSchematic";
@@ -40,7 +41,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
             <div>
               <Eyebrow>{s.hero.eyebrow}</Eyebrow>
 
-              <h1 className="mt-6 max-w-xl text-balance text-[clamp(2rem,4.6vw,3.5rem)] font-semibold leading-[1.04] tracking-tight">
+              <h1 className="mt-6 max-w-2xl text-[clamp(1.9rem,3.8vw,2.8rem)] font-semibold leading-[1.06] tracking-tight">
                 {s.hero.h1}
               </h1>
 
@@ -67,12 +68,18 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
               </div>
             </div>
 
-            {/* 3D site-builder: данные → прототип → реализация (клик — сменить стадию) */}
+            {/* 3D: эволюция бренда (частицы) или site-builder (клик — сменить стадию) */}
             <div className="relative h-[320px] w-full sm:h-[400px] lg:h-[560px]">
-              <SiteBuilderGL className="h-full w-full" variant={s.heroVisual ?? "site"} />
-              <div className="pointer-events-none absolute inset-x-0 bottom-1 z-10 flex items-center justify-center">
-                <StageCaption className="tech-label text-[0.58rem] text-runtime-ink-soft/70" />
-              </div>
+              {s.heroVisual === "evolution" ? (
+                <BrandEvolution className="h-full w-full" />
+              ) : (
+                <>
+                  <SiteBuilderGL className="h-full w-full" variant={s.heroVisual ?? "site"} />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-1 z-10 flex items-center justify-center">
+                    <StageCaption className="tech-label text-[0.58rem] text-runtime-ink-soft/70" />
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
@@ -269,20 +276,68 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
             </div>
           ) : null}
 
+          {/* пример сметы — диаграмма Ганта (дни, цветные полосы) */}
+          {s.gantt ? (
+            <div
+              className="mt-6 overflow-hidden rounded-2xl px-6 py-7 sm:px-8"
+              style={{
+                border: "1px solid var(--color-runtime-line)",
+                background: "rgba(23,16,41,0.4)",
+              }}
+            >
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <p className="tech-label text-[0.7rem]" style={{ color: "var(--color-signal-2)" }}>
+                  пример сметы · гант
+                </p>
+                <p className="text-[0.85rem] text-runtime-ink-soft">{s.gantt.project}</p>
+              </div>
+              <div className="mt-6 space-y-5">
+                {s.gantt.phases.map((p) => (
+                  <div key={p.name}>
+                    <div className="mb-1.5 flex items-center justify-between gap-3 text-[0.88rem]">
+                      <span className="font-medium text-runtime-ink">{p.name}</span>
+                      <span className="shrink-0 text-runtime-ink-soft">
+                        {p.days} {p.days === 1 ? "день" : p.days < 5 ? "дня" : "дней"}
+                      </span>
+                    </div>
+                    <div className="h-2 w-full rounded-full bg-[rgba(151,71,255,0.1)]">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          marginLeft: `${(p.start / s.gantt!.total) * 100}%`,
+                          width: `${(p.days / s.gantt!.total) * 100}%`,
+                          background: p.color,
+                          boxShadow: `0 0 12px ${p.color}55`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="hud mt-5 text-[9px] text-runtime-ink-soft/60">
+                // итого ≈ {s.gantt.total} дней · этапы идут каскадом
+              </p>
+            </div>
+          ) : null}
+
           <ol className="mt-12 space-y-0">
             {s.process.map((p, i) => {
               const last = i === s.process.length - 1;
               return (
                 <li key={p.title} className="relative grid grid-cols-[auto_1fr] gap-5 sm:gap-7">
-                  {/* index + connector */}
+                  {/* index + connector: 01-06 — фирменный фиолетовый, 07+ — циан
+                      с тёмно-фиолетовыми цифрами */}
                   <div className="relative flex flex-col items-center">
                     <span
                       className="relative z-10 grid size-11 shrink-0 place-items-center font-display text-[0.85rem] font-semibold"
                       style={{
                         ...CHIP,
-                        border: "1px solid color-mix(in srgb, var(--color-signal) 45%, transparent)",
-                        background: "rgba(151,71,255,0.12)",
-                        color: "var(--color-signal-cool)",
+                        border:
+                          i >= 6
+                            ? "1px solid color-mix(in srgb, #5fd9f5 55%, transparent)"
+                            : "1px solid color-mix(in srgb, var(--color-signal) 60%, transparent)",
+                        background: i >= 6 ? "#5fd9f5" : "var(--color-signal)",
+                        color: i >= 6 ? "#302055" : "#ffffff",
                       }}
                     >
                       {String(i + 1).padStart(2, "0")}
@@ -545,7 +600,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
 
           <div className="mt-10 max-w-3xl divide-y divide-runtime-line/70 border-y border-runtime-line/70">
             {s.faq.map((f) => (
-              <details key={f.q} className="group py-5">
+              <details key={f.q} className="faq-acc group py-5">
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
                   <span className="text-[1.02rem] font-medium leading-snug text-runtime-ink">
                     {f.q}
@@ -567,34 +622,83 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
         </div>
       </section>
 
-      {/* ================= CLOSING ================= */}
-      <section className="relative py-16 sm:py-20">
-        <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
-        <div className={SHELL}>
-          <div
-            className="signal-glow relative overflow-hidden p-8 sm:p-12"
-            style={{
-              ...CHIP,
-              border: "1px solid rgba(151,71,255,0.4)",
-              background:
-                "radial-gradient(120% 120% at 85% 0%, rgba(151,71,255,0.18), transparent 60%), rgba(23,16,41,0.6)",
-            }}
-          >
-            <h2 className="max-w-2xl text-[clamp(1.6rem,3.6vw,2.6rem)] font-semibold leading-tight tracking-tight">
-              {s.closing.title}
+      {/* ================= ОБУЧЕНИЕ / CLOSING ================= */}
+      {s.training ? (
+        <section className="relative py-16 sm:py-20">
+          <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
+          <div className={SHELL}>
+            <Eyebrow>обучение</Eyebrow>
+            <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
+              {s.training.title}
             </h2>
-            <p className="mt-4 max-w-xl text-runtime-ink-soft">{s.closing.text}</p>
+            <p className="mt-4 max-w-2xl text-[0.98rem] leading-relaxed text-runtime-ink-soft">
+              {s.training.text}
+            </p>
+
+            <div className="mt-10 grid gap-4 sm:grid-cols-2">
+              {s.training.points.map((d) => (
+                <div
+                  key={d.title}
+                  className="signal-glow group relative overflow-hidden p-6"
+                  style={{
+                    ...CHIP,
+                    border: "1px solid rgba(151,71,255,0.35)",
+                    background:
+                      "linear-gradient(180deg, rgba(151,71,255,0.08), rgba(181,123,255,0.03))",
+                  }}
+                >
+                  <CardSigil
+                    seed={`tr-${d.title}`}
+                    stroke="rgba(201,182,255,0.6)"
+                    className="pointer-events-none absolute -right-2 -top-2 h-16 w-16 opacity-[0.3] transition-opacity duration-300 group-hover:opacity-70"
+                  />
+                  <h3 className="relative text-[1.05rem] font-semibold leading-snug">{d.title}</h3>
+                  <p className="mt-2.5 text-[0.92rem] leading-relaxed text-runtime-ink-soft">
+                    {d.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+
             <a
               href="#upgrade"
               data-magnetic
               data-cursor="route signal"
-              className="btn-case mt-8 inline-flex h-12 items-center px-8 text-sm font-semibold"
+              className="btn-case mt-10 inline-flex h-12 items-center px-8 text-sm font-semibold"
             >
               {s.hero.primaryCta} <span aria-hidden className="ml-2">→</span>
             </a>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section className="relative py-16 sm:py-20">
+          <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
+          <div className={SHELL}>
+            <div
+              className="signal-glow relative overflow-hidden p-8 sm:p-12"
+              style={{
+                ...CHIP,
+                border: "1px solid rgba(151,71,255,0.4)",
+                background:
+                  "radial-gradient(120% 120% at 85% 0%, rgba(151,71,255,0.18), transparent 60%), rgba(23,16,41,0.6)",
+              }}
+            >
+              <h2 className="max-w-2xl text-[clamp(1.6rem,3.6vw,2.6rem)] font-semibold leading-tight tracking-tight">
+                {s.closing.title}
+              </h2>
+              <p className="mt-4 max-w-xl text-runtime-ink-soft">{s.closing.text}</p>
+              <a
+                href="#upgrade"
+                data-magnetic
+                data-cursor="route signal"
+                className="btn-case mt-8 inline-flex h-12 items-center px-8 text-sm font-semibold"
+              >
+                {s.hero.primaryCta} <span aria-hidden className="ml-2">→</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

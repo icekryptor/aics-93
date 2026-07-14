@@ -22,37 +22,57 @@ export default function PipelineSchematic({ stages }: { stages: Stage[] }) {
   return (
     <div className="w-full">
       <style>{`
-        /* px in a transform on an SVG element = user units (verified: the pulse
-           lands exactly on the last node at 480px and 1100px render widths), so
-           this scales with the viewBox. Do NOT drop the unit — unitless
-           translateX() is invalid CSS and would disable the animation. */
-        @keyframes pipePulse { 0% { transform: translateX(0); } 100% { transform: translateX(${travel}px); } }
+        /* лабтех-лоадер: бар заполняется слева направо (scaleX по fill-box) */
+        @keyframes pipeFill { 0% { transform: scaleX(0); } 88% { transform: scaleX(1); } 100% { transform: scaleX(1); } }
         @keyframes pipeTrail { 0%,100% { opacity: .35; } 50% { opacity: .9; } }
-        .pipe-pulse { animation: pipePulse 6s linear infinite; }
+        @keyframes pipeBlink { 0%,100% { opacity: .35; } 50% { opacity: 1; } }
+        .pipe-fill { transform-box: fill-box; transform-origin: left center; animation: pipeFill 6s linear infinite; }
         .pipe-node { animation: pipeTrail 3.2s ease-in-out infinite; }
+        .pipe-loading { animation: pipeBlink 1.2s steps(2, end) infinite; }
       `}</style>
       <svg viewBox={`0 0 ${VW} ${VH}`} className="h-auto w-full" role="img" aria-label="Схема процесса: этапы от брифа до аналитического сопровождения">
         <defs>
-          <linearGradient id="pipeLine" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#9747ff" stopOpacity="0.15" />
-            <stop offset="50%" stopColor="#b57bff" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#9747ff" stopOpacity="0.15" />
+          <linearGradient id="pipeFillGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#9747ff" />
+            <stop offset="70%" stopColor="#b57bff" />
+            <stop offset="100%" stopColor="#5fd9f5" />
           </linearGradient>
-          <radialGradient id="pipeGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#efeaff" stopOpacity="1" />
-            <stop offset="35%" stopColor="#c9b6ff" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#9747ff" stopOpacity="0" />
-          </radialGradient>
         </defs>
 
-        {/* baseline trace */}
-        <line x1={X0} y1={y} x2={X1} y2={y} stroke="url(#pipeLine)" strokeWidth="2" />
+        {/* labtech loading readout */}
+        <text
+          className="pipe-loading"
+          x={X0}
+          y={14}
+          fill="#5fd9f5"
+          fontSize="11"
+          fontFamily="var(--font-sans), sans-serif"
+          letterSpacing="2.5"
+          style={{ textTransform: "uppercase" }}
+        >
+          // loading
+        </text>
 
-        {/* travelling pulse */}
-        <g className="pipe-pulse">
-          <circle cx={X0} cy={y} r="16" fill="url(#pipeGlow)" />
-          <circle cx={X0} cy={y} r="3" fill="#efeaff" />
-        </g>
+        {/* track + заполняющийся прогресс-бар */}
+        <rect
+          x={X0}
+          y={y - 3}
+          width={travel}
+          height={6}
+          rx={3}
+          fill="rgba(151,71,255,0.12)"
+          stroke="rgba(151,71,255,0.32)"
+          strokeWidth="1"
+        />
+        <rect
+          className="pipe-fill"
+          x={X0}
+          y={y - 3}
+          width={travel}
+          height={6}
+          rx={3}
+          fill="url(#pipeFillGrad)"
+        />
 
         {/* nodes */}
         {xs.map((x, i) => (

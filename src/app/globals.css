@@ -213,6 +213,22 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: lowercase;
 }
 
+/* --- FAQ-аккордеон: плавное раскрытие <details> (Chrome 131+; прочие —
+       мгновенно, прогрессивное улучшение) --- */
+:root {
+  interpolate-size: allow-keywords;
+}
+details.faq-acc::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size 0.35s cubic-bezier(0.65, 0, 0.35, 1),
+    content-visibility 0.35s allow-discrete;
+}
+details.faq-acc[open]::details-content {
+  block-size: auto;
+}
+
 /* --- кнопки в стиле кейсов (showcase): углы 5/55/55/25, циан + стекло --- */
 .btn-case,
 .btn-case-glass,

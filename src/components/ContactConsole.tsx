@@ -18,7 +18,7 @@ export default function ContactConsole() {
   const [sending, setSending] = useState(false);
   const [sendErr, setSendErr] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", about: "" });
+  const [form, setForm] = useState({ name: "", phone: "", about: "" });
 
   const toggle = (t: string) =>
     setSelected((s) => (s.includes(t) ? s.filter((x) => x !== t) : [...s, t]));
@@ -36,8 +36,7 @@ export default function ContactConsole() {
       "тип проекта": selected,
       "о проекте": form.about,
       имя: form.name,
-      телефон: form.phone,
-      почта: form.email,
+      "телефон/мессенджер": form.phone,
     });
     setSending(false);
     if (ok) {
@@ -136,7 +135,8 @@ export default function ContactConsole() {
                       placeholder="Коротко о проекте и приблизительный бюджет"
                       className={inputCls}
                     />
-                    <div className="grid gap-3 sm:grid-cols-3">
+                    {/* почта не нужна; телефону/мессенджеру — больше места под подсказку */}
+                    <div className="grid gap-3 sm:grid-cols-[0.8fr_1.2fr]">
                       <input value={form.name} onChange={set("name")} aria-label="Ваше имя" placeholder="Ваше имя" className={inputCls} />
                       <input
                         value={form.phone}
@@ -144,14 +144,6 @@ export default function ContactConsole() {
                         required
                         aria-label="Телефон или мессенджер"
                         placeholder="Телефон или мессенджер"
-                        className={inputCls}
-                      />
-                      <input
-                        value={form.email}
-                        onChange={set("email")}
-                        type="email"
-                        aria-label="Ваша почта"
-                        placeholder="Ваша почта"
                         className={inputCls}
                       />
                     </div>

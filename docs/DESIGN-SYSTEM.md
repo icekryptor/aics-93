@@ -84,7 +84,8 @@
 | `GenerativeCover` | `components/blog/GenerativeCover.tsx` | генеративные обложки-плейсхолдеры |
 | `SignalTransition` | `components/system/SignalTransition.tsx` | переходы между актами главной |
 | Данные кейсов | `lib/showcase.ts` | title/desc/bullets(4·6·8)/shots(2деск+2моб)/accent/href/wip |
-| Данные услуг | `lib/services.ts` | реестр лендингов продуктов; опц. блоки: `modules` (что оцифровываем), `bizCases`, `solutionBank`, `ctaQuiz`, `deliverablesTitle`, `comparison.title/classicLabel` |
+| Данные услуг | `lib/services.ts` | реестр лендингов; опц. блоки: `modules`, `bizCases`, `solutionBank`, `gantt` (смета после прогресс-бара), `training` (вместо closing), `ctaQuiz`, `deliverablesTitle`, `comparison.title/classicLabel` |
+| `BrandEvolution` | `components/services/BrandEvolution.tsx` | хиро-3D «эволюция бренда»: ДНК→клетки→единорог (`heroVisual: "evolution"`; дебаг `?evo=0\|1\|2`) |
 
 ## 8. Грамматика страниц
 
@@ -100,6 +101,7 @@
 - Изинги: контент/треки `cubic-bezier(0.65,0,0.35,1)` (easeInOut); кнопки/лифты — spring `cubic-bezier(.34,1.56,.64,1)`.
 - Анимируем только `transform`/`opacity` (+`filter` на кнопках). Никогда — `backdrop-filter`, layout-свойства.
 - Канвас-циклы: seeded PRNG (mulberry32), никакого `Math.random` в рендере; пауза вне вьюпорта/скрытой вкладки; reduced-motion → статичный кадр.
+- Лендинги услуг: плашки шагов «порядка работы» — 01-06 фиолетовые (#9747ff, белые цифры), 07+ циановые (#5fd9f5, цифры #302055); пайплайн-схема — labtech-лоадер («// loading», заполняющийся бар фиолет→циан); FAQ-аккордеон — класс `faq-acc` (плавное раскрытие).
 
 ## 10. Голос и копирайт
 
