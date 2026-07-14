@@ -123,6 +123,6 @@
   `TELEGRAM_BOT_TOKEN`+`TELEGRAM_CHAT_ID` в Vercel Production и `.env.local`).
   Клиент — `lib/lead.ts → sendLead()`; успех-экран только после доставки;
   honeypot `_hp`. Новые формы подключать через sendLead, не напрямую.
-- Реальный @handle телеграма в `lib/content.ts → legal.telegram` (сейчас плейсхолдер).
+- ✅ Телеграм: `legal.telegram = https://t.me/ximik_ai` (кнопка TG в шапках, баннер квиза, футер).
 - Тексты статей (5 шт) и структуры новых лендингов — от Василия или генерим по шаблону §8 и согласуем.
 - Кейсы 02–03: контент по модели `lib/showcase.ts` (для химички образец готов).

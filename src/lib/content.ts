@@ -359,5 +359,5 @@ export const legal = {
   phone: "+7 985 993-83-11",
   phoneHref: "+79859938311",
   email: "dpmnstudio@gmail.com",
-  telegram: "https://t.me/",
+  telegram: "https://t.me/ximik_ai",
 };
