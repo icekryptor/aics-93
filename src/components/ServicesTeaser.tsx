@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { getAllServices } from "@/lib/services";
 import GenerativeCover from "@/components/blog/GenerativeCover";
+import CardVideo from "@/components/services/CardVideo";
 
-// Services block on the main page — surfaces the offerings with seeded
-// algorithmic-art covers (same generative engine as the blog covers).
+// Services block on the main page — covers are the landing videos
+// (fallback: seeded algorithmic art for services without card media).
 const ACCENTS = ["#9747ff", "#c856ff", "#5ab8ff", "#c5ff44"];
 
 export default function ServicesTeaser() {
@@ -34,13 +35,17 @@ export default function ServicesTeaser() {
               <Link key={s.slug} href={`/services/${s.slug}`} className="group block">
                 <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-bg transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_45%,transparent)]">
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <GenerativeCover
-                      seed={`svc-${s.slug}`}
-                      accent={accent}
-                      density={1.15}
-                      animate
-                      className="absolute inset-0"
-                    />
+                    {s.card ? (
+                      <CardVideo src={s.card.video} poster={s.card.poster} className="absolute inset-0" />
+                    ) : (
+                      <GenerativeCover
+                        seed={`svc-${s.slug}`}
+                        accent={accent}
+                        density={1.15}
+                        animate
+                        className="absolute inset-0"
+                      />
+                    )}
                     <span
                       className="tech-label absolute left-4 top-4 z-10 rounded-full bg-white/90 px-2.5 py-1 text-[9px]"
                       style={{ color: accent }}

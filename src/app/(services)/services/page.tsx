@@ -4,6 +4,7 @@ import { getAllServices } from "@/lib/services";
 import JsonLd from "@/components/seo/JsonLd";
 import AlgoArt from "@/components/services/AlgoArt";
 import GenerativeCover from "@/components/blog/GenerativeCover";
+import CardVideo from "@/components/services/CardVideo";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 const ACCENTS = ["#9747ff", "#c856ff", "#5ab8ff", "#c5ff44"];
@@ -96,14 +97,18 @@ export default function ServicesIndex() {
                       "linear-gradient(180deg, rgba(23,16,41,0.65), rgba(14,10,27,0.35))",
                   }}
                 >
-                  {/* обложка */}
+                  {/* обложка — видео лендинга (фолбэк: генеративный арт) */}
                   <div className="relative aspect-[16/9] overflow-hidden">
-                    <GenerativeCover
-                      seed={`svc-${s.slug}`}
-                      accent={accent}
-                      density={1.15}
-                      className="absolute inset-0"
-                    />
+                    {s.card ? (
+                      <CardVideo src={s.card.video} poster={s.card.poster} className="absolute inset-0" />
+                    ) : (
+                      <GenerativeCover
+                        seed={`svc-${s.slug}`}
+                        accent={accent}
+                        density={1.15}
+                        className="absolute inset-0"
+                      />
+                    )}
                     <span
                       className="tech-label absolute left-4 top-4 z-10 rounded-full bg-black/45 px-2.5 py-1 text-[10px]"
                       style={{ color: "#fff" }}
