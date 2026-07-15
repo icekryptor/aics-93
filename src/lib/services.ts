@@ -7,7 +7,12 @@ export type ProcessStep = { title: string; detail: string; benefit: string; dura
 export type Deliverable = { title: string; text: string };
 export type ComparisonRow = { metric: string; classic: string; aics: string };
 export type Faq = { q: string; a: string };
-export type HowItWorks = { lead: string; points: string[] };
+export type HowItWorks = {
+  lead: string;
+  points: string[];
+  /** своё видео блока (иначе — общий how-it-works из lib/media) */
+  video?: { src: string; poster: string; label: string; alt: string };
+};
 export type Module = { title: string; text: string };
 export type BizCase = { title: string; text: string; metric?: string };
 export type SolutionBank = { title: string; text: string; points: string[] };
@@ -267,6 +272,23 @@ export const services: Service[] = [
     nav: "Фирменный стиль и дизайн-система",
     heroVisual: "evolution",
     pipeline: ["бриф", "анализ", "платформа", "нейминг", "концепция", "айдентика", "система", "носители", "поддержка"],
+    howItWorks: {
+      lead: "AI — и исследователь рынка, и генератор айдентики",
+      video: {
+        src: "/media/brand-evolution.mp4",
+        poster: "/media/brand-evolution.jpg",
+        label: "AI CORE · BRAND EVOLUTION",
+        alt: "AI-ядро собирает айдентику бренда",
+      },
+      points: [
+        "Агенты компилируют данные исследования — платформа бренда строится на фактах о рынке и аудитории, а не на вкусовщине.",
+        "Варианты знака, палитры и типографики генерируются в связке с платформой — каждый вариант осмыслен, а не случаен.",
+        "Дизайн-система формализует правила — носители собираются из готовых блоков с высокой точностью.",
+        "Нейроагенты выпускают макеты по промптам бренда: посты, презентации и посадочные в едином стиле.",
+        "Консистентность держит система: чек-листы и ревью не дают бренду расползаться.",
+        "Манифесты и промпты остаются у вас — развиваете бренд сами, без зависимости от подрядчика.",
+      ],
+    },
     gantt: {
       project: "Пример: фирменный стиль + дизайн-система для D2C-бренда",
       total: 14,

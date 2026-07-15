@@ -221,13 +221,13 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
               {s.howItWorks.lead}
             </h2>
 
-            {/* video — full width, like the homepage block */}
+            {/* video — full width, like the homepage block (per-service override) */}
             <div className="mt-10">
               <FramedVideo
-                src={HOW_IT_WORKS_VIDEO.src}
-                poster={HOW_IT_WORKS_VIDEO.poster}
-                label="AI CORE · SITE ASSEMBLY"
-                alt="AI-ядро собирает интерфейсы сайта"
+                src={s.howItWorks.video?.src ?? HOW_IT_WORKS_VIDEO.src}
+                poster={s.howItWorks.video?.poster ?? HOW_IT_WORKS_VIDEO.poster}
+                label={s.howItWorks.video?.label ?? "AI CORE · SITE ASSEMBLY"}
+                alt={s.howItWorks.video?.alt ?? "AI-ядро собирает интерфейсы сайта"}
               />
             </div>
 
