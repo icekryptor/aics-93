@@ -45,10 +45,12 @@ export type Service = {
     secondaryCta: string;
   };
   valueProps: ValueProp[];
+  valuePropsTitle?: string; // заголовок секции преимуществ (дефолт — про разработку)
+  valuePropsEyebrow?: string; // глазок секции преимуществ (дефолт «преимущества подхода»)
   process: ProcessStep[];
   deliverables: Deliverable[];
   deliverablesTitle?: string; // заголовок секции «что вы получаете» (дефолт — про сайт)
-  comparison: { title?: string; classicLabel?: string; rows: ComparisonRow[] };
+  comparison: { title?: string; classicLabel?: string; aicsLabel?: string; rows: ComparisonRow[] };
   faq: Faq[];
   closing: { title: string; text: string };
 };

@@ -172,9 +172,9 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
       <section className="relative py-16 sm:py-20">
         <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
         <div className={SHELL}>
-          <Eyebrow>преимущества подхода</Eyebrow>
+          <Eyebrow>{s.valuePropsEyebrow ?? "преимущества подхода"}</Eyebrow>
           <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
-            Почему это быстрее, дешевле и живее классической разработки
+            {s.valuePropsTitle ?? "Почему это быстрее, дешевле и живее классической разработки"}
           </h2>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -453,10 +453,14 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
           <Eyebrow>сравнение</Eyebrow>
           <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
             {s.comparison.title ? (
-              <>
-                {s.comparison.title.replace(/ и AICS-93$/, "")} и{" "}
-                <span className="font-display">AICS-93</span>
-              </>
+              s.comparison.title.endsWith("AICS-93") ? (
+                <>
+                  {s.comparison.title.replace(/ и AICS-93$/, "")} и{" "}
+                  <span className="font-display">AICS-93</span>
+                </>
+              ) : (
+                s.comparison.title
+              )
             ) : (
               <>
                 Классическая студия и <span className="font-display">AICS-93</span>
@@ -474,9 +478,13 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                 </div>
                 <div
                   className="tech-label rounded-t-xl px-4 pb-3 pt-3 text-[0.72rem]"
-                  style={{ color: "var(--color-signal-cool)", background: "rgba(151,71,255,0.08)", fontFamily: "var(--font-display)" }}
+                  style={{
+                    color: "var(--color-signal-cool)",
+                    background: "rgba(151,71,255,0.08)",
+                    fontFamily: s.comparison.aicsLabel ? undefined : "var(--font-display)",
+                  }}
                 >
-                  AICS-93
+                  {s.comparison.aicsLabel ?? "AICS-93"}
                 </div>
               </div>
               {/* rows */}

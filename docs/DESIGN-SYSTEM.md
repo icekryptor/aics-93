@@ -84,6 +84,7 @@
 | `GenerativeCover` | `components/blog/GenerativeCover.tsx` | генеративные обложки-плейсхолдеры |
 | `SignalTransition` | `components/system/SignalTransition.tsx` | переходы между актами главной |
 | Данные кейсов | `lib/showcase.ts` | title/desc/bullets(4·6·8)/shots(2деск+2моб)/accent/href/wip |
+| Данные направлений | `lib/solutions.ts` | лендинги направлений (товарка/услуги/связки) — тот же тип Service, роут `/solutions/[slug]`; переопределения: `valuePropsTitle/Eyebrow`, `comparison.aicsLabel` |
 | Данные услуг | `lib/services.ts` | реестр лендингов; опц. блоки: `modules`, `bizCases`, `solutionBank`, `gantt` (смета после прогресс-бара), `training` (вместо closing), `ctaQuiz`, `deliverablesTitle`, `comparison.title/classicLabel` |
 | `BrandEvolution` | `components/services/BrandEvolution.tsx` | хиро-3D «эволюция бренда»: ДНК→клетки→единорог (`heroVisual: "evolution"`; дебаг `?evo=0\|1\|2`) |
 | `CardVideo` | `components/services/CardVideo.tsx` | видео-обложка карточки услуги (muted loop, IO play/pause, `Service.card`); фолбэк — GenerativeCover |
