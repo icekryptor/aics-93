@@ -24,10 +24,8 @@ export default function PipelineSchematic({ stages }: { stages: Stage[] }) {
       <style>{`
         /* лабтех-лоадер: бар заполняется слева направо (scaleX по fill-box) */
         @keyframes pipeFill { 0% { transform: scaleX(0); } 88% { transform: scaleX(1); } 100% { transform: scaleX(1); } }
-        @keyframes pipeTrail { 0%,100% { opacity: .35; } 50% { opacity: .9; } }
         @keyframes pipeBlink { 0%,100% { opacity: .35; } 50% { opacity: 1; } }
         .pipe-fill { transform-box: fill-box; transform-origin: left center; animation: pipeFill 6s linear infinite; }
-        .pipe-node { animation: pipeTrail 3.2s ease-in-out infinite; }
         .pipe-loading { animation: pipeBlink 1.2s steps(2, end) infinite; }
       `}</style>
       <svg viewBox={`0 0 ${VW} ${VH}`} className="h-auto w-full" role="img" aria-label="Схема процесса: этапы от брифа до аналитического сопровождения">
@@ -74,19 +72,9 @@ export default function PipelineSchematic({ stages }: { stages: Stage[] }) {
           fill="url(#pipeFillGrad)"
         />
 
-        {/* nodes */}
+        {/* подписи этапов (без кружков — их несёт сам бар) */}
         {xs.map((x, i) => (
           <g key={i}>
-            <circle
-              className="pipe-node"
-              cx={x}
-              cy={y}
-              r="6"
-              fill="rgba(151,71,255,0.18)"
-              stroke="#b57bff"
-              strokeWidth="1.4"
-              style={{ animationDelay: `${(i * 0.28).toFixed(2)}s` }}
-            />
             <text
               x={x}
               y={y - 18}

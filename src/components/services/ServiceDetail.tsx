@@ -598,7 +598,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
             Отвечаю на главные вопросы
           </h2>
 
-          <div className="mt-10 max-w-3xl divide-y divide-runtime-line/70 border-y border-runtime-line/70">
+          <div className="faq-lines mt-10 max-w-3xl">
             {s.faq.map((f) => (
               <details key={f.q} className="faq-acc group py-5">
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-4">

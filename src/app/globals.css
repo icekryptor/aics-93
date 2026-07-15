@@ -228,6 +228,15 @@ details.faq-acc::details-content {
 details.faq-acc[open]::details-content {
   block-size: auto;
 }
+/* линии-разделители FAQ: прежний тон #ded6f0, приглушён на 80%
+   (утилиты divide-runtime-line/N не генерились — красил глобальный дефолт) */
+.faq-lines {
+  border-top: 1px solid rgba(222, 214, 240, 0.18);
+  border-bottom: 1px solid rgba(222, 214, 240, 0.18);
+}
+.faq-lines > details + details {
+  border-top: 1px solid rgba(222, 214, 240, 0.18);
+}
 
 /* --- кнопки в стиле кейсов (showcase): углы 5/55/55/25, циан + стекло --- */
 .btn-case,
