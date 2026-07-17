@@ -115,9 +115,9 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
         <section className="relative py-16 sm:py-20">
           <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
           <div className={SHELL}>
-            <Eyebrow>что оцифровываем</Eyebrow>
+            <Eyebrow>{s.modules.eyebrow ?? "что оцифровываем"}</Eyebrow>
             <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
-              Модули, из которых собирается ваша система
+              {s.modules.title ?? "Модули, из которых собирается ваша система"}
             </h2>
 
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

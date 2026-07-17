@@ -78,7 +78,8 @@
 | `GearSolid` | `components/GearSolid.tsx` | сплошная шестерёнка (лого малых размеров; `hole` опц.) |
 | `SystemNav` | `components/system/SystemNav.tsx` | шапка-гантель (канон формы) |
 | `QuizPanel` | `components/QuizPanel.tsx` | квиз-дровер 320px, 5 шагов |
-| `QuizInline` | `components/QuizInline.tsx` | квиз отдельным блоком в конце лендинга (вместо формы; `Service.ctaQuiz`) |
+| `QuizInline` | `components/QuizInline.tsx` | квиз-блок в конце лендинга; data-driven шаги (`Service.quiz.steps`: input/single/multi/budget/contacts; дефолт — 5 шагов дровера) |
+| `SeeAlso` | `components/services/SeeAlso.tsx` | блок «смотрите также» (`Service.seeAlso.items`) + баннер подписки на тг-канал |
 | Конфиг квиза | `lib/quiz.ts` | общие вопросы/шаги/бюджет для дровера и инлайна — менять здесь |
 | `BackdropFX` (внутри CaseShowcase) | — | орбы+частицы; при переиспользовании — выделить |
 | `GenerativeCover` | `components/blog/GenerativeCover.tsx` | генеративные обложки-плейсхолдеры |

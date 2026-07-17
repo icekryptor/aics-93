@@ -4,6 +4,7 @@ import { getAllSolutions, getSolution } from "@/lib/solutions";
 import ServiceDetail from "@/components/services/ServiceDetail";
 import ContactConsole from "@/components/ContactConsole";
 import QuizInline from "@/components/QuizInline";
+import SeeAlso from "@/components/services/SeeAlso";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
@@ -91,12 +92,17 @@ export default async function SolutionPage({
       {s.ctaQuiz ? (
         <QuizInline
           source={`квиз лендинга «${s.nav}»`}
-          title="Посчитаем экономику перехода"
-          text="Пять коротких вопросов вместо длинной формы — на выходе бриф, по которому я вернусь с расчётом экономики и планом запуска."
+          title={s.quiz?.title ?? "Посчитаем экономику перехода"}
+          text={
+            s.quiz?.text ??
+            "Пять коротких вопросов вместо длинной формы — на выходе бриф, по которому я вернусь с расчётом экономики и планом запуска."
+          }
+          steps={s.quiz?.steps}
         />
       ) : (
         <ContactConsole />
       )}
+      {s.seeAlso ? <SeeAlso items={s.seeAlso.items} /> : null}
     </>
   );
 }

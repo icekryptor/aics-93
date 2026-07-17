@@ -36,3 +36,39 @@ export const BUDGET_MAX = 1_000_000;
 export const BUDGET_STEP = 5000;
 
 export const fmtRub = (n: number) => new Intl.NumberFormat("ru-RU").format(n);
+
+/* --- data-driven шаги для инлайн-квиза (QuizInline) ---
+   Лендинг может передать свой набор шагов; дефолт повторяет дровер. */
+
+export type QuizStep =
+  | { kind: "input"; key: string; title: string; placeholder?: string; multiline?: boolean }
+  | { kind: "single"; key: string; title: string; options: string[]; other?: boolean }
+  | { kind: "multi"; key: string; title: string; options: string[]; other?: boolean }
+  | { kind: "budget"; key: string; title: string }
+  | { kind: "contacts"; key: string; title: string };
+
+export const DEFAULT_QUIZ_STEPS: QuizStep[] = [
+  {
+    kind: "single",
+    key: "задача",
+    title: "Какая у вас задача?",
+    options: QUIZ_TASKS.filter((t) => t !== "другое"),
+    other: true,
+  },
+  {
+    kind: "input",
+    key: "замысел",
+    title: "Коротко — какой замысел хотите реализовать?",
+    placeholder: "Пара предложений о проекте",
+    multiline: true,
+  },
+  {
+    kind: "single",
+    key: "срок",
+    title: "Какой у вас срок на реализацию?",
+    options: QUIZ_DEADLINES.filter((d) => d !== "другое"),
+    other: true,
+  },
+  { kind: "budget", key: "бюджет", title: "Определите диапазон бюджета" },
+  { kind: "contacts", key: "связь", title: "Удобный способ связи" },
+];

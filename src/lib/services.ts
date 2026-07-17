@@ -1,6 +1,8 @@
 // Services registry — one entry per offering. Branching lives at /services,
 // each detail page at /services/[slug]. Content is self-contained (no CMS).
 
+import type { QuizStep } from "@/lib/quiz";
+
 export type ServiceStat = { value: string; label: string };
 export type ValueProp = { title: string; text: string };
 export type ProcessStep = { title: string; detail: string; benefit: string; duration?: string };
@@ -27,13 +29,15 @@ export type Service = {
   heroVisual?: "site" | "brand" | "service" | "evolution"; // 3D в хиро ("evolution" — частицы ДНК→клетки→единорог)
   pipeline?: string[]; // short stage labels for the overview schematic
   howItWorks?: HowItWorks; // "как это работает" block (video + points)
-  modules?: { note: string; items: Module[] }; // «что оцифровываем» — сетка модулей
+  modules?: { title?: string; eyebrow?: string; note: string; items: Module[] }; // сетка модулей (заголовок/глазок переопределяемы)
   bizCases?: { title: string; items: BizCase[] }; // бизнес-кейсы применения
   solutionBank?: SolutionBank; // банк готовых решений
   gantt?: ServiceGantt; // пример сметы в виде Ганта (после прогресс-бара)
   training?: Training; // блок «обучение» — рендерится вместо closing
   card?: { video: string; poster: string }; // медиа карточки услуги (главная + /services) вместо генеративного арта
   ctaQuiz?: boolean; // финал страницы — инлайн-квиз вместо контактной формы
+  quiz?: { title?: string; text?: string; steps?: QuizStep[] }; // кастомные заголовок/шаги инлайн-квиза
+  seeAlso?: { items: { tag: string; title: string; href: string }[] }; // блок «смотрите также» + тг-баннер
   metaTitle: string;
   metaDescription: string;
   hero: {
