@@ -1,6 +1,7 @@
 import NeuralHero from "@/components/NeuralHero";
 import { Intro, Frameworks, Reasons, SalesEngine, About } from "@/components/Sections";
 import AiProcess from "@/components/AiProcess";
+import ConveyorBlock from "@/components/ConveyorBlock";
 // CaseSlider припаркован — блок работ теперь CaseShowcase (мокап Frame 1)
 import CaseShowcase from "@/components/showcase/CaseShowcase";
 import ContactConsole from "@/components/ContactConsole";
@@ -42,6 +43,7 @@ export default function Experience() {
         <SignalTransition id="act-engine" index="03" label="// движок · ии в ваших процессах" />
         <Reasons />
         <AiProcess />
+        <ConveyorBlock />
         <SalesEngine />
         <ServicesTeaser />
         <SolutionsTeaser />
