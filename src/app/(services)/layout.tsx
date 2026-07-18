@@ -2,6 +2,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import CursorPro from "@/components/system/CursorPro";
 import ZoneLabel from "@/components/services/ZoneLabel";
+import GoalLink from "@/components/system/GoalLink";
 import { legal } from "@/lib/content";
 
 // Focused dark "runtime" chrome for service pages — cyber-lab identity without
@@ -56,14 +57,16 @@ export default function ServicesLayout({ children }: { children: React.ReactNode
             >
               ← на сайт
             </Link>
-            <a
+            <GoalLink
+              goal="kp_click"
+              goalParams={{ source: "services_nav" }}
               href="#upgrade"
               data-magnetic
               data-cursor="route signal"
               className="btn-case grid h-8 place-items-center px-4 text-[12px] font-semibold"
             >
               обсудить проект
-            </a>
+            </GoalLink>
           </div>
         </div>
       </header>

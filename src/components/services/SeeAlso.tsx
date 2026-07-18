@@ -1,4 +1,5 @@
 import Link from "next/link";
+import GoalLink from "@/components/system/GoalLink";
 import { legal } from "@/lib/content";
 
 /* SeeAlso — блок «смотрите также» в конце лендинга: рекомендации релевантных
@@ -76,14 +77,16 @@ export default function SeeAlso({
               Инсайты из IT и ИИ-сфер для развития бизнеса — простым языком.
             </p>
           </div>
-          <a
+          <GoalLink
+            goal="tg_subscribe"
+            goalParams={{ source: "see_also" }}
             href={legal.telegramChannel}
             target="_blank"
             rel="noreferrer"
             className="btn-case inline-flex h-12 shrink-0 items-center px-7 text-sm font-semibold"
           >
             Подписаться →
-          </a>
+          </GoalLink>
         </div>
       </div>
     </section>

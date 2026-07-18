@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import GearSolid from "@/components/GearSolid";
 import { assets, legal } from "@/lib/content";
+import { reachGoal } from "@/lib/metrika";
 
 const LINKS = [
   { label: "разум", href: "#how" },
@@ -151,6 +152,7 @@ export default function SystemNav() {
               href="#upgrade"
               data-magnetic
               data-cursor="route signal"
+              onClick={() => reachGoal("kp_click", { source: "nav" })}
               className="rounded-[3px] px-3.5 py-1.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#2b2538]"
             >
               КП
@@ -162,6 +164,7 @@ export default function SystemNav() {
               rel="noreferrer"
               data-magnetic
               aria-label="Telegram"
+              onClick={() => reachGoal("tg_click", { source: "nav" })}
               className="rounded-[3px] px-3.5 py-1.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#2b2538]"
             >
               TG

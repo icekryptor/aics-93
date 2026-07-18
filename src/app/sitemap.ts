@@ -28,6 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     { url: `${SITE_URL}/blog`, lastModified: newest, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/classic`, lastModified: new Date("2026-07-02"), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE_URL}/ai`, lastModified: new Date("2026-07-18"), changeFrequency: "monthly", priority: 0.3 },
     ...posts.map((p) => ({
       url: `${SITE_URL}/blog/${p.slug}`,
       lastModified: new Date(p.date),

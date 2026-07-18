@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import CubeMorph from "./system/CubeMorph";
-import { projectTypes } from "@/lib/content";
+import { projectTypes, legal } from "@/lib/content";
 import { reachGoal } from "@/lib/metrika";
 import { sendLead } from "@/lib/lead";
 
@@ -163,6 +163,31 @@ export default function ContactConsole() {
                       не удалось отправить — попробуйте ещё раз или напишите в telegram
                     </p>
                   )}
+                  <p className="mt-4 text-[12.5px] leading-relaxed text-runtime-ink-soft">
+                    Без формы:{" "}
+                    <a
+                      href={legal.telegram}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => reachGoal("tg_click", { source: "contact_console" })}
+                      className="text-[color-mix(in_srgb,var(--color-signal-cool)_85%,white)] underline decoration-dotted underline-offset-4 transition-colors hover:text-white"
+                    >
+                      напишите в Telegram
+                    </a>{" "}
+                    «хочу разбор» — вернусь со структурой и вилкой цены в течение 24 часов.
+                  </p>
+
+                  {/* что будет дальше — снимает тревогу после отправки */}
+                  <div className="mt-5 flex flex-wrap gap-x-5 gap-y-1.5 border-t border-runtime-line/60 pt-4">
+                    {["разбор задачи", "структура и вилка цены", "план и старт"].map((step, i) => (
+                      <span key={step} className="tech-label inline-flex items-center gap-2 text-[10px] text-runtime-ink-soft">
+                        <span style={{ color: "var(--color-signal-2)" }}>0{i + 1}</span>
+                        {step}
+                        {i < 2 && <span aria-hidden className="text-runtime-ink-soft/50">→</span>}
+                      </span>
+                    ))}
+                  </div>
+
                   <p className="hud mt-4 text-[9px] text-runtime-ink-soft/60">
                     // данные уходят напрямую оператору · без спама
                   </p>

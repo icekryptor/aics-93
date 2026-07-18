@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import LogoMark from "./LogoMark";
 import BrainGL from "./system/BrainGL";
 import StudioGrid from "./StudioGrid";
-import { heroStats } from "@/lib/content";
+import { heroStats, legal } from "@/lib/content";
+import { reachGoal } from "@/lib/metrika";
 
 const STATES = ["biology", "hybrid", "machine"] as const;
 
@@ -139,6 +140,21 @@ export default function NeuralHero() {
                 Смотреть работы
               </a>
             </div>
+
+            {/* низкопороговый вход: TG вместо формы, SLA 24 часа */}
+            <p className="mt-5 max-w-md text-[12.5px] leading-relaxed text-runtime-ink-soft">
+              Или напишите в{" "}
+              <a
+                href={legal.telegram}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => reachGoal("tg_click", { source: "hero" })}
+                className="text-[color-mix(in_srgb,var(--color-signal-cool)_85%,white)] underline decoration-dotted underline-offset-4 transition-colors hover:text-white"
+              >
+                Telegram
+              </a>{" "}
+              «хочу разбор» — вернусь со структурой и вилкой цены в течение 24 часов.
+            </p>
           </div>
 
           {/* center: the living brain — shifted 20px left; the canvas overflows
