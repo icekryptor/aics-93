@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import CursorPro from "@/components/system/CursorPro";
+import ZoneLabel from "@/components/services/ZoneLabel";
 import { legal } from "@/lib/content";
 
 // Focused dark "runtime" chrome for service pages — cyber-lab identity without
@@ -45,7 +46,7 @@ export default function ServicesLayout({ children }: { children: React.ReactNode
             <span className="font-display text-[14px] tracking-tight text-runtime-ink">
               AICS<span className="signal-text">-93</span>
             </span>
-            <span className="tech-label ml-1 hidden text-[10px] text-runtime-ink-soft sm:inline">/ услуги</span>
+            <ZoneLabel />
           </Link>
           <div className="flex items-center gap-2">
             <Link

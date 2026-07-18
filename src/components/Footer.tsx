@@ -30,12 +30,25 @@ export default function Footer() {
           </div>
 
           {/* nav */}
-          <nav className="flex flex-wrap gap-x-8 gap-y-2 lg:order-2">
-            {nav.map((n) => (
-              <a key={n.href} href={n.href} className="text-sm text-white/60 transition-colors hover:text-white">
-                {n.label}
-              </a>
-            ))}
+          <nav className="flex flex-col gap-y-3 lg:order-2">
+            <div className="flex flex-wrap gap-x-8 gap-y-2">
+              {nav.map((n) => (
+                <a key={n.href} href={n.href} className="text-sm text-white/60 transition-colors hover:text-white">
+                  {n.label}
+                </a>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-x-8 gap-y-2">
+              {[
+                { label: "Услуги", href: "/services" },
+                { label: "Решения", href: "/solutions" },
+                { label: "Журнал", href: "/blog" },
+              ].map((n) => (
+                <a key={n.href} href={n.href} className="text-sm text-white/60 transition-colors hover:text-white">
+                  {n.label}
+                </a>
+              ))}
+            </div>
           </nav>
 
           {/* socials */}

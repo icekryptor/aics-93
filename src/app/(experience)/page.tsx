@@ -5,6 +5,7 @@ import AiProcess from "@/components/AiProcess";
 import CaseShowcase from "@/components/showcase/CaseShowcase";
 import ContactConsole from "@/components/ContactConsole";
 import ServicesTeaser from "@/components/ServicesTeaser";
+import SolutionsTeaser from "@/components/SolutionsTeaser";
 import BlogTeaser from "@/components/BlogTeaser";
 import Footer from "@/components/Footer";
 import SignalTransition from "@/components/system/SignalTransition";
@@ -43,6 +44,7 @@ export default function Experience() {
         <AiProcess />
         <SalesEngine />
         <ServicesTeaser />
+        <SolutionsTeaser />
 
         {/* ACT IV — THE OPERATOR & THE PROOF */}
         <SignalTransition id="act-proof" index="04" label="// оператор · доказательства" compact />

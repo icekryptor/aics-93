@@ -128,6 +128,13 @@ export default function SystemNav() {
             </Link>
             <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
             <Link
+              href="/solutions"
+              className="tech-label rounded-[3px] px-3 py-1.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-3.5"
+            >
+              решения
+            </Link>
+            <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
+            <Link
               href="/blog"
               className="tech-label rounded-[3px] px-3 py-1.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-3.5"
             >
@@ -223,6 +230,15 @@ export default function SystemNav() {
                   className="tech-label flex items-center gap-2 rounded-[3px] px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-[#221c2e] hover:text-white"
                 >
                   услуги
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/solutions"
+                  onClick={() => setOpen(false)}
+                  className="tech-label flex items-center gap-2 rounded-[3px] px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-[#221c2e] hover:text-white"
+                >
+                  решения
                 </Link>
               </li>
               <li>
