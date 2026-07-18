@@ -21,7 +21,7 @@ export async function generateMetadata({
   if (!post) return {};
   const canonical = `/blog/${post.slug}`;
   return {
-    title: `${post.title} — Журнал AICS-93`,
+    title: post.title,
     description: post.excerpt,
     keywords: [post.tag, "брендинг", "дизайн", "Василий Аистов"],
     authors: [{ name: AUTHOR.name, url: SITE_URL }],

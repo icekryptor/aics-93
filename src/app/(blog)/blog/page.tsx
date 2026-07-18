@@ -6,7 +6,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Журнал AICS-93 — бренд, ИИ в процессах, дизайн на данных",
+  title: "Журнал — бренд, ИИ в процессах, дизайн на данных",
   description:
     "Заметки Василия Аистова о брендинге, внедрении ИИ в процессы компаний и дизайне, который отстраивает.",
   alternates: {

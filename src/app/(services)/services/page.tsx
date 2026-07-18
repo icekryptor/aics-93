@@ -10,7 +10,7 @@ import { SITE_URL, SITE_NAME } from "@/lib/site";
 const ACCENTS = ["#9747ff", "#c856ff", "#5ab8ff", "#c5ff44"];
 
 export const metadata: Metadata = {
-  title: "Услуги — разработка сайтов, брендинг, ИИ в процессах | AICS-93",
+  title: "Услуги — разработка сайтов, брендинг, ИИ в процессах",
   description:
     "Услуги студии AICS-93: разработка сайтов за 7-14 дней с ИИ, ребрендинг, брендбук и внедрение нейроагентов в процессы. Данные, а не догадки.",
   alternates: { canonical: "/services" },
