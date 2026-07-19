@@ -66,6 +66,18 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                   {s.hero.secondaryCta}
                 </a>
               </div>
+
+              {/* публичная цена: смета = масштаб × проектные часы, фикс в договоре */}
+              {s.pricing && (
+                <p className="mt-5 text-[13.5px] leading-relaxed text-runtime-ink-soft">
+                  <span className="font-display text-[1.05rem] tracking-tight text-runtime-ink">
+                    {s.pricing.from ? "от " : ""}
+                    {s.pricing.usd.toLocaleString("ru-RU")}&nbsp;$
+                  </span>{" "}
+                  · итоговая смета зависит от масштаба и проектных часов — фиксируется в договоре
+                  до старта. Оплата 50/50, ответственность за сроки — материальная.
+                </p>
+              )}
             </div>
 
             {/* 3D: эволюция бренда (частицы) или site-builder (клик — сменить стадию) */}

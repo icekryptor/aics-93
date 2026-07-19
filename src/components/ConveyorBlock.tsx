@@ -5,13 +5,13 @@
    Тайминги фаз согласованы с Гантом лендинга сайтов (lib/services.ts). */
 
 const LOG: { cmd?: boolean; text: string; when: string }[] = [
-  { cmd: true, text: "pipeline.start — бриф загружен", when: "день 0" },
-  { text: "агенты · исследование рынка и ЦА", when: "дни 1–3" },
-  { text: "прототип и копирайтинг на данных", when: "дни 4–6" },
-  { text: "дизайн-концепция и дизайн-система", when: "дни 7–9" },
-  { text: "генерация страниц по системе", when: "дни 10–12" },
-  { text: "интеграции · E2E-тесты", when: "дни 13–14" },
-  { cmd: true, text: "deploy --prod", when: "день 7–14 ✓" },
+  { cmd: true, text: "pipeline.start — бриф · распаковка смыслов · аудит", when: "день 0–1" },
+  { text: "исследование конкурентов и ЦА → стратегия", when: "дни 1–3" },
+  { text: "харнесс-система · обучение субагентов на BI", when: "дни 3–4" },
+  { text: "дизайн-концепция — вручную, мной", when: "дни 4–6" },
+  { text: "оцифровка дизайн-системы · прототип", when: "дни 6–8" },
+  { text: "сборка: react/next.js · ts/python/postgres", when: "дни 8–12" },
+  { cmd: true, text: "deploy MVP --prod · E2E-тесты", when: "день 7–14 ✓" },
 ];
 
 const ROLES = ["аналитик", "копирайтер", "дизайнер", "разработчик"];
@@ -98,7 +98,7 @@ export default function ConveyorBlock() {
               <div className="mt-1 border-t border-runtime-line/60 pt-3">
                 <p className="hud text-[11.5px] leading-relaxed text-runtime-ink-soft" style={{ textTransform: "none" }}>
                   <span aria-hidden className="mr-2 opacity-60">∞</span>
-                  инженер: ревью каждой строки — сквозно, все 14 дней
+                  ревью каждой строки — вручную · после запуска: харнесс заказчику + месяц поддержки
                   <span aria-hidden className="hud-dot ml-2 inline-block align-middle" />
                 </p>
               </div>

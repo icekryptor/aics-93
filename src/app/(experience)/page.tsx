@@ -2,6 +2,7 @@ import NeuralHero from "@/components/NeuralHero";
 import { Intro, Frameworks, Reasons, SalesEngine, About } from "@/components/Sections";
 import AiProcess from "@/components/AiProcess";
 import ConveyorBlock from "@/components/ConveyorBlock";
+import PricingBlock from "@/components/PricingBlock";
 // CaseSlider припаркован — блок работ теперь CaseShowcase (мокап Frame 1)
 import CaseShowcase from "@/components/showcase/CaseShowcase";
 import ContactConsole from "@/components/ContactConsole";
@@ -47,6 +48,7 @@ export default function Experience() {
         <SalesEngine />
         <ServicesTeaser />
         <SolutionsTeaser />
+        <PricingBlock />
 
         {/* ACT IV — THE OPERATOR & THE PROOF */}
         <SignalTransition id="act-proof" index="04" label="// оператор · доказательства" compact />

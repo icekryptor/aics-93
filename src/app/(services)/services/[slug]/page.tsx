@@ -61,8 +61,16 @@ export default async function ServicePage({
       offers: {
         "@type": "Offer",
         availability: "https://schema.org/InStock",
-        priceCurrency: "RUB",
         url: `${url}#upgrade`,
+        ...(s.pricing
+          ? {
+              priceSpecification: {
+                "@type": "PriceSpecification",
+                minPrice: s.pricing.usd,
+                priceCurrency: "USD",
+              },
+            }
+          : { priceCurrency: "RUB" }),
       },
     },
     {
