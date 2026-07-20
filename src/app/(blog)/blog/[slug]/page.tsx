@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPost, formatDate } from "@/lib/blog";
 import MarkdownLite from "@/components/blog/MarkdownLite";
+import BlogRail from "@/components/blog/BlogRail";
 import GenerativeCover from "@/components/blog/GenerativeCover";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, SITE_NAME, AUTHOR } from "@/lib/site";
@@ -117,9 +118,14 @@ export default async function BlogPostPage({
         </div>
       </div>
 
-      {/* body */}
-      <div className="mx-auto mt-10 lg:mt-14">
-        <MarkdownLite source={post.body} />
+      {/* body: 8 колонок текста + липкий рейл с офферами (4 колонки) */}
+      <div className="mt-10 grid gap-10 lg:mt-14 lg:grid-cols-12 lg:gap-12">
+        <div className="min-w-0 lg:col-span-8">
+          <MarkdownLite source={post.body} />
+        </div>
+        <aside className="lg:col-span-4" aria-label="Предложения студии">
+          <BlogRail />
+        </aside>
       </div>
 
       {/* footer nav */}

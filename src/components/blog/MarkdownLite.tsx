@@ -65,5 +65,6 @@ export default function MarkdownLite({ source }: { source: string }) {
     );
   });
 
-  return <div className="max-w-[68ch]">{out}</div>;
+  // ширину колонки задаёт грид страницы (8 из 12 колонок на десктопе)
+  return <div>{out}</div>;
 }
