@@ -126,6 +126,8 @@ export default function BootSequence({ onDone }: BootSequenceProps) {
       if (window.sessionStorage.getItem(STORAGE_KEY)) shouldSkip = true;
       // deep-link / share override: /?boot=0 skips the boot sequence
       if (new URLSearchParams(window.location.search).get("boot") === "0") shouldSkip = true;
+      // мобайл (<lg): оверлей скрыт CSS-ом ради LCP — не гоняем и логику
+      if (window.matchMedia("(max-width: 1023px)").matches) shouldSkip = true;
     } catch {
       /* ignore */
     }
@@ -196,11 +198,12 @@ export default function BootSequence({ onDone }: BootSequenceProps) {
   const isGlitch = phase === "glitch";
   const nameLit = progress >= 100;
 
+  // display управляется классами (hidden lg:flex): на мобиле оверлей скрыт
+  // чистым CSS ещё до гидрации — hero рисуется сразу, LCP не ждёт boot.
   const overlayStyle: CSSProperties = {
     position: "fixed",
     inset: 0,
     zIndex: 9999,
-    display: "flex",
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
@@ -219,7 +222,7 @@ export default function BootSequence({ onDone }: BootSequenceProps) {
 
   return (
     <div
-      className="runtime"
+      className="runtime hidden lg:flex"
       style={overlayStyle}
       onClick={skip}
       role="presentation"
