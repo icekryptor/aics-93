@@ -144,6 +144,7 @@ export default function QuizPanel() {
         id="quiz-panel"
         aria-label="Бриф на проект"
         aria-hidden={!open}
+        inert={!open}
         className="quiz-panel fixed inset-y-0 right-0 z-[70] flex w-[320px] max-w-[86vw] flex-col border-l border-line bg-bg shadow-[-16px_0_48px_-24px_rgba(48,32,85,0.5)] transition-transform duration-[420ms] [transition-timing-function:cubic-bezier(0.4,0,0.2,1)]"
         style={{ transform: open ? "translateX(0)" : "translateX(100%)" }}
       >

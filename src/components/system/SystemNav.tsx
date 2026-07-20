@@ -200,6 +200,8 @@ export default function SystemNav() {
 
         {/* mobile sheet — своя тёмная подложка (у гантели нет общего фона) */}
         <div
+          inert={!open}
+          aria-hidden={!open}
           className={`grid overflow-hidden transition-all duration-300 lg:hidden ${
             open ? "mt-2 grid-rows-[1fr]" : "grid-rows-[0fr]"
           }`}
