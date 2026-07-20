@@ -92,6 +92,7 @@
 | `ConveyorBlock` | `components/ConveyorBlock.tsx` | «как работает ИИ-конвейер» (главная, ACT III): терминал-карточка conveyor.log (`.hud normal-case`, шапка с 3 точками), роли-чипы «1 = 4», честная плашка с бордером `--color-signal-cool`; тайминги фаз = Гант лендинга сайтов |
 | `GoalLink` | `components/system/GoalLink.tsx` | ссылка с целью Метрики для серверных компонентов (`goal`, `goalParams`) |
 | `PricingBlock` | `components/PricingBlock.tsx` | публичные пакеты и условия (главная): 3 карточки «цена от → состав → срок» + чипы условий (50/50, договор, ответственность за сроки, KPI); цены в $ цифрами font-display; источник цен — `Service.pricing` (услуги) |
+| `CaseLongread` | `components/cases/CaseLongread.tsx` | кейс-лонгрид (`/cases/[slug]`, данные `lib/cases.ts`): hero с фактами и ролями-чипами, липкая `ChapterNav` (IO-подсветка, desktop), блоки «номер font-display + текст + медиа-сетка»; пустой `src` медиа → GenerativeCover-плейсхолдер «[ медиа · скоро ]»; mobile-медиа — узкая колонка 9/16 |
 
 ## 8. Грамматика страниц
 

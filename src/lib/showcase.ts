@@ -44,7 +44,7 @@ export const showcaseCases: ShowcaseCase[] = [
       { src: "/assets/cases/ximichka/site.png", kind: "desktop", alt: "Химичка — официальный интернет-магазин" },
     ],
     accent: "#9057ff",
-    href: "https://ximi4ka.ru",
+    href: "/cases/ximichka",
     wip: true,
   },
   {

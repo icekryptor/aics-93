@@ -7,7 +7,11 @@ import { usePathname } from "next/navigation";
 // layout остаётся серверным.
 export default function ZoneLabel() {
   const pathname = usePathname();
-  const label = pathname?.startsWith("/solutions") ? "/ решения" : "/ услуги";
+  const label = pathname?.startsWith("/solutions")
+    ? "/ решения"
+    : pathname?.startsWith("/cases")
+      ? "/ кейсы"
+      : "/ услуги";
   return (
     <span className="tech-label ml-1 hidden text-[10px] text-runtime-ink-soft sm:inline">
       {label}

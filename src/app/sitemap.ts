@@ -3,6 +3,7 @@ import { SITE_URL } from "@/lib/site";
 import { getAllPosts } from "@/lib/blog";
 import { getAllServices } from "@/lib/services";
 import { getAllSolutions } from "@/lib/solutions";
+import { getAllCases } from "@/lib/cases";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
@@ -29,6 +30,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/blog`, lastModified: newest, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/classic`, lastModified: new Date("2026-07-02"), changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/ai`, lastModified: new Date("2026-07-18"), changeFrequency: "monthly", priority: 0.3 },
+    ...getAllCases().map((c) => ({
+      url: `${SITE_URL}/cases/${c.slug}`,
+      lastModified: new Date("2026-07-20"),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
     ...posts.map((p) => ({
       url: `${SITE_URL}/blog/${p.slug}`,
       lastModified: new Date(p.date),
