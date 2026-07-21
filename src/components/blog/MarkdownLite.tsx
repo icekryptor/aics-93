@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 
 // Tiny markdown renderer for blog bodies. Supports: ## headings, blank-line
-// paragraphs, "- " bullet lists, "> " blockquotes, and **bold** inline.
+// paragraphs, "- " bullet lists, "> " blockquotes, **bold** inline, and
+// standalone image blocks "![alt](/path.png)" (optionally "|caption" after alt).
 // No dependencies, no dangerouslySetInnerHTML.
 
 function inline(text: string, keyBase: string): ReactNode[] {
@@ -23,6 +25,29 @@ export default function MarkdownLite({ source }: { source: string }) {
   const out: ReactNode[] = [];
 
   blocks.forEach((block, bi) => {
+    // image block: ![alt](/src) или ![alt|подпись](/src)
+    const img = block.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+    if (img) {
+      const [alt, caption] = img[1].split("|").map((s) => s.trim());
+      out.push(
+        <figure key={bi} className="my-8">
+          <div className="relative overflow-hidden rounded-[18px] border border-line">
+            <Image
+              src={img[2]}
+              alt={alt}
+              width={1456}
+              height={816}
+              sizes="(min-width: 1024px) 740px, 100vw"
+              className="h-auto w-full"
+            />
+          </div>
+          {caption && (
+            <figcaption className="tech-label mt-2.5 text-[11px] text-ink-soft">{caption}</figcaption>
+          )}
+        </figure>
+      );
+      return;
+    }
     if (block.startsWith("## ")) {
       out.push(
         <h2
