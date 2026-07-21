@@ -28,15 +28,16 @@ BACKGROUND: seamless deep desaturated indigo-purple (#2c2545), smooth gradient, 
 no clutter.
 
 STYLE: clean, high-end, cinematic product render, cohesive violet / lavender / white
-palette on dark purple, subtle bloom, sharp focus, 8k, ultra-detailed. No readable text
-anywhere.
+palette on dark purple, with cyan (#5fd9f5) glow accents on screens, scan beams and key
+traces, and small lime (#c8ff4d) highlight accents on circuit nodes and indicator details.
+Subtle bloom, sharp focus, 8k, ultra-detailed. No readable text anywhere.
 
 Aspect ratio 16:9.
 ```
 
 Правила:
 
-- Монохром: фиолет/лаванда/белый на тёмном индиго. Циан из UI-палитры сайта в иллюстрации не тянем.
+- Палитра (v3, решение юзера 2026-07-21): база — фиолет/лаванда/белый на тёмном индиго; акценты — циан #5fd9f5 (экраны, лучи сканирования, ключевые дорожки) и точечный лайм #c8ff4d (узлы схем, индикаторы, мелкие детали). Лайм — микроакцент, не заливка.
 - Поток всегда читаемый: слева направо или по кругу; этапы соединяют светящиеся PCB-дорожки.
 - Смысловые объекты — стеклянные, с подсвеченной начинкой (механизмы, экраны, документы).
 - Без читаемого текста в кадре; UI на экранах — абстрактные блоки/графики.
@@ -46,5 +47,17 @@ Aspect ratio 16:9.
 
 | Файл | Статья | Сцена |
 |---|---|---|
-| `ii-konvejer-sborka-v2.webp` | kak-ii-konvejer-sobiraet-sajt | база знаний → конвейер с 3 станциями-агентами (шестерни/оптика/манипулятор), панели wireframe→готовый UI → монитор |
-| `petlya-doobucheniya-v2.webp` | kak-ii-konvejer-sobiraet-sajt | стеклянная рука со стилусом правит экран, лента света уходит в стопку инструкций, PCB-дорожка замыкает кольцо |
+| `ii-konvejer-sborka-v3.webp` | kak-ii-konvejer-sobiraet-sajt | база знаний → конвейер с 3 станциями-агентами (шестерни/оптика/манипулятор), панели wireframe→готовый UI → монитор |
+| `petlya-doobucheniya-v3.webp` | kak-ii-konvejer-sobiraet-sajt | стеклянная рука со стилусом правит экран, лента света уходит в стопку инструкций, PCB-дорожка замыкает кольцо |
+| `ii-kontur-brenda.webp` | ai-v-processy-brenda | мозг-чип → 4 куба-отдела (график/чат/корзина/шестерни) → общий дашборд |
+| `rebrending-dnk.webp` | rebranding-kak-perepisyvanie-dnk | манипулятор меняет тусклый сегмент ДНК на светящийся, дорожки к носителям бренда |
+| `dannye-vs-dogadki.webp` | dannye-a-ne-dogadki | весы: хрустальный шар догадок легче плиток с данными; вес уходит в решение на дашборде |
+| `vizual-otstrojka.webp` | vizual-kotoryj-otstraivaet | полка одинаковых карточек, одна светится под прожектором с лайм-меткой |
+| `rynok-sajtov-segmenty.webp` | skolko-stoit-sajt-2026 | 3 пьедестала: шаблон → студийный сайт → машинерия, кристаллы-цены растут |
+| `most-s-marketplejsa.webp` | kak-ujti-s-marketplejsov | склад с шестернями комиссий → мост-караван кубов → свой магазин с сейфом |
+| `firstil-prizma.webp` | skolko-stoit-firmennyj-stil | призма-ядро бренда преломляет луч в носители (лого/палитра/визитки/док/апп) |
+| `crm-moduli.webp` | svoya-crm-protiv-korobki | запечатанная коробка с монетоприёмником vs модульная сборка кубов манипулятором |
+| `dizajn-sistema-plitki.webp` | dizajn-sistema-dlya-malogo-biznesa | плата компонентов-плиток → десктоп/планшет/телефон из одних деталей |
+| `chat-bot-yadro.webp` | skolko-stoit-chat-bot | чат-пузырь с шестернями и чипом-мозгом, телефон с перепиской, монитор + стопки монет |
+| `sajt-v-razreze.webp` | chem-dorogoj-sajt-otlichaetsya | 3 сайта в разрезе: пустая оболочка / половина / плотная машинерия с антенной и лайм-лампой |
+| `agentnyj-prosmotr.webp` | sajt-dlya-ii-agentov | дрон-агент сканирует план сайта циан-лучом, блоки подсвечиваются лаймом, панель 3/3 |
