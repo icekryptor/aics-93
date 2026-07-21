@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getAllPosts, getPost, formatDate } from "@/lib/blog";
 import MarkdownLite from "@/components/blog/MarkdownLite";
 import BlogRail from "@/components/blog/BlogRail";
-import GenerativeCover from "@/components/blog/GenerativeCover";
+import BlogCover from "@/components/blog/BlogCover";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, SITE_NAME, AUTHOR } from "@/lib/site";
 
@@ -95,7 +95,7 @@ export default async function BlogPostPage({
       <JsonLd data={articleJsonLd} />
       {/* cover */}
       <div className="relative mt-6 flex min-h-[300px] items-end overflow-hidden rounded-[24px] p-7 sm:p-10 lg:min-h-[380px]">
-        <GenerativeCover seed={post.slug} accent={post.accent} className="absolute inset-0" density={1.15} />
+        <BlogCover seed={post.slug} accent={post.accent} cover={post.cover} className="absolute inset-0" density={1.15} priority />
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-[0.35]"

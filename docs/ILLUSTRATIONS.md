@@ -43,6 +43,15 @@ Aspect ratio 16:9.
 - Без читаемого текста в кадре; UI на экранах — абстрактные блоки/графики.
 - Анти-правило: плоский 2D-wireframe/blueprint-стиль (первая итерация) — примитивно, не использовать.
 
+## Обложки статей (covers)
+
+`public/assets/blog/covers/<slug>.webp` (sharp resize 2048 + q85) → `BlogPost.cover` → `BlogCover`
+(hero статьи, карточки индекса, BlogTeaser; фолбэк — GenerativeCover). Композиция обложки:
+один иконичный герой-объект в ПРАВОЙ трети, левые ⅔ — спокойная тёмная зона под заголовок
+(текст ложится поверх), запас сверху/снизу под object-cover кропы. Промпт = мастер-шаблон
+с блоком COMPOSITION «SINGLE iconic hero group in the RIGHT third … LEFT two-thirds calm dark».
+Обложек 13 — по одной на статью, имя файла = slug.
+
 ## Реестр сгенерированного
 
 | Файл | Статья | Сцена |

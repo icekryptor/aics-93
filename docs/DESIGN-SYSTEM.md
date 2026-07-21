@@ -100,7 +100,7 @@
 - **Секции**: тёмные full-bleed (`.runtime`-семейство) чередуются со светлыми (белый + сетка); глазок-эйбрау формата `[ тема · уточнение ]` (`.tech-label`, lowercase).
 - Контейнер: `max-w-[1180px]` (контент) / `max-w-[1640px]` (широкие сцены), паддинги секций 30–80px (lg).
 - **Лендинг продукта/направления** (шаблон ServiceDetail): hero (тёмный, 3D/арт) → боли/задачи → «как это работает» (шаги) → доказательства (кейсы/цифры) → сравнение → FAQ → CTA-секция с формой.
-- **Статья**: обложка (GenerativeCover + тег + заголовок) → MarkdownLite body → related. SEO: canonical, OG per-page, JSON-LD (образец в `blog/[slug]/page.tsx`).
+- **Статья**: обложка (`BlogCover`: иллюстрация из `post.cover` + скрим-градиент, фолбэк GenerativeCover; тег + заголовок поверх) → MarkdownLite body → related. SEO: canonical, OG per-page, JSON-LD (образец в `blog/[slug]/page.tsx`). Обложки-иллюстрации: герой справа, левые ⅔ тёмные под текст (`docs/ILLUSTRATIONS.md`).
 - **Иллюстрации статей** — генеративные (Higgsfield `nano_banana_pro`, 16:9, resolution 2k): изометрия ~30°, frosted-glass 3D-рендер — полупрозрачное матовое стекло, фиолет/лаванда база + циан-акценты (#5fd9f5) + точечный лайм (#c8ff4d), неоновые PCB-дорожки, фон #2c2545; канон промпта и шаблон — `docs/ILLUSTRATIONS.md`. Плоский 2D-wireframe — нельзя (пройдено, примитивно). Файлы `public/assets/blog/*.webp` (sharp resize 1600 + q88; PNG-оригиналы в репо не кладём). В body — отдельным абзацем `![alt|подпись](/assets/blog/x.webp)`; подпись lowercase «рис. NN · …»; квадратные скобки в alt/подписи запрещены — ломают парсер MarkdownLite.
 - Кейс-страница: расширение карточки showcase (те же данные + лонгрид-блоки).
 - Числа/статы — Unbounded; вордмарка в заголовках — Unbounded-span.
