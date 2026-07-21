@@ -90,8 +90,8 @@ export default function BlogIndex() {
               <div className="flex flex-col justify-between p-7 sm:p-9 lg:p-11">
                 <div className="flex items-center gap-3">
                   <span
-                    className="tech-label rounded-full px-3 py-1 text-[10px] text-white"
-                    style={{ background: lead.accent }}
+                    className="tech-label rounded-full px-3 py-1 text-[10px]"
+                    style={{ background: `color-mix(in srgb, ${lead.accent} 16%, white)`, color: `color-mix(in srgb, ${lead.accent} 45%, #302055)` }}
                   >
                     {lead.tag}
                   </span>
@@ -123,11 +123,11 @@ export default function BlogIndex() {
         {rest.map((p) => (
           <Link key={p.slug} href={`/blog/${p.slug}`} className="group block">
             <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-bg transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_45%,transparent)]">
-              <div className="relative h-36 overflow-hidden">
+              <div className="relative h-48 overflow-hidden">
                 <BlogCover seed={p.slug} accent={p.accent} cover={p.cover} className="absolute inset-0" sizes="(min-width: 1024px) 370px, 100vw" />
                 <span
                   className="tech-label absolute left-3 top-3 z-10 rounded-full bg-white/90 px-2.5 py-1 text-[9px]"
-                  style={{ color: p.accent }}
+                  style={{ color: `color-mix(in srgb, ${p.accent} 45%, #302055)` }}
                 >
                   {p.tag}
                 </span>

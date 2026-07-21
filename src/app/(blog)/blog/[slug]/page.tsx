@@ -106,7 +106,7 @@ export default async function BlogPostPage({
           }}
         />
         <div className="relative">
-          <span className="tech-label rounded-full bg-white/90 px-3 py-1 text-[10px]" style={{ color: post.accent }}>
+          <span className="tech-label rounded-full bg-white/90 px-3 py-1 text-[10px]" style={{ color: `color-mix(in srgb, ${post.accent} 45%, #302055)` }}>
             {post.tag}
           </span>
           <h1 className="mt-5 max-w-3xl text-[clamp(1.8rem,4.2vw,3.2rem)] font-normal leading-[1.04] tracking-tight text-white">
@@ -142,7 +142,7 @@ export default async function BlogPostPage({
             {others.map((p) => (
               <Link key={p.slug} href={`/blog/${p.slug}`} className="group block">
                 <div className="rounded-2xl border border-line bg-bg p-5 transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_45%,transparent)]">
-                  <span className="tech-label text-[10px]" style={{ color: p.accent }}>
+                  <span className="tech-label text-[10px]" style={{ color: `color-mix(in srgb, ${p.accent} 45%, #302055)` }}>
                     {p.tag}
                   </span>
                   <p className="mt-2 text-[1rem] font-bold leading-snug tracking-tight text-ink transition-colors group-hover:text-accent-ink">
