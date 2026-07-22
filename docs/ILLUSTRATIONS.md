@@ -52,6 +52,16 @@ Aspect ratio 16:9.
 с блоком COMPOSITION «SINGLE iconic hero group in the RIGHT third … LEFT two-thirds calm dark».
 Обложек 13 — по одной на статью, имя файла = slug.
 
+## Обложки направлений (solutions)
+
+`public/assets/solutions/<slug>.webp` → `Service.cover` (приоритет рендера: cover → card-видео →
+GenerativeCover) — карточки на `/solutions` и в SolutionsTeaser главной. Тот же канон-шаблон.
+
+| Файл | Направление | Сцена |
+|---|---|---|
+| `dlya-tovarki.webp` | /solutions/dlya-tovarki | коробки с конвейера → свой стеклянный магазин → сейф с монетами + график роста |
+| `dlya-uslug.webp` | /solutions/dlya-uslug | телефон с заявками → календарь записей (циан-слот) → CRM и договор с печатью |
+
 ## Реестр сгенерированного
 
 | Файл | Статья | Сцена |

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAllSolutions } from "@/lib/solutions";
 import GenerativeCover from "@/components/blog/GenerativeCover";
 import CardVideo from "@/components/services/CardVideo";
+import Image from "next/image";
 
 // Solutions block on the main page — направления деятельности («решения для
 // товарки», «решения для услуг»). Тот же паттерн карточек, что ServicesTeaser;
@@ -36,7 +37,9 @@ export default function SolutionsTeaser() {
               <Link key={s.slug} href={`/solutions/${s.slug}`} className="group block">
                 <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-bg transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_45%,transparent)]">
                   <div className="relative aspect-[16/9] overflow-hidden">
-                    {s.card ? (
+                    {s.cover ? (
+                      <Image src={s.cover} alt="" fill sizes="(min-width: 640px) 560px, 100vw" className="object-cover" />
+                    ) : s.card ? (
                       <CardVideo src={s.card.video} poster={s.card.poster} className="absolute inset-0" />
                     ) : (
                       <GenerativeCover

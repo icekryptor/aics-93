@@ -8,6 +8,7 @@ import type { Service } from "@/lib/services";
 export const solutions: Service[] = [
   {
     slug: "dlya-tovarki",
+    cover: "/assets/solutions/dlya-tovarki.webp",
     order: "01",
     nav: "Решения для товарки",
     heroVisual: "site",
@@ -220,6 +221,7 @@ export const solutions: Service[] = [
 
 solutions.push({
   slug: "dlya-uslug",
+  cover: "/assets/solutions/dlya-uslug.webp",
   order: "02",
   nav: "Решения для услуг",
   heroVisual: "site",

@@ -4,6 +4,7 @@ import { getAllSolutions } from "@/lib/solutions";
 import JsonLd from "@/components/seo/JsonLd";
 import AlgoArt from "@/components/services/AlgoArt";
 import GenerativeCover from "@/components/blog/GenerativeCover";
+import Image from "next/image";
 import CardVideo from "@/components/services/CardVideo";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
@@ -99,7 +100,9 @@ export default function SolutionsIndex() {
                   >
                     {/* обложка — видео лендинга (фолбэк: генеративный арт) */}
                     <div className="relative aspect-[16/9] overflow-hidden">
-                      {s.card ? (
+                      {s.cover ? (
+                        <Image src={s.cover} alt="" fill sizes="(min-width: 1024px) 560px, 100vw" className="object-cover" />
+                      ) : s.card ? (
                         <CardVideo src={s.card.video} poster={s.card.poster} className="absolute inset-0" />
                       ) : (
                         <GenerativeCover

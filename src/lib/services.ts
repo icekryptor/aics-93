@@ -35,6 +35,7 @@ export type Service = {
   gantt?: ServiceGantt; // пример сметы в виде Ганта (после прогресс-бара)
   training?: Training; // блок «обучение» — рендерится вместо closing
   card?: { video: string; poster: string }; // медиа карточки услуги (главная + /services) вместо генеративного арта
+  cover?: string; // статичная иллюстрация-обложка карточки (канон docs/ILLUSTRATIONS.md); приоритет: cover → card → генеративный арт
   ctaQuiz?: boolean; // финал страницы — инлайн-квиз вместо контактной формы
   quiz?: { title?: string; text?: string; steps?: QuizStep[] }; // кастомные заголовок/шаги инлайн-квиза
   seeAlso?: { items: { tag: string; title: string; href: string }[] }; // блок «смотрите также» + тг-баннер
