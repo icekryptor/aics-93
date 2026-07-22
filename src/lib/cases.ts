@@ -166,6 +166,184 @@ export const cases: CaseStudy[] = [
       },
     ],
   },
+  {
+    slug: "gold",
+    title: "GO.LD",
+    metaTitle: "Кейс GO.LD — сайт и фирменный стиль ювелирного лофта",
+    metaDescription:
+      "Ювелирный лофт GO.LD: обновление брендбука и логотипа, сайт с каталогом моделей, квизом подбора кольца и витриной мастер-классов.",
+    hero: {
+      eyebrow: "кейс 02 · go.ld",
+      h1: "GO.LD: сайт и фирменный стиль ювелирного лофта",
+      subhead:
+        "GO.LD делает обручальные и помолвочные кольца на заказ в Москве — от эскиза до вручения, плюс мастер-классы, где пары создают кольца своими руками. Разбор дополняется.",
+      roles: ["исследование", "брендинг", "сайт"],
+      facts: [
+        { value: "5.0", label: "рейтинг на Яндекс Картах" },
+        { value: "251", label: "оценка клиентов" },
+      ],
+    },
+    accent: "#c5ff44",
+    externalUrl: "https://rings-master.ru",
+    blocks: [
+      {
+        num: "01",
+        id: "context",
+        title: "Контекст и задача",
+        text: "Работа с брендом шла от глубинного интервью и маркетингового исследования до обновления брендбука, логотипа и сайта. Задача сайта — превращать трафик в заявки на изготовление и мастер-классы.",
+        media: [],
+      },
+      {
+        num: "02",
+        id: "site",
+        title: "Сайт",
+        text: "Многостраничный сайт с каталогом моделей, квизом подбора кольца в 7 шагов, витриной мастер-классов и интеграцией отзывов Яндекс Карт. Путь клиента собран вокруг двух действий: подобрать кольцо и записаться на консультацию.",
+        media: [
+          { src: "/assets/cases/gold/site-desktop.webp", kind: "desktop", alt: "Главная страница сайта GO.LD" },
+          { src: "/assets/cases/gold/site-mobile.webp", kind: "mobile", alt: "Мобильная версия сайта GO.LD" },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "upliti",
+    title: "Уплиты",
+    metaTitle: "Кейс «Уплиты» — сайт сети салонов кухонь",
+    metaDescription:
+      "Сайт производителя кухонь «Уплиты» (ранее inCucina): каталог, портфолио, расчёт проекта и запись на визит в салон.",
+    hero: {
+      eyebrow: "кейс 03 · уплиты",
+      h1: "Уплиты: сайт производителя кухонь",
+      subhead:
+        "«Уплиты» (ранее inCucina) — производитель кухонь с собственной сетью салонов. Разбор дополняется.",
+      roles: ["сайт"],
+      facts: [{ value: "2005", label: "компания на рынке с" }],
+    },
+    accent: "#5ab8ff",
+    externalUrl: "https://upliti.ru",
+    blocks: [
+      {
+        num: "01",
+        id: "site",
+        title: "Сайт",
+        text: "Корпоративный сайт с каталогом кухонь, портфолио проектов, акциями и двумя ключевыми действиями — рассчитать проект и записаться на визит в салон. Подключены рейтинг Яндекса и мессенджеры.",
+        media: [
+          { src: "/assets/cases/upliti/site-desktop.webp", kind: "desktop", alt: "Главная страница сайта «Уплиты»" },
+          { src: "/assets/cases/upliti/site-mobile.webp", kind: "mobile", alt: "Мобильная версия сайта «Уплиты»" },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "evo-center",
+    title: "EVOLVER",
+    metaTitle: "Кейс EVOLVER — сайт международного проекта Mind Evolution",
+    metaDescription:
+      "Сайт-манифест проекта Mind Evolution (EVOLVER): иммерсивное интро и айдентика для международной аудитории.",
+    hero: {
+      eyebrow: "кейс 04 · evolver",
+      h1: "EVOLVER: сайт проекта Mind Evolution",
+      subhead:
+        "Международный проект о развитии мышления под слоганом «In Mind We Trust». Сайт-манифест с тёмным иммерсивным интро. Разбор дополняется.",
+      roles: ["сайт", "айдентика"],
+      facts: [],
+    },
+    accent: "#5ab8ff",
+    externalUrl: "https://evo.center",
+    blocks: [
+      {
+        num: "01",
+        id: "site",
+        title: "Сайт",
+        text: "Тёмная иммерсивная подача: логотип-ДНК, интро-экран и повествование, раскрывающееся по скроллу. Сайт работает как манифест бренда для англоязычной аудитории.",
+        media: [
+          { src: "/assets/cases/evo/site-desktop.webp", kind: "desktop", alt: "Интро-экран сайта EVOLVER" },
+          { src: "/assets/cases/evo/site-mobile.webp", kind: "mobile", alt: "Мобильная версия сайта EVOLVER" },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "hst-transport",
+    title: "HST",
+    metaTitle: "Кейс HST — корпоративный сайт транспортной компании",
+    metaDescription:
+      "Honest Smart Transportation Ltd: англоязычный корпоративный сайт логистической компании — услуги, кейсы, отрасли, новости.",
+    hero: {
+      eyebrow: "кейс 05 · hst",
+      h1: "HST: корпоративный сайт транспортной компании",
+      subhead:
+        "Honest Smart Transportation Ltd — логистическая компания. Англоязычный корпоративный сайт: услуги от контроля качества до экспедирования, кейсы и отраслевые страницы. Разбор дополняется.",
+      roles: ["сайт"],
+      facts: [],
+    },
+    accent: "#ff7050",
+    externalUrl: "https://hst-transport.net",
+    blocks: [
+      {
+        num: "01",
+        id: "site",
+        title: "Сайт",
+        text: "Структура под B2B-запрос: четыре направления услуг (Quality Control, Software and Digital Tools, Equipment Supply and Maintenance, Logistics and Forwarding), кейсы, отрасли и новости. Тёмная строгая подача с одним ключевым действием — Contact us.",
+        media: [
+          { src: "/assets/cases/hst/site-desktop.webp", kind: "desktop", alt: "Главная страница сайта HST" },
+          { src: "/assets/cases/hst/site-mobile.webp", kind: "mobile", alt: "Мобильная версия сайта HST" },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "gantsel",
+    title: "Евгений Ганцель",
+    metaTitle: "Кейс «Евгений Ганцель» — лендинги личного бренда фитнес-тренера",
+    metaDescription:
+      "Линейка лендингов для фитнес-тренера и нутрициолога Евгения Ганцеля: программа «7 шагов к телу мечты», продажа видео-разбора и международная версия.",
+    hero: {
+      eyebrow: "кейс 06 · евгений ганцель",
+      h1: "Евгений Ганцель: линейка лендингов личного бренда",
+      subhead:
+        "Евгений Ганцель — фитнес-тренер, нутрициолог и нейропсихолог, «скульптор фигуры». Под личный бренд собрана линейка лендингов: флагманская программа, продуктовый лендинг видео-разбора и международная версия. Разбор дополняется.",
+      roles: ["лендинги", "личный бренд"],
+      facts: [
+        { value: "3", label: "лендинга в связке" },
+        { value: "2", label: "языковые версии" },
+      ],
+    },
+    accent: "#9747ff",
+    externalUrl: "https://eugene-hantsel.ru",
+    blocks: [
+      {
+        num: "01",
+        id: "steps-ru",
+        title: "«7 шагов к телу мечты»",
+        text: "Флагманский лендинг программы: метафора скульптора, портретная подача эксперта и путь от болей аудитории к вариантам программ.",
+        media: [
+          { src: "/assets/cases/gantsel/steps-ru-desktop.webp", kind: "desktop", alt: "Лендинг «7 шагов к телу мечты»" },
+          { src: "/assets/cases/gantsel/steps-ru-mobile.webp", kind: "mobile", alt: "Мобильная версия лендинга «7 шагов к телу мечты»" },
+        ],
+      },
+      {
+        num: "02",
+        id: "video",
+        title: "Лендинг видео-разбора",
+        text: "Продуктовый лендинг для продажи экспертного видео-разбора: разбор причин срывов и откатов, оплата в двух валютах — для России и Казахстана.",
+        media: [
+          { src: "/assets/cases/gantsel/video-desktop.webp", kind: "desktop", alt: "Лендинг видео-разбора" },
+          { src: "/assets/cases/gantsel/video-mobile.webp", kind: "mobile", alt: "Мобильная версия лендинга видео-разбора" },
+        ],
+      },
+      {
+        num: "03",
+        id: "body7",
+        title: "Международная версия",
+        text: "Англоязычный лендинг 7 Steps to Dream Body под международную аудиторию — та же программа, адаптированная подача и позиционирование сертифицированного ISSA-тренера.",
+        media: [
+          { src: "/assets/cases/gantsel/body7-desktop.webp", kind: "desktop", alt: "Лендинг 7 Steps to Dream Body" },
+          { src: "/assets/cases/gantsel/body7-mobile.webp", kind: "mobile", alt: "Мобильная версия 7 Steps to Dream Body" },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getCase(slug: string): CaseStudy | undefined {
