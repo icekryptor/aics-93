@@ -2,18 +2,21 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import GoalLink from "@/components/system/GoalLink";
+import RouteMap from "@/components/kp/RouteMap";
+import GanttToggle, { type GanttVariant } from "@/components/kp/GanttToggle";
 import { legal } from "@/lib/content";
 
 /* КП для MARTOX — коммерческое предложение в виде лендинга (noindex, вне
-   sitemap). Структура: понимание задачи → структура будущего лендинга с
-   подсвеченными рекомендациями → варианты реализации → Гант ×2 → условия →
-   работы → следующий шаг. Фото — Higgsfield (nano banana), скрины работ —
-   реальные. Кликабельное содержание — якоря. */
+   sitemap). Визуальная зона — финтех/логистика (Mercury, Stripe Atlas,
+   Flexport): схемы вместо стока, документальная фотография, без
+   «американской мечты». Сквозной мотив — RouteMap (путь товара).
+   Цены финальные, согласованы на созвоне: лендинг 1 200 $ · сайт 2 100 $
+   (френдли-прайс −25%). */
 
 export const metadata: Metadata = {
-  title: "КП для MARTOX — лендинг выхода брендов на рынок США",
+  title: "КП для MARTOX — сайт выхода брендов на рынок США",
   description:
-    "Коммерческое предложение AICS-93: продающий лендинг для MARTOX — структура, рекомендации, два варианта реализации с планом и сроками.",
+    "Коммерческое предложение AICS-93: продающий сайт для MARTOX — структура, рекомендации, два варианта реализации с планом и сроками.",
   robots: { index: false, follow: false },
 };
 
@@ -24,20 +27,20 @@ const CHIP: React.CSSProperties = {
 
 const TOC = [
   { id: "task", num: "01", label: "понимание задачи" },
-  { id: "structure", num: "02", label: "структура лендинга + рекомендации" },
-  { id: "options", num: "03", label: "варианты реализации" },
+  { id: "structure", num: "02", label: "структура сайта + рекомендации" },
+  { id: "options", num: "03", label: "варианты и цены" },
   { id: "plan", num: "04", label: "план и сроки · гант" },
   { id: "terms", num: "05", label: "состав и условия" },
   { id: "works", num: "06", label: "работы" },
   { id: "next", num: "07", label: "следующий шаг" },
 ];
 
-/* блоки будущего лендинга: из ТЗ (kind: tz) и наши рекомендации (kind: rec) */
-const STRUCTURE: { kind: "tz" | "rec"; title: string; text: string }[] = [
+/* блоки будущего сайта: из ТЗ (kind: tz) и наши рекомендации (kind: rec) */
+const STRUCTURE: { kind: "tz" | "rec"; title: string; text: string; badge?: string }[] = [
   {
     kind: "tz",
     title: "Хиро: оффер + два CTA",
-    text: "«Выведем ваш бренд на рынок США с готовой инфраструктурой и системой под ключ» + кнопки «Получить стратегию выхода» и «Оценить потенциал бренда». Фон — атмосферный визуал уровня кино (примеры сгенерированы ниже по этой странице).",
+    text: "«Выведем ваш бренд на рынок США с готовой инфраструктурой и системой под ключ» + кнопки «Получить стратегию выхода» и «Оценить потенциал бренда». Под оффером — схема пути товара (сквозной мотив, см. ниже): она объясняет продукт быстрее любого текста.",
   },
   {
     kind: "rec",
@@ -47,12 +50,12 @@ const STRUCTURE: { kind: "tz" | "rec"; title: string; text: string }[] = [
   {
     kind: "tz",
     title: "«То, на поиск чего уходят месяцы, у нас уже есть» — 7 шагов инфраструктуры",
-    text: "Компания и счёт, налоги, аналитика и выбор товара, логистика и таможня, склад, торговая марка, регистрация на платформах. Подача — нумерованный процесс в стиле конвейера: виден путь от нуля до продаж.",
+    text: "Компания и счёт, налоги, аналитика и выбор товара, логистика и таможня, склад, торговая марка, регистрация на платформах. Каждый шаг — узел на той же карте пути товара: видно, что именно закрывает MARTOX.",
   },
   {
     kind: "tz",
     title: "«Вы уже продаёте на WB и Ozon? Это ваш следующий шаг» — 8 причин рынка США",
-    text: "Размер рынка, цена товара, независимость, защита бизнеса, валюта, конкуренция, масштаб, статус бренда. Финал блока: «Wildberries и Ozon дали вам опыт. США дадут масштаб» — выносим крупной строкой.",
+    text: "Размер рынка, цена товара, независимость, защита бизнеса, валюта, конкуренция, масштаб, статус бренда. Подача — плотная сетка фактов с крупными цифрами (в духе финтех-отчёта), финал: «Wildberries и Ozon дали вам опыт. США дадут масштаб».",
   },
   {
     kind: "rec",
@@ -62,12 +65,12 @@ const STRUCTURE: { kind: "tz" | "rec"; title: string; text: string }[] = [
   {
     kind: "tz",
     title: "13 способов продаж на рынке США",
-    text: "Shopify, Amazon, Etsy, Walmart, TikTok Shop, ритейл, опт, Instagram, инфлюенсеры, контент, аффилиаты, выставки, PR. Рекомендуем интерактивный формат: фильтр «какой канал подходит вашему товару» вместо простыни из 13 абзацев.",
+    text: "Shopify, Amazon, Etsy, Walmart, TikTok Shop, ритейл, опт, Instagram, инфлюенсеры, контент, аффилиаты, выставки, PR. В варианте «лендинг» — упаковываем в лид-магнит: PDF-гайд в обмен на контакт. В варианте «сайт» — раздел статей: каждый канал — SEO-страница, которая приводит органический трафик.",
   },
   {
     kind: "rec",
     title: "История одного бренда (кейс)",
-    text: "Один разбор пути: товар → инфраструктура → первые продажи, с цифрами и таймлайном. Абстрактные обещания продают хуже, чем один конкретный путь. Если публичных цифр пока нет — формат «как это устроено» на обезличенном примере.",
+    text: "Один разбор пути по той же карте: товар → инфраструктура → первые продажи, с цифрами и таймлайном. Абстрактные обещания продают хуже, чем один конкретный путь. Если публичных цифр пока нет — формат «как это устроено» на обезличенном примере.",
   },
   {
     kind: "tz",
@@ -77,7 +80,7 @@ const STRUCTURE: { kind: "tz" | "rec"; title: string; text: string }[] = [
   {
     kind: "tz",
     title: "Пакеты: Ecosystem · Support · Growth",
-    text: "Три формата работы с прозрачным составом. Рекомендуем таблицу сравнения с подсветкой среднего пакета — классика, которая работает.",
+    text: "Таблица сравнения — как полноценный визуальный элемент (референс — прайсинги Mercury/Ramp): состав по строкам, подсветка среднего пакета, у каждого тарифа — свой отрезок карты пути товара: видно, докуда «довозит» каждый пакет.",
   },
   {
     kind: "rec",
@@ -86,8 +89,9 @@ const STRUCTURE: { kind: "tz" | "rec"; title: string; text: string }[] = [
   },
   {
     kind: "rec",
+    badge: "гипотеза — проверим после запуска",
     title: "Лид-магнит: чеклист «Первые 90 дней в США»",
-    text: "Чеклист уже есть в составе пакета Ecosystem — его фрагмент отлично работает как магнит: контакт в обмен на PDF. Тёплый вход для тех, кто пока не готов к консультации.",
+    text: "Чеклист уже есть в составе пакета Ecosystem — его фрагмент может работать как второй магнит: контакт в обмен на PDF, тёплый вход для недозревших. Оставляем как гипотезу: запускаем после старта, если основная воронка потребует расширения.",
   },
   {
     kind: "tz",
@@ -96,72 +100,37 @@ const STRUCTURE: { kind: "tz" | "rec"; title: string; text: string }[] = [
   },
 ];
 
-type Phase = { name: string; days: number; start: number; color: string };
-const GANTT_1: { total: number; phases: Phase[] } = {
-  total: 14,
-  phases: [
-    { name: "Бриф · аудит смыслов и ТЗ", days: 1, start: 0, color: "#ff3d92" },
-    { name: "Исследование ЦА и конкурентов · стратегия", days: 2, start: 1, color: "#d94fe6" },
-    { name: "Харнесс и обучение субагентов", days: 1, start: 3, color: "#b15cff" },
-    { name: "Дизайн-концепция (вручную)", days: 2, start: 4, color: "#9747ff" },
-    { name: "Дизайн-система · прототип", days: 2, start: 6, color: "#8b67ff" },
-    { name: "Сборка страницы · квиз · интеграции", days: 4, start: 8, color: "#7a7bff" },
-    { name: "E2E-тесты · деплой", days: 2, start: 12, color: "#5fd9f5" },
-  ],
-};
-const GANTT_2: { total: number; phases: Phase[] } = {
-  total: 24,
-  phases: [
-    { name: "Бриф · исследование · стратегия", days: 4, start: 0, color: "#ff3d92" },
-    { name: "Харнесс · дизайн-концепция", days: 4, start: 4, color: "#d94fe6" },
-    { name: "Дизайн-система · прототипы страниц", days: 4, start: 8, color: "#9747ff" },
-    { name: "Сборка главной · квиз · интеграции", days: 4, start: 12, color: "#8b67ff" },
-    { name: "Раздел «13 каналов» — генерация страниц", days: 4, start: 16, color: "#7a7bff" },
-    { name: "SEO-контур · пакеты · финальные тесты", days: 4, start: 20, color: "#5fd9f5" },
-  ],
-};
-
-function Gantt({ label, note, data }: { label: string; note: string; data: { total: number; phases: Phase[] } }) {
-  return (
-    <div
-      className="overflow-hidden rounded-2xl px-6 py-7 sm:px-8"
-      style={{ border: "1px solid var(--color-runtime-line)", background: "rgba(23,16,41,0.4)" }}
-    >
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="tech-label text-[0.7rem]" style={{ color: "var(--color-signal-2)" }}>
-          {label}
-        </p>
-        <p className="text-[0.85rem] text-runtime-ink-soft">{note}</p>
-      </div>
-      <div className="mt-6 space-y-5">
-        {data.phases.map((p) => (
-          <div key={p.name}>
-            <div className="mb-1.5 flex items-center justify-between gap-3 text-[0.88rem]">
-              <span className="font-medium text-runtime-ink">{p.name}</span>
-              <span className="shrink-0 text-runtime-ink-soft">
-                {p.days} {p.days === 1 ? "день" : p.days < 5 ? "дня" : "дней"}
-              </span>
-            </div>
-            <div className="h-2 w-full rounded-full bg-[rgba(151,71,255,0.1)]">
-              <div
-                className="h-full rounded-full"
-                style={{
-                  marginLeft: `${(p.start / data.total) * 100}%`,
-                  width: `${(p.days / data.total) * 100}%`,
-                  background: p.color,
-                  boxShadow: `0 0 12px ${p.color}55`,
-                }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-      <p className="hud mt-5 text-[9px] text-runtime-ink-soft/60">
-        // итого ≈ {data.total} дней · этапы идут каскадом
-      </p>
-    </div>
-  );
-}
+const GANTT_VARIANTS: GanttVariant[] = [
+  {
+    key: "landing",
+    label: "лендинг",
+    note: "запуск за 7–14 дней",
+    total: 14,
+    phases: [
+      { name: "Бриф · аудит смыслов и ТЗ", days: 1, start: 0, color: "#ff3d92" },
+      { name: "Исследование ЦА и конкурентов · стратегия", days: 2, start: 1, color: "#d94fe6" },
+      { name: "Харнесс и обучение субагентов", days: 1, start: 3, color: "#b15cff" },
+      { name: "Дизайн-концепция (вручную)", days: 2, start: 4, color: "#9747ff" },
+      { name: "Дизайн-система · прототип", days: 2, start: 6, color: "#8b67ff" },
+      { name: "Сборка страницы · квиз · интеграции", days: 4, start: 8, color: "#7a7bff" },
+      { name: "E2E-тесты · деплой", days: 2, start: 12, color: "#5fd9f5" },
+    ],
+  },
+  {
+    key: "site",
+    label: "сайт",
+    note: "запуск ≈ 24 дня",
+    total: 24,
+    phases: [
+      { name: "Бриф · исследование · стратегия", days: 4, start: 0, color: "#ff3d92" },
+      { name: "Харнесс · дизайн-концепция", days: 4, start: 4, color: "#d94fe6" },
+      { name: "Дизайн-система · прототипы страниц", days: 4, start: 8, color: "#9747ff" },
+      { name: "Сборка главной · квиз · интеграции", days: 4, start: 12, color: "#8b67ff" },
+      { name: "Раздел «13 каналов» — генерация страниц", days: 4, start: 16, color: "#7a7bff" },
+      { name: "SEO-контур · пакеты · финальные тесты", days: 4, start: 20, color: "#5fd9f5" },
+    ],
+  },
+];
 
 const WORKS: { name: string; url: string; img: string }[] = [
   { name: "ximi4ka.ru", url: "https://ximi4ka.ru", img: "/assets/kp/works/ximi4ka.jpg" },
@@ -188,32 +157,16 @@ const TERMS = [
   "оплата 50 / 50",
   "в белую: договор и расчётный счёт",
   "материальная ответственность за сроки",
-  "показатели эффективности — в договоре",
+  "скидка 10% при 100% предоплате",
 ];
 
 export default function KpMartoxPage() {
   return (
     <div className="text-runtime-ink">
-      {/* ---------- hero ---------- */}
+      {/* ---------- hero: без фото-клише, мотив — схема пути товара ---------- */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0" aria-hidden>
-          <Image
-            src="/assets/kp/port.jpg"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover opacity-45"
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(14,10,27,0.55) 0%, rgba(14,10,27,0.75) 60%, var(--color-runtime) 100%)",
-            }}
-          />
-        </div>
-        <div className="relative mx-auto w-full max-w-6xl px-5 pb-16 pt-20 sm:px-8 sm:pt-28">
+        <div className="runtime-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+        <div className="relative mx-auto w-full max-w-6xl px-5 pb-14 pt-20 sm:px-8 sm:pt-28">
           <span
             className="tech-label inline-flex items-center gap-2 text-[0.72rem]"
             style={{ color: "var(--color-signal-2)", letterSpacing: "0.22em" }}
@@ -222,16 +175,16 @@ export default function KpMartoxPage() {
             коммерческое предложение · aics-93 → martox
           </span>
           <h1 className="mt-6 max-w-3xl text-[clamp(2rem,4.6vw,3.3rem)] font-semibold leading-[1.05] tracking-tight">
-            Лендинг для <span className="signal-text">MARTOX</span>: страница, которая продаёт
-            выход брендов на рынок США
+            Сайт для <span className="signal-text">MARTOX</span>, который продаёт выход брендов
+            на рынок США
           </h1>
           <p className="mt-5 max-w-2xl text-[1.05rem] leading-relaxed text-runtime-ink-soft">
-            По вашему ТЗ и прототипу — продающая страница в фирменном стиле MARTOX: структура
-            под холодный и тёплый трафик, квиз-механика, доставка лидов в мессенджер. Ниже —
-            разбор структуры, наши рекомендации, два варианта реализации и план по дням.
+            По вашему ТЗ и прототипу — продающий сайт в фирменном стиле MARTOX: структура под
+            холодный и тёплый трафик, квиз-механика, доставка лидов в мессенджер. Ниже — разбор
+            структуры, наши рекомендации, два варианта реализации и план по дням.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-2">
-            {["сроки: от 7 дней", "бюджет: от 1 500 $", "лендинг или многостраничник", "24 июля 2026"].map((c) => (
+            {["лендинг: 1 200 $", "сайт: 2 100 $", "френдли-прайс −25%", "сроки: от 7 дней", "24 июля 2026"].map((c) => (
               <span
                 key={c}
                 className="tech-label rounded-full border border-runtime-line bg-black/30 px-3.5 py-1.5 text-[11px] text-runtime-ink-soft"
@@ -239,6 +192,11 @@ export default function KpMartoxPage() {
                 {c}
               </span>
             ))}
+          </div>
+
+          {/* сквозной мотив — в первом экране, как и на будущем сайте */}
+          <div className="mt-10">
+            <RouteMap caption="Этот граф — сквозной мотив будущего сайта: он повторяется в хиро, в блоке процесса и в пакетах, показывая, что именно закрывает MARTOX на каждом участке." />
           </div>
 
           {/* содержание — кликабельное */}
@@ -271,10 +229,10 @@ export default function KpMartoxPage() {
             [ 01 · понимание задачи ]
           </p>
           <h2 className="mt-4 max-w-2xl text-[clamp(1.5rem,3vw,2.2rem)] font-semibold leading-tight tracking-tight">
-            MARTOX выводит бренды из России и СНГ в США. Странице нужно продавать это — а не
+            MARTOX выводит бренды из России и СНГ в США. Сайту нужно продавать это — а не
             рассказывать об этом
           </h2>
-          <div className="mt-8 grid items-center gap-8 lg:grid-cols-[1.15fr_1fr]">
+          <div className="mt-8 grid items-start gap-8 lg:grid-cols-[1.15fr_1fr]">
             <div className="space-y-4 text-[15px] leading-relaxed text-runtime-ink-soft">
               <p>
                 Продукт — готовая инфраструктура для работы в США: компания и счёт, налоги,
@@ -283,13 +241,13 @@ export default function KpMartoxPage() {
                 кроме инфраструктуры.
               </p>
               <p>
-                Цель страницы — заявка на консультацию и стратегию выхода. Контент готов
-                (ТЗ закрывает все блоки), прототип отрисован в Figma. Наша задача — довести
-                это до продающей страницы: усилить структуру, добавить механики захвата лида
-                и собрать быстро и без потери качества.
+                Цель сайта — заявка на консультацию и стратегию выхода. Контент готов (ТЗ
+                закрывает все блоки), прототип отрисован в Figma. Наша задача — довести это до
+                продающего сайта: усилить структуру, добавить механики захвата лида и собрать
+                быстро и без потери качества.
               </p>
               <div className="flex flex-wrap gap-2 pt-1">
-                {["контент: готов (ТЗ)", "прототип: Figma", "cta: заявка на консультацию", "тон: экспертный, без воды"].map((c) => (
+                {["контент: готов (ТЗ)", "прототип: figma", "cta: заявка на консультацию", "тон: экспертный, без воды"].map((c) => (
                   <span
                     key={c}
                     className="tech-label rounded-full border border-runtime-line px-3.5 py-1.5 text-[11px] text-runtime-ink-soft"
@@ -299,26 +257,38 @@ export default function KpMartoxPage() {
                 ))}
               </div>
             </div>
-            <figure className="relative overflow-hidden rounded-[18px] border border-runtime-line">
-              <Image
-                src="/assets/kp/skyline.jpg"
-                alt="Ночной Нью-Йорк — рынок, на который MARTOX выводит бренды"
-                width={1376}
-                height={768}
-                sizes="(min-width: 1024px) 480px, 100vw"
-                className="h-auto w-full"
-              />
-              <figcaption className="tech-label absolute bottom-3 left-4 text-[10px] text-white/60">
-                визуал: примеры атмосферы для будущего лендинга
-              </figcaption>
-            </figure>
+            {/* визуальное направление — вместо фото-клише */}
+            <div
+              className="p-5 sm:p-6"
+              style={{
+                ...CHIP,
+                border: "1px solid var(--color-runtime-line)",
+                background: "rgba(23,16,41,0.4)",
+              }}
+            >
+              <p className="tech-label text-[0.68rem]" style={{ color: "var(--color-signal-2)" }}>
+                [ визуальное направление ]
+              </p>
+              <p className="mt-3 text-[13.5px] leading-relaxed text-runtime-ink-soft">
+                Референсная зона — финтех и логистика: <span className="text-runtime-ink">Mercury,
+                Stripe Atlas, Flexport, Ramp</span>. Плотная сетка, много воздуха, крупная
+                гротескная типографика, схемы и таблицы как полноценный визуал, документальная
+                фотография склада и контейнеров вместо стока.
+              </p>
+              <p className="mt-3 text-[13.5px] leading-relaxed text-runtime-ink-soft">
+                Сознательно <span className="text-runtime-ink">не идём в «американскую мечту»</span> —
+                флаги, статуя Свободы, орлы, небоскрёбы, доллары: этот код аудитория считывает
+                как инфобизнес. И не идём в стартап-градиенты — они говорят «SaaS», а MARTOX
+                продаёт операционную ответственность.
+              </p>
+            </div>
           </div>
         </section>
 
         {/* ---------- 02 структура ---------- */}
         <section id="structure" className="scroll-mt-28 pt-16">
           <p className="tech-label text-[11px]" style={{ color: "var(--color-signal-2)" }}>
-            [ 02 · структура будущего лендинга ]
+            [ 02 · структура будущего сайта ]
           </p>
           <h2 className="mt-4 max-w-2xl text-[clamp(1.5rem,3vw,2.2rem)] font-semibold leading-tight tracking-tight">
             Все блоки вашего ТЗ — плюс то, что мы{" "}
@@ -326,8 +296,8 @@ export default function KpMartoxPage() {
           </h2>
           <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-runtime-ink-soft">
             Порядок — по логике принятия решения посетителем. Подсвеченные карточки — наши
-            рекомендации сверх ТЗ: каждая с обоснованием, все обсуждаемы и не влияют на базовую
-            смету критично.
+            рекомендации сверх ТЗ: каждая с обоснованием, все обсуждаемы и не влияют на смету
+            критично.
           </p>
 
           <div className="mt-9 space-y-3">
@@ -360,7 +330,7 @@ export default function KpMartoxPage() {
                         className="tech-label rounded-full px-3 py-1 text-[10px] font-semibold"
                         style={{ background: "var(--color-signal-cool)", color: "#0b1e33" }}
                       >
-                        рекомендуем добавить
+                        {b.badge ?? "рекомендуем добавить"}
                       </span>
                     )}
                   </div>
@@ -372,29 +342,47 @@ export default function KpMartoxPage() {
             })}
           </div>
 
-          <figure className="relative mt-8 overflow-hidden rounded-[18px] border border-runtime-line">
-            <Image
-              src="/assets/kp/warehouse.jpg"
-              alt="Фулфилмент-инфраструктура — атмосфера блока «7 шагов»"
-              width={1376}
-              height={768}
-              sizes="(min-width: 1024px) 1080px, 100vw"
-              className="h-auto w-full"
-            />
-            <figcaption className="tech-label absolute bottom-3 left-4 text-[10px] text-white/60">
-              визуал для блока «инфраструктура» — сгенерирован под этот проект, стиль обсуждаем
-            </figcaption>
-          </figure>
+          {/* референс фотостиля: документальная логистика */}
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <figure className="relative overflow-hidden rounded-[18px] border border-runtime-line">
+              <Image
+                src="/assets/kp/dock.jpg"
+                alt="Референс фотостиля: документальная съёмка склада — паллеты, коробки, естественный свет"
+                width={1376}
+                height={768}
+                sizes="(min-width: 640px) 540px, 100vw"
+                className="h-auto w-full"
+              />
+            </figure>
+            <figure className="relative overflow-hidden rounded-[18px] border border-runtime-line">
+              <Image
+                src="/assets/kp/containers.jpg"
+                alt="Референс фотостиля: контейнерный терминал, приглушённые тона, репортажная подача"
+                width={1376}
+                height={768}
+                sizes="(min-width: 640px) 540px, 100vw"
+                className="h-auto w-full"
+              />
+            </figure>
+          </div>
+          <p className="tech-label mt-2.5 text-[11px] text-runtime-ink-soft">
+            референс фотостиля будущего сайта: документальная логистика — склад, паллеты,
+            контейнеры; без стоковых рукопожатий и неона
+          </p>
         </section>
 
-        {/* ---------- 03 варианты ---------- */}
+        {/* ---------- 03 варианты и цены ---------- */}
         <section id="options" className="scroll-mt-28 pt-16">
           <p className="tech-label text-[11px]" style={{ color: "var(--color-signal-2)" }}>
-            [ 03 · варианты реализации ]
+            [ 03 · варианты и цены ]
           </p>
           <h2 className="mt-4 max-w-2xl text-[clamp(1.5rem,3vw,2.2rem)] font-semibold leading-tight tracking-tight">
             Два пути: быстрый запуск или платформа под трафик
           </h2>
+          <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-runtime-ink-soft">
+            Цены финальные — согласованы на созвоне. Это смета по факту, а не «от»: состав
+            зафиксирован, скидка 25% уже применена как френдли-прайс.
+          </p>
           <div className="mt-9 grid gap-5 lg:grid-cols-2">
             {/* вариант 1 */}
             <article
@@ -405,19 +393,27 @@ export default function KpMartoxPage() {
                 background: "radial-gradient(120% 140% at 88% 0%, rgba(151,71,255,0.16), transparent 60%), rgba(23,16,41,0.5)",
               }}
             >
-              <p className="tech-label text-[10px] text-runtime-ink-soft">вариант 01 · рекомендуем для старта</p>
+              <p className="tech-label text-[10px] text-runtime-ink-soft">вариант 01 · быстрый запуск</p>
               <h3 className="mt-2 text-[1.3rem] font-semibold leading-snug">Лендинг</h3>
-              <div className="mt-3 flex items-baseline gap-3">
-                <span className="font-display text-[1.6rem] leading-none tracking-tight">от 1 500 $</span>
-                <span className="tech-label text-[11px]" style={{ color: "var(--color-signal-cool)" }}>
-                  7–14 дней
+              <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="font-display text-[1.7rem] leading-none tracking-tight">1 200 $</span>
+                <span className="text-[0.95rem] text-runtime-ink-soft line-through">1 600 $</span>
+                <span
+                  className="tech-label rounded-full px-3 py-1 text-[10px] font-semibold"
+                  style={{ background: "var(--color-signal-cool)", color: "#0b1e33" }}
+                >
+                  френдли-прайс −25%
                 </span>
               </div>
+              <p className="tech-label mt-2 text-[11px]" style={{ color: "var(--color-signal-cool)" }}>
+                7–14 дней
+              </p>
               <ul className="mt-5 space-y-2 text-[13.5px] leading-relaxed text-runtime-ink-soft">
                 {[
                   "одна страница: все блоки ТЗ + рекомендации выше",
                   "квиз «оценить потенциал бренда» + формы → лиды в Telegram",
-                  "фирменный стиль MARTOX, атмосферные визуалы",
+                  "«13 способов» как лид-магнит: PDF в обмен на контакт",
+                  "фирменный стиль MARTOX, схема пути товара как мотив",
                   "аналитика с целями, базовое SEO и разметка",
                   "быстрый запуск: можно лить рекламу через 2 недели",
                 ].map((li) => (
@@ -437,18 +433,25 @@ export default function KpMartoxPage() {
                 background: "rgba(23,16,41,0.4)",
               }}
             >
-              <p className="tech-label text-[10px] text-runtime-ink-soft">вариант 02 · для органического роста</p>
-              <h3 className="mt-2 text-[1.3rem] font-semibold leading-snug">Многостраничник</h3>
-              <div className="mt-3 flex items-baseline gap-3">
-                <span className="font-display text-[1.6rem] leading-none tracking-tight">смета по составу</span>
-                <span className="tech-label text-[11px]" style={{ color: "var(--color-signal-cool)" }}>
-                  ≈ 24 дня
+              <p className="tech-label text-[10px] text-runtime-ink-soft">вариант 02 · органический рост</p>
+              <h3 className="mt-2 text-[1.3rem] font-semibold leading-snug">Сайт (многостраничник)</h3>
+              <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="font-display text-[1.7rem] leading-none tracking-tight">2 100 $</span>
+                <span className="text-[0.95rem] text-runtime-ink-soft line-through">2 800 $</span>
+                <span
+                  className="tech-label rounded-full px-3 py-1 text-[10px] font-semibold"
+                  style={{ background: "var(--color-signal-cool)", color: "#0b1e33" }}
+                >
+                  френдли-прайс −25%
                 </span>
               </div>
+              <p className="tech-label mt-2 text-[11px]" style={{ color: "var(--color-signal-cool)" }}>
+                ≈ 24 дня
+              </p>
               <ul className="mt-5 space-y-2 text-[13.5px] leading-relaxed text-runtime-ink-soft">
                 {[
                   "всё из варианта 1 — как главная страница",
-                  "раздел «13 каналов продаж»: отдельная SEO-страница под каждый канал",
+                  "«13 каналов продаж» — раздел статей: SEO-страница под каждый канал",
                   "страницы пакетов Ecosystem / Support / Growth",
                   "блог под запросы «выход на рынок США», «продавать на Amazon» — органический трафик без аукциона",
                   "генерация страниц по дизайн-системе — новые добавляются за часы",
@@ -462,9 +465,8 @@ export default function KpMartoxPage() {
             </article>
           </div>
           <p className="mt-5 max-w-3xl text-[13.5px] leading-relaxed text-runtime-ink-soft">
-            Честная рекомендация: стартовать с варианта 1 — проверить оффер и рекламные связки,
-            затем апгрейд до варианта 2 на той же дизайн-системе, без переделки с нуля. Смета
-            варианта 2 фиксируется после выбора состава страниц.
+            Оба варианта строятся на одной дизайн-системе: если стартуете с лендинга, апгрейд до
+            сайта делается без переделки с нуля — доплачивается только разница.
           </p>
         </section>
 
@@ -476,9 +478,8 @@ export default function KpMartoxPage() {
           <h2 className="mt-4 max-w-2xl text-[clamp(1.5rem,3vw,2.2rem)] font-semibold leading-tight tracking-tight">
             По дням — от брифа до продакшена
           </h2>
-          <div className="mt-9 grid gap-5 xl:grid-cols-2">
-            <Gantt label="вариант 01 · лендинг" note="запуск за 7–14 дней" data={GANTT_1} />
-            <Gantt label="вариант 02 · многостраничник" note="запуск ≈ 24 дня" data={GANTT_2} />
+          <div className="mt-9">
+            <GanttToggle variants={GANTT_VARIANTS} />
           </div>
           <p className="mt-5 text-[13.5px] leading-relaxed text-runtime-ink-soft">
             Сроки — обязательство, а не оценка: ответственность за них прописывается в договоре.
@@ -493,7 +494,7 @@ export default function KpMartoxPage() {
             [ 05 · состав и условия ]
           </p>
           <h2 className="mt-4 max-w-2xl text-[clamp(1.5rem,3vw,2.2rem)] font-semibold leading-tight tracking-tight">
-            Что входит в любую из смет
+            Что входит в обе сметы
           </h2>
           <div className="mt-8 grid gap-8 lg:grid-cols-[1.2fr_1fr]">
             <ul className="space-y-2.5 text-[15px] leading-relaxed text-runtime-ink-soft">
@@ -514,8 +515,8 @@ export default function KpMartoxPage() {
                 ))}
               </div>
               <p className="mt-5 text-[13.5px] leading-relaxed text-runtime-ink-soft">
-                Итоговая смета = масштаб × проектные часы. Считается по составу работ и
-                фиксируется в договоре до старта — без «финализаций» отдельной строкой потом.
+                Цены зафиксированы по итогам созвона и уже включают френдли-скидку 25%. Никаких
+                «финализаций» отдельной строкой потом: состав закрыт, дедлайн в договоре.
               </p>
             </div>
           </div>
@@ -577,12 +578,13 @@ export default function KpMartoxPage() {
               [ 07 · следующий шаг ]
             </p>
             <h2 className="mt-3 max-w-2xl text-[clamp(1.4rem,2.8vw,2rem)] font-semibold leading-tight tracking-tight">
-              Выбираем вариант — фиксирую смету и дату запуска
+              Лендинг или сайт — какой вариант ваш?
             </h2>
             <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-runtime-ink-soft">
-              Напишите в Telegram «MARTOX» — вернусь со сметой по выбранному варианту и планом
-              в течение 24 часов. Вопросы по структуре и рекомендациям — обсудим голосом или
-              в переписке, как удобнее.
+              Созвон уже прошёл, цены зафиксированы. Остался один шаг: выберите формат и
+              отправьте в Telegram одно слово — <span className="text-runtime-ink">«лендинг»</span>{" "}
+              или <span className="text-runtime-ink">«сайт»</span>. Дальше — договор, предоплата
+              и старт по Ганту выше.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <GoalLink
@@ -593,7 +595,7 @@ export default function KpMartoxPage() {
                 rel="noreferrer"
                 className="btn-case inline-flex h-12 items-center px-8 text-sm font-semibold"
               >
-                Написать в Telegram →
+                Отправить ответ в Telegram →
               </GoalLink>
               <a
                 href={`tel:${legal.phoneHref}`}
