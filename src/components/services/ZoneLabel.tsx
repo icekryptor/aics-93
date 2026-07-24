@@ -11,7 +11,9 @@ export default function ZoneLabel() {
     ? "/ решения"
     : pathname?.startsWith("/cases")
       ? "/ кейсы"
-      : "/ услуги";
+      : pathname?.startsWith("/kp")
+        ? "/ кп"
+        : "/ услуги";
   return (
     <span className="tech-label ml-1 hidden text-[10px] text-runtime-ink-soft sm:inline">
       {label}
