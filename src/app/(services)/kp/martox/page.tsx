@@ -100,34 +100,38 @@ const STRUCTURE: { kind: "tz" | "rec"; title: string; text: string; badge?: stri
   },
 ];
 
+/* Этапы в обоих вариантах одинаковые — отличается только длительность
+   (разный объём работы). Прототипирование — отдельный ключевой этап после
+   исследования. Дизайн-концепция — лично, в трёх вариантах. */
 const GANTT_VARIANTS: GanttVariant[] = [
   {
     key: "landing",
     label: "лендинг",
-    note: "запуск за 7–14 дней",
-    total: 14,
+    note: "запуск ≈ 11 дней",
+    total: 11,
     phases: [
       { name: "Бриф · аудит смыслов и ТЗ", days: 1, start: 0, color: "#ff3d92" },
-      { name: "Исследование ЦА и конкурентов · стратегия", days: 2, start: 1, color: "#d94fe6" },
-      { name: "Харнесс и обучение субагентов", days: 1, start: 3, color: "#b15cff" },
-      { name: "Дизайн-концепция (вручную)", days: 2, start: 4, color: "#9747ff" },
-      { name: "Дизайн-система · прототип", days: 2, start: 6, color: "#8b67ff" },
-      { name: "Сборка страницы · квиз · интеграции", days: 4, start: 8, color: "#7a7bff" },
-      { name: "E2E-тесты · деплой", days: 2, start: 12, color: "#5fd9f5" },
+      { name: "Исследование ЦА и конкурентов · стратегия", days: 1, start: 1, color: "#e648d9" },
+      { name: "Харнесс и обучение субагентов", days: 1, start: 2, color: "#c853f2" },
+      { name: "Прототипирование", days: 2, start: 3, color: "#a94dff" },
+      { name: "Дизайн-концепция — лично, 3 варианта", days: 2, start: 5, color: "#9747ff" },
+      { name: "Вёрстка и программирование", days: 3, start: 7, color: "#7a7bff" },
+      { name: "E2E-тесты · деплой", days: 1, start: 10, color: "#5fd9f5" },
     ],
   },
   {
     key: "site",
     label: "сайт",
-    note: "запуск ≈ 24 дня",
-    total: 24,
+    note: "запуск ≈ 16 дней",
+    total: 16,
     phases: [
-      { name: "Бриф · исследование · стратегия", days: 4, start: 0, color: "#ff3d92" },
-      { name: "Харнесс · дизайн-концепция", days: 4, start: 4, color: "#d94fe6" },
-      { name: "Дизайн-система · прототипы страниц", days: 4, start: 8, color: "#9747ff" },
-      { name: "Сборка главной · квиз · интеграции", days: 4, start: 12, color: "#8b67ff" },
-      { name: "Раздел «13 каналов» — генерация страниц", days: 4, start: 16, color: "#7a7bff" },
-      { name: "SEO-контур · пакеты · финальные тесты", days: 4, start: 20, color: "#5fd9f5" },
+      { name: "Бриф · аудит смыслов и ТЗ", days: 1, start: 0, color: "#ff3d92" },
+      { name: "Исследование ЦА и конкурентов · стратегия", days: 1, start: 1, color: "#e648d9" },
+      { name: "Харнесс и обучение субагентов", days: 1, start: 2, color: "#c853f2" },
+      { name: "Прототипирование", days: 3, start: 3, color: "#a94dff" },
+      { name: "Дизайн-концепция — лично, 3 варианта", days: 2, start: 6, color: "#9747ff" },
+      { name: "Вёрстка и программирование", days: 6, start: 8, color: "#7a7bff" },
+      { name: "E2E-тесты · деплой", days: 2, start: 14, color: "#5fd9f5" },
     ],
   },
 ];
@@ -184,7 +188,7 @@ export default function KpMartoxPage() {
             структуры, наши рекомендации, два варианта реализации и план по дням.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-2">
-            {["лендинг: 1 200 $", "сайт: 2 100 $", "френдли-прайс −25%", "сроки: от 7 дней", "24 июля 2026"].map((c) => (
+            {["лендинг: 1 200 $ · ≈ 11 дней", "сайт: 2 100 $ · ≈ 16 дней", "френдли-прайс −25%", "24 июля 2026"].map((c) => (
               <span
                 key={c}
                 className="tech-label rounded-full border border-runtime-line bg-black/30 px-3.5 py-1.5 text-[11px] text-runtime-ink-soft"
@@ -406,7 +410,7 @@ export default function KpMartoxPage() {
                 </span>
               </div>
               <p className="tech-label mt-2 text-[11px]" style={{ color: "var(--color-signal-cool)" }}>
-                7–14 дней
+                ≈ 11 дней
               </p>
               <ul className="mt-5 space-y-2 text-[13.5px] leading-relaxed text-runtime-ink-soft">
                 {[
@@ -446,7 +450,7 @@ export default function KpMartoxPage() {
                 </span>
               </div>
               <p className="tech-label mt-2 text-[11px]" style={{ color: "var(--color-signal-cool)" }}>
-                ≈ 24 дня
+                ≈ 16 дней
               </p>
               <ul className="mt-5 space-y-2 text-[13.5px] leading-relaxed text-runtime-ink-soft">
                 {[
