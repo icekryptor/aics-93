@@ -43,6 +43,7 @@ export default function Footer() {
                 { label: "Услуги", href: "/services" },
                 { label: "Решения", href: "/solutions" },
                 { label: "Журнал", href: "/blog" },
+                { label: "Оператор", href: "/operator" },
               ].map((n) => (
                 <a key={n.href} href={n.href} className="text-sm text-white/60 transition-colors hover:text-white">
                   {n.label}
