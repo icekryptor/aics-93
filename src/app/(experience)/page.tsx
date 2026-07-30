@@ -1,5 +1,5 @@
 import NeuralHero from "@/components/NeuralHero";
-import { Intro, Frameworks, Reasons, SalesEngine, About } from "@/components/Sections";
+import { Intro, Frameworks, Reasons, About } from "@/components/Sections";
 import AiProcess from "@/components/AiProcess";
 import ConveyorBlock from "@/components/ConveyorBlock";
 import PricingBlock from "@/components/PricingBlock";
@@ -45,7 +45,8 @@ export default function Experience() {
         <Reasons />
         <AiProcess />
         <ConveyorBlock />
-        <SalesEngine />
+        {/* SalesEngine (шестерёнки) припаркован — механика «двигателя» уже
+            объяснена в ConveyorBlock и AiProcess; вернуть импортом при надобности */}
         <ServicesTeaser />
         <SolutionsTeaser />
         <PricingBlock />
