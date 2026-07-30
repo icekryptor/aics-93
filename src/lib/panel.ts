@@ -28,7 +28,7 @@ export const panelProjects: PanelProject[] = [
         href: "https://www.figma.com/design/Hy8nJUaFc0WcP7aWrMXPSo?node-id=32-18",
         kind: "design",
       },
-      { label: "дизайн-система · токены", href: "/clients/martox-tokens.json", kind: "design" },
+      { label: "дизайн-система (PDF)", href: "/clients/martox-design-system.pdf", kind: "design" },
       {
         label: "прототип (первый)",
         href: "https://www.figma.com/design/QTJLqvRZ34PGOLw29Sdo7I/%D0%A5%D0%B8%D0%BC%D0%B8%D1%87%D0%BA%D0%B0?node-id=5223-732",

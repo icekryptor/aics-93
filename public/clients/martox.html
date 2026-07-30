@@ -67,6 +67,17 @@
   footer{padding:44px 0 64px;color:var(--taupe-d);font-size:12px;letter-spacing:.05em}
   a{color:var(--rose);text-decoration:none;border-bottom:1px solid rgba(178,127,133,.35)}
   .stamp{display:inline-block;border:2px solid var(--wine);color:var(--rose);border-radius:8px;padding:4px 12px;font-size:10px;letter-spacing:.2em;transform:rotate(-4deg);margin-left:10px}
+  .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+  .lnk{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:100px;
+       padding:12px 20px;font-size:12px;letter-spacing:.07em;color:var(--paper);background:var(--panel);
+       text-decoration:none;transition:border-color .16s cubic-bezier(.16,1,.3,1),transform .16s cubic-bezier(.16,1,.3,1)}
+  .lnk:hover{border-color:var(--wine);transform:translateY(-1px)}
+  .lnk.solid{background:var(--wine);border-color:var(--wine)}
+  .lnk .k{font-size:9px;letter-spacing:.16em;color:var(--taupe);text-transform:uppercase}
+  .lnk.solid .k{color:var(--rose)}
+  .lnk .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+  .lnk.pdf .dot{background:var(--rose)}
+  .lnk.fig .dot{background:var(--taupe)}
 </style>
 </head>
 <body>
@@ -74,7 +85,7 @@
 
 <header>
   <div class="brand">MARTOX · СТРАНИЦА ПРОЕКТА</div>
-  <h1>Выводим бренд<br>на рынок США — <em>движок работ</em></h1>
+  <h1>Выводим бренд<br>на рынок США — <em>ход работ</em></h1>
   <p class="sub">Оператор выхода WB/Ozon-селлеров на американский рынок: компания, счёт, налоги,
   марка, склад и площадки — по одному договору. Дизайн защищён и принят заказчиком,
   идёт вёрстка. Здесь — живой статус проекта.</p>
@@ -87,7 +98,33 @@
 </header>
 
 <section>
-  <h2>Движок</h2>
+  <h2>Материалы проекта</h2>
+  <p class="lead">Всё, что уже сделано и доступно к просмотру: живая сборка, макеты,
+  дизайн-система и документы. Ссылки обновляются по мере работы.</p>
+  <div class="links">
+    <a class="lnk solid" href="https://martox-site.vercel.app" target="_blank" rel="noreferrer">
+      <span class="dot"></span><span><span class="k">живое</span><br>Превью сайта</span>
+    </a>
+    <a class="lnk fig" href="https://www.figma.com/design/Hy8nJUaFc0WcP7aWrMXPSo?node-id=32-18" target="_blank" rel="noreferrer">
+      <span class="dot"></span><span><span class="k">Figma</span><br>Макет v3 · 15 экранов</span>
+    </a>
+    <a class="lnk pdf" href="/clients/martox-design-system.pdf" target="_blank" rel="noreferrer">
+      <span class="dot"></span><span><span class="k">PDF</span><br>Дизайн-система</span>
+    </a>
+    <a class="lnk pdf" href="/clients/martox-tz.pdf" target="_blank" rel="noreferrer">
+      <span class="dot"></span><span><span class="k">PDF</span><br>Техническое задание</span>
+    </a>
+    <a class="lnk" href="/kp/martox" target="_blank" rel="noreferrer">
+      <span class="dot"></span><span><span class="k">документ</span><br>Коммерческое предложение</span>
+    </a>
+    <a class="lnk fig" href="https://www.figma.com/design/QTJLqvRZ34PGOLw29Sdo7I/%D0%A5%D0%B8%D0%BC%D0%B8%D1%87%D0%BA%D0%B0?node-id=5223-732" target="_blank" rel="noreferrer">
+      <span class="dot"></span><span><span class="k">Figma</span><br>Первый прототип</span>
+    </a>
+  </div>
+</section>
+
+<section>
+  <h2>Этапы работ</h2>
   <p class="lead">Пять этапов, тридцать шесть шагов. Каждый шаг оставляет документ,
   решения фиксируются, допущения помечаются.</p>
   <div class="steps">
