@@ -6,6 +6,16 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
+  async redirects() {
+    return [
+      // «конвейер» выведен из лексикона (минус-фраза) — статья переименована
+      {
+        source: "/blog/kak-ii-konvejer-sobiraet-sajt",
+        destination: "/blog/kak-ii-dvizhok-sobiraet-sajt",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

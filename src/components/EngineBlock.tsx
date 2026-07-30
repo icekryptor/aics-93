@@ -1,4 +1,4 @@
-/* ConveyorBlock — «как работает ИИ-конвейер»: механика скорости и цены.
+/* EngineBlock — «как работает ИИ-движок»: механика скорости и цены.
    Отстройка и от агентств (никто не объясняет, откуда 7–14 дней), и от
    нейро-конструкторов (мы не генерим шаблон — собираем по дизайн-системе).
    Серверный компонент: терминальная карточка на CSS, без канвасов.
@@ -16,9 +16,9 @@ const LOG: { cmd?: boolean; text: string; when: string }[] = [
 
 const ROLES = ["аналитик", "копирайтер", "дизайнер", "разработчик"];
 
-export default function ConveyorBlock() {
+export default function EngineBlock() {
   return (
-    <section id="conveyor" className="runtime relative scroll-mt-24 overflow-hidden py-[50px] lg:py-[80px]">
+    <section id="engine" className="runtime relative scroll-mt-24 overflow-hidden py-[50px] lg:py-[80px]">
       <div className="runtime-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
       <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
 
@@ -27,7 +27,7 @@ export default function ConveyorBlock() {
           {/* тезис */}
           <div>
             <p className="tech-label text-[11px] text-[color-mix(in_srgb,var(--color-signal)_80%,white)]">
-              [ конвейер · механика скорости ]
+              [ движок · механика скорости ]
             </p>
             <h2 className="mt-4 text-[clamp(1.7rem,3.4vw,2.7rem)] font-medium leading-[1.06] tracking-[-0.02em] text-runtime-ink">
               Как один инженер делает <span className="signal-text">работу четверых</span>
@@ -39,7 +39,7 @@ export default function ConveyorBlock() {
               себестоимость производства.
             </p>
 
-            {/* 1 = 4: роли, которые закрывает конвейер */}
+            {/* 1 = 4: роли, которые закрывает движок */}
             <div className="mt-6 flex flex-wrap items-center gap-2">
               <span className="font-display text-[1.35rem] leading-none text-runtime-ink">1 = 4</span>
               <span aria-hidden className="mx-1 h-4 w-px bg-runtime-line" />
@@ -59,14 +59,14 @@ export default function ConveyorBlock() {
               style={{ borderColor: "var(--color-signal-cool)" }}
             >
               <p className="text-[13.5px] leading-relaxed text-runtime-ink-soft">
-                Это не генератор шаблонов: конвейер собирает по вашей дизайн-системе, а{" "}
+                Это не генератор шаблонов: движок собирает по вашей дизайн-системе, а{" "}
                 <span className="text-runtime-ink">каждую строку перед продакшеном проверяю я</span>.
                 Если задачу быстрее решит конструктор — скажу об этом ещё на брифе.
               </p>
             </div>
           </div>
 
-          {/* терминал конвейера */}
+          {/* терминал движка */}
           <div
             className="overflow-hidden rounded-[14px] border border-runtime-line"
             style={{ background: "color-mix(in srgb, var(--color-runtime-2) 92%, transparent)" }}
@@ -77,7 +77,7 @@ export default function ConveyorBlock() {
                 <span key={c} className="size-2.5 rounded-full" style={{ background: c, opacity: 0.75 }} />
               ))}
               <span className="hud ml-2 text-[10px] text-runtime-ink-soft" style={{ textTransform: "none" }}>
-                aics-93 · conveyor.log
+                aics-93 · engine.log
               </span>
             </div>
 

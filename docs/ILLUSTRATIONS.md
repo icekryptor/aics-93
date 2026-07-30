@@ -59,15 +59,15 @@ GenerativeCover) — карточки на `/solutions` и в SolutionsTeaser г
 
 | Файл | Направление | Сцена |
 |---|---|---|
-| `dlya-tovarki.webp` | /solutions/dlya-tovarki | коробки с конвейера → свой стеклянный магазин → сейф с монетами + график роста |
+| `dlya-tovarki.webp` | /solutions/dlya-tovarki | коробки с движка → свой стеклянный магазин → сейф с монетами + график роста |
 | `dlya-uslug.webp` | /solutions/dlya-uslug | телефон с заявками → календарь записей (циан-слот) → CRM и договор с печатью |
 
 ## Реестр сгенерированного
 
 | Файл | Статья | Сцена |
 |---|---|---|
-| `ii-konvejer-sborka-v3.webp` | kak-ii-konvejer-sobiraet-sajt | база знаний → конвейер с 3 станциями-агентами (шестерни/оптика/манипулятор), панели wireframe→готовый UI → монитор |
-| `petlya-doobucheniya-v3.webp` | kak-ii-konvejer-sobiraet-sajt | стеклянная рука со стилусом правит экран, лента света уходит в стопку инструкций, PCB-дорожка замыкает кольцо |
+| `ii-dvizhok-sborka-v3.webp` | kak-ii-dvizhok-sobiraet-sajt | база знаний → движок с 3 станциями-агентами (шестерни/оптика/манипулятор), панели wireframe→готовый UI → монитор |
+| `petlya-doobucheniya-v3.webp` | kak-ii-dvizhok-sobiraet-sajt | стеклянная рука со стилусом правит экран, лента света уходит в стопку инструкций, PCB-дорожка замыкает кольцо |
 | `ii-kontur-brenda.webp` | ai-v-processy-brenda | мозг-чип → 4 куба-отдела (график/чат/корзина/шестерни) → общий дашборд |
 | `rebrending-dnk.webp` | rebranding-kak-perepisyvanie-dnk | манипулятор меняет тусклый сегмент ДНК на светящийся, дорожки к носителям бренда |
 | `dannye-vs-dogadki.webp` | dannye-a-ne-dogadki | весы: хрустальный шар догадок легче плиток с данными; вес уходит в решение на дашборде |

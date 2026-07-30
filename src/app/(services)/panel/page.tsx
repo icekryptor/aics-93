@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import PanelGate from "@/components/panel/PanelGate";
-import { panelProjects } from "@/lib/panel";
+import { panelProjects, LINK_KIND_COLOR } from "@/lib/panel";
 import { tokenFor } from "@/lib/panel-auth";
 
 /* /panel — harness-панель: приватный реестр проектов и артефактов
@@ -59,6 +59,9 @@ export default async function PanelPage() {
                   <span className="tech-label text-[10.5px] text-runtime-ink-soft">{p.date}</span>
                 </div>
                 <p className="mt-2 text-[13.5px] text-runtime-ink-soft">{p.status}</p>
+                <p className="tech-label mt-1.5 text-[10.5px]" style={{ color: "var(--color-signal-2)" }}>
+                  {p.stage}
+                </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {p.links.map((l) => (
                     <a
@@ -66,8 +69,13 @@ export default async function PanelPage() {
                       href={l.href}
                       target={l.href.startsWith("http") ? "_blank" : undefined}
                       rel={l.href.startsWith("http") ? "noreferrer" : undefined}
-                      className="tech-label rounded-full border border-runtime-line px-4 py-2 text-[11px] text-runtime-ink-soft transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)] hover:text-runtime-ink"
+                      className="tech-label inline-flex items-center gap-2 rounded-full border border-runtime-line px-4 py-2 text-[11px] text-runtime-ink-soft transition-colors hover:border-[color-mix(in_srgb,var(--color-signal)_60%,transparent)] hover:text-runtime-ink"
                     >
+                      <span
+                        aria-hidden
+                        className="size-1.5 rounded-full"
+                        style={{ background: LINK_KIND_COLOR[l.kind] }}
+                      />
                       {l.label} →
                     </a>
                   ))}

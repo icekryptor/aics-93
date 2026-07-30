@@ -1,7 +1,7 @@
 import NeuralHero from "@/components/NeuralHero";
 import { Intro, Frameworks, Reasons, About } from "@/components/Sections";
 import AiProcess from "@/components/AiProcess";
-import ConveyorBlock from "@/components/ConveyorBlock";
+import EngineBlock from "@/components/EngineBlock";
 import PricingBlock from "@/components/PricingBlock";
 // CaseSlider припаркован — блок работ теперь CaseShowcase (мокап Frame 1)
 import CaseShowcase from "@/components/showcase/CaseShowcase";
@@ -44,9 +44,9 @@ export default function Experience() {
         <SignalTransition id="act-engine" index="03" label="// движок · ии в ваших процессах" />
         <Reasons />
         <AiProcess />
-        <ConveyorBlock />
+        <EngineBlock />
         {/* SalesEngine (шестерёнки) припаркован — механика «двигателя» уже
-            объяснена в ConveyorBlock и AiProcess; вернуть импортом при надобности */}
+            объяснена в EngineBlock и AiProcess; вернуть импортом при надобности */}
         <ServicesTeaser />
         <SolutionsTeaser />
         <PricingBlock />
