@@ -36,6 +36,7 @@ export const panelProjects: PanelProject[] = [
       },
       { label: "страница проекта", href: "/clients/martox.html", kind: "doc" },
       { label: "КП", href: "/kp/martox", kind: "doc" },
+      { label: "ТЗ клиента (PDF)", href: "/clients/martox-tz.pdf", kind: "doc" },
     ],
   },
 ];
