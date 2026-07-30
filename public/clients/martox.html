@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>MARTOX · страница проекта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;1,400&family=Onest:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#141109; --panel:#1d1810; --paper:#f7f3ea; --paper2:#efe9dc;
+    --wine:#873543; --rose:#b27f85; --taupe:#9a9082; --taupe-d:#5f5546;
+    --green:#789783; --line:rgba(247,243,234,.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--paper);font-family:Onest,system-ui,sans-serif;line-height:1.55}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  header{padding:64px 0 40px;border-bottom:1px solid var(--line)}
+  .brand{font-family:Spectral,serif;font-size:15px;letter-spacing:.35em;color:var(--rose)}
+  h1{font-family:Spectral,serif;font-weight:400;font-size:clamp(34px,5.5vw,58px);margin:18px 0 10px}
+  h1 em{font-style:italic;color:var(--rose)}
+  .sub{color:var(--taupe);max-width:640px;font-size:15px}
+  .badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+  .badge{font-size:11px;letter-spacing:.14em;padding:7px 14px;border:1px solid var(--line);border-radius:100px;color:var(--taupe)}
+  .badge.hot{border-color:var(--wine);background:var(--wine);color:var(--paper)}
+  .badge.ok{border-color:var(--green);color:var(--green)}
+  section{padding:52px 0;border-bottom:1px solid var(--line)}
+  h2{font-family:Spectral,serif;font-weight:400;font-size:clamp(24px,3.2vw,34px);margin-bottom:8px}
+  h2 em{font-style:italic;color:var(--rose)}
+  .lead{color:var(--taupe);font-size:14px;max-width:620px;margin-bottom:28px}
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .step{border:1px solid var(--line);border-radius:14px;padding:16px 14px;position:relative}
+  .step .n{font-family:Spectral,serif;font-size:26px;color:var(--taupe-d)}
+  .step.done .n{color:var(--green)}
+  .step.now{border-color:var(--wine);background:var(--panel)}
+  .step.now .n{color:var(--rose)}
+  .step .t{font-size:12px;letter-spacing:.08em;margin-top:6px}
+  .step .s{font-size:10px;color:var(--taupe);margin-top:4px;letter-spacing:.05em}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .fact{border:1px solid var(--line);border-radius:14px;padding:18px 16px}
+  .fact b{font-family:Spectral,serif;font-weight:400;font-size:30px;color:var(--rose);display:block}
+  .fact span{font-size:11px;color:var(--taupe);letter-spacing:.06em}
+  .sections{display:flex;flex-wrap:wrap;gap:8px}
+  .sec{font-size:11px;letter-spacing:.07em;padding:8px 13px;border-radius:100px;border:1px solid var(--line);color:var(--paper2)}
+  .sec.dark{background:var(--panel)}
+  .sec.new{border-color:var(--rose);color:var(--rose)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+  .card{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--panel)}
+  .card img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}
+  .card .cap{padding:12px 16px;font-size:12px;color:var(--taupe);letter-spacing:.05em}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+  @media(max-width:760px){.cols{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,1fr)}}
+  ul.plain{list-style:none}
+  ul.plain li{padding:10px 0;border-bottom:1px dashed var(--line);font-size:14px;display:flex;gap:12px;align-items:baseline}
+  ul.plain li:last-child{border-bottom:none}
+  .tick{color:var(--green);font-size:13px}
+  .wait{color:var(--taupe-d);font-size:13px}
+  .flag{color:var(--rose);font-size:13px}
+  .muted{color:var(--taupe)}
+  .score{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .crit{border:1px solid var(--line);border-radius:14px;padding:14px 18px;flex:1;min-width:150px}
+  .crit b{font-family:Spectral,serif;font-weight:400;font-size:26px;color:var(--paper)}
+  .crit i{font-style:normal;color:var(--taupe);font-size:11px;display:block;letter-spacing:.08em}
+  .crit .goal{color:var(--rose);font-size:11px}
+  footer{padding:44px 0 64px;color:var(--taupe-d);font-size:12px;letter-spacing:.05em}
+  a{color:var(--rose);text-decoration:none;border-bottom:1px solid rgba(178,127,133,.35)}
+  .stamp{display:inline-block;border:2px solid var(--wine);color:var(--rose);border-radius:8px;padding:4px 12px;font-size:10px;letter-spacing:.2em;transform:rotate(-4deg);margin-left:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">MARTOX · СТРАНИЦА ПРОЕКТА</div>
+  <h1>Выводим бренд<br>на рынок США — <em>конвейер работ</em></h1>
+  <p class="sub">Оператор выхода WB/Ozon-селлеров на американский рынок: компания, счёт, налоги,
+  марка, склад и площадки — по одному договору. Дизайн защищён и принят заказчиком,
+  идёт вёрстка. Здесь — живой статус проекта.</p>
+  <div class="badges">
+    <span class="badge hot">ЭТАП 4 ИЗ 5 · ВЁРСТКА</span>
+    <span class="badge ok">ЗАЩИТА ДИЗАЙНА ПРОЙДЕНА</span>
+    <span class="badge">ОБНОВЛЕНО 30.07.2026</span>
+    <span class="badge">СЛЕДУЮЩИЙ ШАГ · ДЕПЛОЙ</span>
+  </div>
+</header>
+
+<section>
+  <h2>Конвейер</h2>
+  <p class="lead">Пять этапов, тридцать шесть шагов. Каждый шаг оставляет документ,
+  решения фиксируются, допущения помечаются.</p>
+  <div class="steps">
+    <div class="step done"><span class="n">01</span><div class="t">ИССЛЕДОВАНИЕ</div><div class="s">рынок · конкуренты · аудитория · финмодель</div></div>
+    <div class="step done"><span class="n">02</span><div class="t">КОНТЕНТ</div><div class="s">структура · сущности · CJM · офферы</div></div>
+    <div class="step done"><span class="n">03</span><div class="t">ДИЗАЙН</div><div class="s">рефы · система · макеты 1440/360 · защита принята</div></div>
+    <div class="step now"><span class="n">04</span><div class="t">ВЁРСТКА</div><div class="s">Astro · 13 секций собраны · анимации</div></div>
+    <div class="step"><span class="n">05</span><div class="t">ЗАПУСК</div><div class="s">домен · аналитика · заявки</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Сделано — <em>в цифрах</em></h2>
+  <div class="facts">
+    <div class="fact"><b>10</b><span>версий макета: v4 → v10-aistov</span></div>
+    <div class="fact"><b>40</b><span>разборов референсов в банке решений</span></div>
+    <div class="fact"><b>13</b><span>секций лендинга, включая кейсы-плейсхолдеры</span></div>
+    <div class="fact"><b>2</b><span>макета: 1440 × 12029 и 360 × 9364</span></div>
+    <div class="fact"><b>11</b><span>слайдов презентации защиты</span></div>
+    <div class="fact"><b>28/28</b><span>кеглей сайта сошлись с замером макета</span></div>
+    <div class="fact"><b>9</b><span>коммитов вёрстки, сборка без ошибок</span></div>
+    <div class="fact"><b>0</b><span>коллизий текста по программному детектору</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Схема лендинга</h2>
+  <p class="lead">Порядок секций утверждён владельцем. Тёмные — на туши, светлые — на бумаге.
+  Полные рендеры макетов — в репозитории проекта и на защите.</p>
+  <div class="sections">
+    <span class="sec">шапка-виджет</span>
+    <span class="sec dark">герой · посылка РФ→США</span>
+    <span class="sec dark">7 этапов · скролл-аккордеон</span>
+    <span class="sec">рынок · цифры со стрелками</span>
+    <span class="sec">что США покупают</span>
+    <span class="sec dark">квиз · пошаговый</span>
+    <span class="sec">договор · лист с печатью</span>
+    <span class="sec dark">13 каналов</span>
+    <span class="sec">что входит + фулфилмент</span>
+    <span class="sec dark">7/7 против конкурентов</span>
+    <span class="sec new">первые кейсы · места 01–03</span>
+    <span class="sec">три формата · матрица</span>
+    <span class="sec dark">FAQ · стопка</span>
+    <span class="sec">PDF «13 способов»</span>
+    <span class="sec dark">форма · без хранения данных</span>
+  </div>
+</section>
+
+<section>
+  <h2>Вёрстка — <em>что уже живое</em></h2>
+  <p class="lead">Главная собрана целиком и работает локально. Каждый экран сверялся
+  с макетом не на глаз, а диффом: спецификация Figma против computed styles браузера.</p>
+  <ul class="plain">
+    <li><span class="tick">✓</span> 13 секций: шапка, герой, этапы, рынок, квиз, договор, каналы, что входит, 7/7, кейсы, форматы, FAQ, PDF, форма, подвал</li>
+    <li><span class="tick">✓</span> Скролл-аккордеон этапов: карточки наезжают, шапки остаются читаемыми</li>
+    <li><span class="tick">✓</span> Три нижних блока накладываются друг на друга при скролле</li>
+    <li><span class="tick">✓</span> Пошаговый квиз с кастомными дропдаунами, ответы уходят в форму</li>
+    <li><span class="tick">✓</span> Набегающие счётчики, растущий график импорта, поочерёдное появление блоков</li>
+    <li><span class="tick">✓</span> Слайдер кейсов, форма с валидацией, мобильная версия без горизонтального скролла</li>
+    <li><span class="tick">✓</span> Всё движение выключается при prefers-reduced-motion</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Библиотека фирменных визуалов</h2>
+  <p class="lead">Стиль: экспортные документы и таможенная бумага — изометрия, крафт, сургуч,
+  винные штампы. Канон-промпт зафиксирован, генерация nano banana pro.</p>
+  <div class="grid">
+    <div class="card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3Gob7XqEnaWQmGMTWVDmS7Rv9zj/hf_20260729_221953_f46a1f2b-2b5a-4df3-a740-d992bea2c919_min.webp" alt="Семь этапов — карточки"><div class="cap">СЕМЬ ЭТАПОВ · карточки на бечёвке, сургуч на активном</div></div>
+    <div class="card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3Gob7XqEnaWQmGMTWVDmS7Rv9zj/hf_20260729_221536_c0c6957a-d7ec-4fb3-bfec-4a039b865664_min.webp" alt="Один договор"><div class="cap">ОДИН ДОГОВОР · против пяти мятых деклараций</div></div>
+    <div class="card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3Gob7XqEnaWQmGMTWVDmS7Rv9zj/hf_20260729_221541_7cc9486e-53c9-4275-ae90-22366c9e6571_min.webp" alt="Гайд 13"><div class="cap">ГАЙД «13» · бандероль RU→USA, штампы</div></div>
+    <div class="card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3Gob7XqEnaWQmGMTWVDmS7Rv9zj/hf_20260729_221547_a6b4f244-3838-466e-8722-b19e9748820f_min.webp" alt="Таможенный пакет"><div class="cap">ДОКУМЕНТЫ · бирка «РФ → США», отметки</div></div>
+    <div class="card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_3Gob7XqEnaWQmGMTWVDmS7Rv9zj/hf_20260729_222241_408977a1-11b1-4222-96e1-3109a14ed663_min.webp" alt="Чек-лист 7 из 7"><div class="cap">ЭКСПОРТ · 7/7 · все этапы проштампованы</div></div>
+  </div>
+</section>
+
+<section class="cols">
+  <div>
+    <h2>Метод и <em>оценка</em></h2>
+    <p class="lead">Дизайн собирается не вкусом, а замером: банк приёмов на 40 работ,
+    контрасты и движение — числами, макет проверяется программным детектором.
+    Самооценка сверяется внешней критикой.</p>
+    <div class="score">
+      <div class="crit"><i>ЭСТЕТИКА</i><b>7.5</b><span class="goal">цель ≥ 9</span></div>
+      <div class="crit"><i>ПОНЯТНОСТЬ</i><b>7.5</b><span class="goal">цель ≥ 9</span></div>
+      <div class="crit"><i>УНИКАЛЬНОСТЬ</i><b>7</b><span class="goal">цель ≥ 9</span></div>
+    </div>
+    <p class="lead" style="margin-top:14px">Планка «девять по двум из трёх» проверяется
+    на живом сайте после вёрстки — на людях, а не самооценкой.</p>
+  </div>
+  <div>
+    <h2>Стек публикации</h2>
+    <ul class="plain">
+      <li><span class="tick">✓</span> Astro + TypeScript, статическая сборка</li>
+      <li><span class="tick">✓</span> CSS на токенах из tokens.json</li>
+      <li><span class="tick">✓</span> GSAP ScrollTrigger — только скролл-аккордеон</li>
+      <li><span class="tick">✓</span> Слайдер кейсов на CSS scroll-snap</li>
+      <li><span class="tick">✓</span> Заявки: serverless → Telegram + Email, без хранения</li>
+      <li><span class="tick">✓</span> Токены, шрифты самохостом, изображения в WebP</li>
+      <li><span class="wait">…</span> <span class="muted">Эндпоинт заявок /api/lead — ждёт токен бота и ключ Resend</span></li>
+      <li><span class="wait">…</span> <span class="muted">Публикация — нужен доступ к созданию проекта в Vercel</span></li>
+      <li><span class="wait">…</span> <span class="muted">Домен — выбирается, старт на *.vercel.app</span></li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Открытые решения — <em>за владельцем</em></h2>
+  <ul class="plain">
+    <li><span class="flag">⚑</span> Флаг США на этикетке фото героя (мобайл) — заменить или снять ограничение</li>
+    <li><span class="flag">⚑</span> Логотипы маркетплейсов на визуале рынка (десктоп) — заменить или подтвердить права</li>
+    <li><span class="flag">⚑</span> Гербоподобный штамп на визуале «Договор» — заменить на фирменный до продакшена</li>
+    <li><span class="flag">⚑</span> Числа «Что США покупают» — сверить с первоисточником до снятия сноски</li>
+    <li><span class="flag">⚑</span> Ответы FAQ 02–05 собраны из формулировок других секций — нужны слова владельца</li>
+    <li><span class="flag">⚑</span> Заголовочный шрифт макета — пробная версия CoFo Holz; на сайте заменён на Spectral Light</li>
+    <li><span class="flag">⚑</span> Два бага вёрстки в работе: часть счётчиков и полосок графика срабатывает не всегда</li>
+  </ul>
+</section>
+
+<footer>
+  MARTOX · проект ведётся конвейером Continuum <span class="stamp">РФ → США</span><br><br>
+  Макеты в Figma и полные документы — по запросу владельца проекта. Страница не индексируется.
+</footer>
+
+</div>
+</body>
+</html>

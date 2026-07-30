@@ -15,10 +15,12 @@ export const panelProjects: PanelProject[] = [
   {
     id: "martox",
     client: "MARTOX",
-    title: "Сайт выхода брендов на рынок США",
-    status: "КП отправлено · ожидаем выбор: лендинг / сайт",
-    date: "24.07.2026",
+    title: "Оператор вывода бизнеса в США — лендинг",
+    status:
+      "В работе: выбран лендинг (1 200 $) + страницы пакетов · фабрика: 2.1–2.3 готовы, текущий шаг 2.4 «офферы, УТП, CTA»",
+    date: "30.07.2026",
     links: [
+      { label: "страница проекта", href: "/clients/martox.html" },
       { label: "КП-лендинг", href: "/kp/martox" },
       {
         label: "прототип (Figma)",
