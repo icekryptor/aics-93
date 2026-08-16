@@ -48,6 +48,26 @@ export const showcaseCases: ShowcaseCase[] = [
     wip: true,
   },
   {
+    title: "MARTOX",
+    desc: "Сайт оператора выхода брендов на рынок США: дизайн, вёрстка, генеративные визуалы и приём заявок в Telegram.",
+    bullets: [
+      "фирменный стиль и айдентика",
+      "дизайн главной и страниц пакетов",
+      "схема пути товара в движении",
+      "квиз и лид-магнит",
+      "приём заявок в Telegram",
+      "174 автопроверки на живом сайте",
+    ],
+    shots: [
+      { src: "/assets/cases/martox/site-desktop.webp", kind: "desktop", alt: "MARTOX — первый экран" },
+      { src: "/assets/cases/martox/site-mobile.webp", kind: "mobile", alt: "MARTOX — мобильная версия" },
+      { src: "/assets/cases/martox/menu-mobile.webp", kind: "mobile", alt: "MARTOX — мобильное меню" },
+      { src: "/assets/cases/martox/steps.webp", kind: "desktop", alt: "MARTOX — семь этапов выхода" },
+    ],
+    accent: "#b27f85",
+    href: "/cases/martox",
+  },
+  {
     title: "GO.LD",
     desc: "Сайт и фирменный стиль для ювелирного лофта в Москве.",
     bullets: [
