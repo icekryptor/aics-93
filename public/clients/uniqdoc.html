@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Uniqdoc · дизайн-направление</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Instrument+Sans:wght@400;500;600&family=Inter:wght@400;500;600&display=swap">
+<style>
+  /* Единый светлый мир — страница сознательно одно-темная, всё покрашено явно */
+  :root{
+    --paper:#FAF7F2; --card:#FFFFFF; --ink:#232B36; --ink-soft:#5C6572;
+    --line:#E6E0D5; --teal:#3E7C87; --teal-deep:#2E616B;
+    --gold:#8A6B3A; --gold-decor:#C2A05E;
+    --sky:#C9DCEA; --blush:#F2CFD5; --caramel:#D6B08C; --mint:#A9BCA9;
+    --cloud:#DCDCE1; --mousse:#5A6B9E; --noir:#26221F;
+    --f-display:'Fraunces', Georgia, serif;
+    --f-ui:'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+    --f-note:'Inter', -apple-system, 'Segoe UI', sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+  body{background:var(--paper);color:var(--ink);font-family:var(--f-note);
+    font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+  section{padding:72px 0;border-top:1px solid var(--line)}
+  .eyebrow{font-family:var(--f-ui);font-size:12px;font-weight:600;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--gold)}
+  .sec-head{display:flex;align-items:baseline;gap:20px;margin-bottom:40px}
+  .sec-head h2{font-family:var(--f-display);font-weight:480;font-size:34px;
+    font-variation-settings:'opsz' 60;text-wrap:balance}
+  .sec-head .n{font-family:var(--f-ui);font-size:12px;color:var(--ink-soft);letter-spacing:.1em}
+  .note{color:var(--ink-soft);max-width:62ch}
+  .grid{display:grid;gap:20px}
+
+  /* HERO */
+  header.hero{padding:88px 0 72px}
+  .hero .eyebrow{color:var(--teal)}
+  .hero h1{font-family:var(--f-display);font-weight:420;font-size:clamp(44px,7vw,76px);
+    line-height:1.04;letter-spacing:-.01em;font-variation-settings:'opsz' 120;
+    margin:20px 0 24px;text-wrap:balance}
+  .hero h1 em{font-style:italic;font-weight:380;color:var(--teal-deep)}
+  .hero p{max-width:58ch;color:var(--ink-soft);font-size:18px}
+  .hero .mark{display:flex;align-items:center;gap:10px;margin-bottom:36px;font-family:var(--f-ui)}
+  .mark .dot{width:9px;height:9px;border-radius:50%;background:var(--gold-decor)}
+  .mark b{font-weight:600;letter-spacing:.02em}
+  .mark span{color:var(--ink-soft);font-size:14px}
+
+  /* ПРИНЦИП */
+  .principles{grid-template-columns:repeat(3,1fr)}
+  .pcard{background:var(--card);border:1px solid var(--line);padding:28px 26px}
+  .pcard h3{font-family:var(--f-display);font-weight:520;font-size:21px;margin-bottom:10px}
+  .pcard p{font-size:15px;color:var(--ink-soft)}
+  .versus{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    font-family:var(--f-ui);font-size:13px}
+  .versus .chip{border:1px solid var(--line);background:var(--card);padding:7px 14px;color:var(--ink-soft)}
+  .versus .chip.us{background:var(--ink);color:#FDFBF7;border-color:var(--ink)}
+  .versus .sep{color:var(--gold);font-weight:600}
+
+  /* ПАЛИТРА */
+  .swatches{grid-template-columns:repeat(4,1fr)}
+  .swatch{border:1px solid var(--line);background:var(--card)}
+  .swatch .chip-top{height:96px}
+  .swatch .meta{padding:14px 16px}
+  .swatch .meta b{display:block;font-family:var(--f-ui);font-weight:600;font-size:14px}
+  .swatch .meta code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;color:var(--ink-soft)}
+  .swatch .meta small{display:block;margin-top:6px;font-size:12.5px;color:var(--ink-soft);line-height:1.5}
+  .pastels{grid-template-columns:repeat(7,1fr);margin-top:20px}
+  .pastel{text-align:center}
+  .pastel .chip-top{height:64px;border:1px solid var(--line)}
+  .pastel b{display:block;margin-top:8px;font-family:var(--f-ui);font-size:11.5px;font-weight:600;
+    letter-spacing:.06em;text-transform:uppercase}
+  .pastel code{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--ink-soft)}
+  .ratio{display:flex;height:44px;margin-top:36px;border:1px solid var(--line);overflow:hidden}
+  .ratio div{display:flex;align-items:center;justify-content:center;font-family:var(--f-ui);
+    font-size:11.5px;font-weight:600;letter-spacing:.08em;white-space:nowrap}
+  .ratio-cap{margin-top:10px;font-size:13px;color:var(--ink-soft)}
+
+  /* ТИПОГРАФИКА */
+  .typo{grid-template-columns:1.4fr 1fr;align-items:start}
+  .specimen{background:var(--card);border:1px solid var(--line);padding:40px 36px}
+  .specimen .s-label{font-family:var(--f-ui);font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .specimen .display{font-family:var(--f-display);font-weight:400;font-size:54px;line-height:1.05;
+    font-variation-settings:'opsz' 130;letter-spacing:-.01em}
+  .specimen .display em{font-style:italic;color:var(--teal-deep)}
+  .specimen .h2s{font-family:var(--f-display);font-weight:520;font-size:28px;margin-top:30px}
+  .specimen .bodys{font-family:var(--f-ui);font-size:16px;line-height:1.7;color:var(--ink-soft);
+    margin-top:14px;max-width:52ch}
+  .specimen .labels{margin-top:26px;display:flex;gap:26px;flex-wrap:wrap;font-family:var(--f-ui)}
+  .specimen .labels span{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+  .specimen .labels .price{font-weight:500;letter-spacing:.02em;text-transform:none;font-size:16px;
+    font-variant-numeric:tabular-nums}
+  .trules{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);background:var(--card)}
+  .trule{padding:18px 22px;border-bottom:1px solid var(--line)}
+  .trule:last-child{border-bottom:none}
+  .trule b{font-family:var(--f-ui);font-weight:600;font-size:14px;display:block}
+  .trule span{font-size:13.5px;color:var(--ink-soft)}
+
+  /* ДЕМО */
+  .demo{background:var(--card);border:1px solid var(--line)}
+  .demo-nav{display:flex;align-items:center;justify-content:space-between;
+    padding:18px 28px;border-bottom:1px solid var(--line);font-family:var(--f-ui)}
+  .demo-nav .logo{font-family:var(--f-display);font-weight:560;font-size:20px;letter-spacing:.01em}
+  .demo-nav .logo i{font-style:normal;color:var(--gold-decor)}
+  .demo-nav nav{display:flex;gap:26px;font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+  .demo-nav nav a{color:var(--ink);text-decoration:none;cursor:pointer}
+  .demo-nav nav a.act{color:var(--teal-deep);border-bottom:2px solid var(--teal-deep);padding-bottom:4px}
+  .demo-nav .cart{font-size:12.5px;color:var(--ink-soft);letter-spacing:.06em}
+  .demo-hero{display:grid;grid-template-columns:1.1fr .9fr;min-height:280px}
+  .demo-hero .txt{padding:48px 40px;display:flex;flex-direction:column;justify-content:center;gap:16px}
+  .demo-hero .txt .eyebrow{color:var(--teal)}
+  .demo-hero .txt h3{font-family:var(--f-display);font-weight:430;font-size:38px;line-height:1.08;
+    font-variation-settings:'opsz' 100;text-wrap:balance}
+  .demo-hero .txt p{font-family:var(--f-ui);font-size:15px;color:var(--ink-soft);max-width:40ch}
+  .demo-hero .img{background:linear-gradient(160deg,var(--sky) 0%,#E4EEF5 55%,var(--paper) 100%);
+    display:flex;align-items:flex-end;justify-content:flex-end;padding:18px 22px}
+  .demo-hero .img small{font-family:var(--f-ui);font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--teal-deep)}
+  .btnrow{display:flex;gap:14px;margin-top:6px;flex-wrap:wrap}
+  .btn{font-family:var(--f-ui);font-size:12px;font-weight:600;letter-spacing:.13em;
+    text-transform:uppercase;padding:15px 28px;border-radius:2px;cursor:pointer;border:1px solid transparent;
+    transition:background .2s ease-out,color .2s ease-out}
+  .btn:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+  .btn-primary{background:var(--ink);color:#FDFBF7}
+  .btn-primary:hover{background:#0F141C}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
+  .btn-ghost:hover{background:var(--ink);color:#FDFBF7}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line)}
+  .prod{border-right:1px solid var(--line);padding:0 0 22px}
+  .prod:last-child{border-right:none}
+  .prod .ph{height:210px;position:relative}
+  .prod .ph .tag{position:absolute;top:12px;left:12px;background:var(--card);
+    font-family:var(--f-ui);font-size:10px;font-weight:600;letter-spacing:.12em;
+    text-transform:uppercase;padding:5px 9px;color:var(--gold)}
+  .prod .info{padding:16px 18px 0;font-family:var(--f-ui)}
+  .prod .info b{font-weight:600;font-size:14.5px;display:block}
+  .prod .info span{font-size:12.5px;color:var(--ink-soft)}
+  .prod .price{margin-top:8px;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
+  .dots{display:flex;gap:6px;margin-top:10px}
+  .dots i{width:14px;height:14px;border-radius:50%;border:1px solid rgba(35,43,54,.25)}
+  .demo-cap{padding:14px 28px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft)}
+
+  /* ФОТО + АНТИ */
+  .two{grid-template-columns:1fr 1fr}
+  .rulecard{background:var(--card);border:1px solid var(--line);padding:26px}
+  .rulecard h3{font-family:var(--f-display);font-weight:520;font-size:20px;margin-bottom:14px}
+  .rulecard ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .rulecard li{font-size:14.5px;color:var(--ink-soft);padding-left:20px;position:relative}
+  .rulecard li::before{content:'';position:absolute;left:0;top:9px;width:8px;height:2px;background:var(--gold-decor)}
+  .rulecard.no li::before{background:#B5544A}
+  footer{padding:48px 0 72px;border-top:1px solid var(--line);color:var(--ink-soft);font-size:13.5px}
+  footer b{color:var(--ink)}
+
+  @media (max-width:860px){
+    .principles,.swatches,.typo,.two{grid-template-columns:1fr}
+    .pastels{grid-template-columns:repeat(4,1fr)}
+    .cards{grid-template-columns:1fr}
+    .prod{border-right:none;border-bottom:1px solid var(--line)}
+    .demo-hero{grid-template-columns:1fr}
+    .demo-nav nav{display:none}
+    .wrap{padding:0 20px}
+  }
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="mark"><span class="dot"></span><b>UNIQDOC</b><span>· выход на США · Shopify · дизайн-направление · 25.08.2026</span></div>
+    <p class="eyebrow">Editorial clean beauty</p>
+    <h1>Скрабы, сшитые<br><em>как костюм.</em></h1>
+    <p>Пять конкурентов США делят рынок между спортивными скрабами (FIGS, Jaanuu) и клинической
+    униформой (Medelita, Cherokee). Между ними пусто — туда и встаём: сайт собираем по правилам
+    fashion-витрины, на материале уже снятого каталога BALANCE.</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><span class="n">01</span><h2>Визуальный принцип</h2></div>
+    <div class="grid principles">
+      <div class="pcard">
+        <h3>Журнальная вёрстка</h3>
+        <p>Крупные фото, линии 1px вместо теней, строгая сетка и низкая плотность: на экране
+        одна мысль. Глассморфизм и градиентные hero-блоки не используем.</p>
+      </div>
+      <div class="pcard">
+        <h3>Цвет достаётся продукту</h3>
+        <p>Фон взят со студийных стен каталога — тёплый почти-белый. Пастели BALANCE появляются
+        только там, где показывают товар: свотчи, плитки коллекций, лёгкие заливки секций.
+        Сам интерфейс нейтральный.</p>
+      </div>
+      <div class="pcard">
+        <h3>Тил и золото — по чуть-чуть</h3>
+        <p>Цвета логотипа не заливают интерфейс. Тил работает в ссылках и активных состояниях,
+        золото — в ярлыках, рейтинге и точке вордмарка. Главный жест страницы — заголовок
+        в Fraunces с курсивом.</p>
+      </div>
+    </div>
+    <div class="versus">
+      <span class="chip">FIGS — спортивный минимализм</span>
+      <span class="chip">Jaanuu — lifestyle-каталог</span>
+      <span class="chip">Medelita — консервативный неви</span>
+      <span class="sep">→</span>
+      <span class="chip us">Uniqdoc — editorial clean beauty</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="n">02</span><h2>Гамма</h2></div>
+    <div class="grid swatches">
+      <div class="swatch"><div class="chip-top" style="background:#FAF7F2;border-bottom:1px solid var(--line)"></div>
+        <div class="meta"><b>Paper</b><code>#FAF7F2</code><small>Фон всего сайта. Тёплый почти-белый со студийных стен каталога — не стерильный #FFF.</small></div></div>
+      <div class="swatch"><div class="chip-top" style="background:#232B36"></div>
+        <div class="meta"><b>Ink</b><code>#232B36</code><small>Текст, кнопки, вордмарк. Сине-чернильный (не чёрный) — родня нэви из логотипа. Контраст на Paper 12.9:1.</small></div></div>
+      <div class="swatch"><div class="chip-top" style="background:#3E7C87"></div>
+        <div class="meta"><b>Teal</b><code>#3E7C87</code><small>Из логотипа. Ссылки, активная навигация, ховеры. В тексте — тёмная ступень #2E616B (5.9:1).</small></div></div>
+      <div class="swatch"><div class="chip-top" style="background:#C2A05E"></div>
+        <div class="meta"><b>Gold</b><code>#C2A05E</code><small>Из логотипа. Только мелочи: ярлыки, звёзды рейтинга, точка бренда. Для текста — ступень #8A6B3A (4.6:1).</small></div></div>
+    </div>
+
+    <div class="grid pastels">
+      <div class="pastel"><div class="chip-top" style="background:#C9DCEA"></div><b>Sky Sorbet</b><code>#C9DCEA</code></div>
+      <div class="pastel"><div class="chip-top" style="background:#F2CFD5"></div><b>Strawberry</b><code>#F2CFD5</code></div>
+      <div class="pastel"><div class="chip-top" style="background:#D6B08C"></div><b>Caramel</b><code>#D6B08C</code></div>
+      <div class="pastel"><div class="chip-top" style="background:#A9BCA9"></div><b>Mint Matcha</b><code>#A9BCA9</code></div>
+      <div class="pastel"><div class="chip-top" style="background:#DCDCE1"></div><b>Cloud</b><code>#DCDCE1</code></div>
+      <div class="pastel"><div class="chip-top" style="background:#5A6B9E"></div><b>Blueberry</b><code>#5A6B9E</code></div>
+      <div class="pastel"><div class="chip-top" style="background:#26221F"></div><b>Velvet Noir</b><code>#26221F</code></div>
+    </div>
+    <p class="ratio-cap" style="margin-top:14px">Продуктовая палитра — из цветов коллекции BALANCE (сверить пипеткой по финальным фото).
+    Она живёт в свотчах, плитках коллекций и фонах секций на 8–15% непрозрачности — никогда в кнопках и тексте.</p>
+
+    <div class="ratio">
+      <div style="flex:58;background:#FAF7F2;color:#5C6572">PAPER 58%</div>
+      <div style="flex:24;background:#FFFFFF;color:#5C6572;border-left:1px solid var(--line);border-right:1px solid var(--line)">WHITE 24%</div>
+      <div style="flex:10;background:#232B36;color:#FDFBF7">INK 10%</div>
+      <div style="flex:5;background:#3E7C87;color:#FDFBF7">5%</div>
+      <div style="flex:3;background:#C2A05E;color:#26221F">3%</div>
+    </div>
+    <p class="ratio-cap">Пропорции цвета на типовой странице: база занимает почти всю площадь, бренд-цветам остаются проценты.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="n">03</span><h2>Типографика</h2></div>
+    <div class="grid typo">
+      <div class="specimen">
+        <p class="s-label">Display · Fraunces (variable, optical size)</p>
+        <p class="display">Serenity. Kimono cut,<br><em>palazzo pants.</em></p>
+        <p class="h2s">The BALANCE Collection</p>
+        <p class="bodys" style="font-family:var(--f-ui)">UI · Instrument Sans — Kimono wrap top with a hand-tied belt.
+        Four-way stretch weave, two side pockets, a mid-weight drape that holds its shape
+        through a 12-hour shift. Machine wash cold.</p>
+        <div class="labels">
+          <span style="color:var(--gold)">New drop</span>
+          <span style="color:var(--teal-deep)">Shop women</span>
+          <span class="price">$68.00 · Set $128.00</span>
+        </div>
+      </div>
+      <div class="trules">
+        <div class="trule"><b>Fraunces — заголовки и имена моделей</b>
+          <span>Вес 380–560, optical size на максимум в hero. Курсив — один акцент на экран. У всех пяти конкурентов заголовки набраны гротеском; сериф отделяет Uniqdoc от полки с первого экрана.</span></div>
+        <div class="trule"><b>Instrument Sans — интерфейс и текст</b>
+          <span>400/500/600. Навигация и кнопки — 12px, капс, трекинг .12em. Цены — tabular-nums, никогда не капсом.</span></div>
+        <div class="trule"><b>Шкала</b>
+          <span>12 · 14 · 16 · 18 · 22 · 28 · 38 · 54–76. Текст 16px/1.65, строка ≤ 65 знаков.</span></div>
+        <div class="trule"><b>Кириллицы в паре нет — и не нужно</b>
+          <span>Сайт англоязычный. Если появится RU-версия — дисплей Prata, UI Inter (обе с кириллицей, тот же характер).</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="n">04</span><h2>Как это выглядит</h2></div>
+    <div class="demo">
+      <div class="demo-nav">
+        <span class="logo">Uniqdoc<i>.</i></span>
+        <nav><a class="act">Women</a><a>Men</a><a>Collections</a><a>Fabric</a><a>Clinics</a></nav>
+        <span class="cart">SEARCH &nbsp;·&nbsp; BAG (1)</span>
+      </div>
+      <div class="demo-hero">
+        <div class="txt">
+          <p class="eyebrow">The Balance Collection</p>
+          <h3>The kimono top.<br>In <em style="font-style:italic;color:var(--teal-deep)">eight shades.</em></h3>
+          <p>Kimono tops and palazzo pants for cosmetology, dental and aesthetic clinics.
+          Every color named after a dessert.</p>
+          <div class="btnrow">
+            <button class="btn btn-primary">Shop women</button>
+            <button class="btn btn-ghost">Explore fabric</button>
+          </div>
+        </div>
+        <div class="img"><small>Фото: Serenity · Sky Sorbet</small></div>
+      </div>
+      <div class="cards">
+        <div class="prod">
+          <div class="ph" style="background:linear-gradient(170deg,#F2CFD5,#F8E7EA)"><span class="tag">Bestseller</span></div>
+          <div class="info"><b>Serenity Kimono Top</b><span>Strawberry Smoothie</span>
+            <div class="price">$68.00</div>
+            <div class="dots"><i style="background:#F2CFD5"></i><i style="background:#C9DCEA"></i><i style="background:#5A6B9E"></i><i style="background:#26221F"></i><i style="background:#D6B08C"></i></div>
+          </div>
+        </div>
+        <div class="prod">
+          <div class="ph" style="background:linear-gradient(170deg,#A9BCA9,#DCE6DC)"><span class="tag">New color</span></div>
+          <div class="info"><b>Focuse Straight Pant</b><span>Mint Matcha</span>
+            <div class="price">$74.00</div>
+            <div class="dots"><i style="background:#A9BCA9"></i><i style="background:#26221F"></i><i style="background:#FDFBF7"></i><i style="background:#5A6B9E"></i></div>
+          </div>
+        </div>
+        <div class="prod">
+          <div class="ph" style="background:linear-gradient(170deg,#C9DCEA,#E7F0F6)"><span class="tag">Men</span></div>
+          <div class="info"><b>Core Zip Shirt</b><span>Titan Steel</span>
+            <div class="price">$66.00</div>
+            <div class="dots"><i style="background:#7A8794"></i><i style="background:#26221F"></i><i style="background:#3A4B77"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-cap">Демо-макет: цены — гипотеза из исследования конкурентов (окно $55–90), плейсхолдеры вместо фото —
+      финальные съёмки лежат в Google Drive клиента. Кнопки: радиус 2px, капс-лейблы; у FIGS и Jaanuu кнопки заметно круглее, разница видна сразу.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="n">05</span><h2>Фото и моушен</h2></div>
+    <div class="grid two">
+      <div class="rulecard">
+        <h3>Фотография — продолжение каталога</h3>
+        <ul>
+          <li>Тёплый дневной свет, интерьеры клиник и студий — стиль уже снятого каталога BALANCE сохраняем.</li>
+          <li>Латунные и золотые детали в кадре повторяют gold-акцент интерфейса.</li>
+          <li>Для США — кастинг с этническим разнообразием моделей (стандарт категории: FIGS, Jaanuu).</li>
+          <li>Товар на белом/сером фоне — для карточек; лайфстайл — для hero и коллекций.</li>
+        </ul>
+      </div>
+      <div class="rulecard no">
+        <h3>Чего не делаем</h3>
+        <ul>
+          <li>Спортивный неон, «атлетичные» ракурсы, кричащие плашки скидок — территория FIGS и масс-сегмента.</li>
+          <li>Тёмный «люкс» с золотом на чёрном — конфликтует со светлым каталогом и медициной.</li>
+          <li>Глассморфизм, тяжёлые тени, параллакс — сбивают журнальный ритм и роняют производительность.</li>
+          <li>Моушен — только тихий: fade/translate 200–250ms ease-out, зум фото 1.03 на ховере, уважение prefers-reduced-motion.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Статус:</b> предложение к обсуждению.
+    Открытые вопросы: сверка пастельных оттенков по финальным фото · написание бренда Uniqdoc/uniqdocs · брендбук, если он существует.
+    <br>AISTOV · aistov.space · 2026</p>
+  </footer>
+</div>
+</body>
+</html>
