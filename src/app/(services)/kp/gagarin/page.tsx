@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import QuizInline from "@/components/QuizInline";
 import RevenueBar from "@/components/kp/RevenueBar";
 import KpViewSwitch from "@/components/kp/KpViewSwitch";
+import KpChapterNav from "@/components/kp/KpChapterNav";
 import GagarinMark from "@/components/kp/GagarinMark";
 import {
   KP_BASE,
@@ -45,6 +46,8 @@ const CHIP: React.CSSProperties = {
 export default function KpGagarinPage() {
   return (
     <div className="text-runtime-ink">
+      <KpChapterNav items={TOC} />
+
       {/* ---------- hero ---------- */}
       <div className="relative overflow-hidden">
         <div className="runtime-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />

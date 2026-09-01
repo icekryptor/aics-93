@@ -3,6 +3,7 @@ import { Playfair_Display, Lora } from "next/font/google";
 import QuizInline from "@/components/QuizInline";
 import RevenueBar from "@/components/kp/RevenueBar";
 import KpViewSwitch from "@/components/kp/KpViewSwitch";
+import KpChapterNav from "@/components/kp/KpChapterNav";
 import GagarinMark from "@/components/kp/GagarinMark";
 import {
   KP_BASE,
@@ -65,6 +66,8 @@ function Rule({ children }: { children: React.ReactNode }) {
 export default function KpGagarinDocPage() {
   return (
     <div className={`${playfair.variable} ${lora.variable} px-4 py-10 sm:px-6 sm:py-14`}>
+      <KpChapterNav items={TOC.map((t) => ({ ...t, id: `doc-${t.id}` }))} />
+
       {/* лист бумаги на тёмной сцене студии */}
       <article
         className="kp-doc mx-auto w-full max-w-[860px] overflow-hidden rounded-[14px] px-6 py-12 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] sm:px-14 sm:py-16"
