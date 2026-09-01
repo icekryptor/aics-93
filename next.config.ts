@@ -6,6 +6,15 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
+  async rewrites() {
+    return [
+      // Статичные КП-документы из public/kp/*.html под чистыми URL в стиле /kp/martox
+      {
+        source: "/kp/broker",
+        destination: "/kp/broker.html",
+      },
+    ];
+  },
   async redirects() {
     return [
       // «конвейер» выведен из лексикона (минус-фраза) — статья переименована
