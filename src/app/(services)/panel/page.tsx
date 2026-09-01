@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { cookies } from "next/headers";
 import PanelGate from "@/components/panel/PanelGate";
 import { panelProjects, LINK_KIND_COLOR } from "@/lib/panel";
@@ -31,6 +32,15 @@ export default async function PanelPage() {
         <h1 className="mt-6 text-[clamp(1.8rem,4vw,2.6rem)] font-semibold leading-tight tracking-tight">
           Проекты <span className="signal-text">в работе</span>
         </h1>
+        {authed ? (
+          <Link
+            href="/kp"
+            className="tech-label mt-4 inline-flex text-[11px] transition-colors hover:text-runtime-ink"
+            style={{ color: "var(--color-signal-2)" }}
+          >
+            индекс готовых КП →
+          </Link>
+        ) : null}
 
         {!authed ? (
           <>

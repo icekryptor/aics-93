@@ -15,6 +15,20 @@ export type PanelProject = {
 
 export const panelProjects: PanelProject[] = [
   {
+    id: "gagarin",
+    client: "Школа «Гагарин»",
+    title: "Учебная платформа — форк learn.ximi4ka.ru под русский и английский",
+    status:
+      "КП отправлено (80 000 ₽, оплата частями) · ответ ждём через квиз в конце предложения",
+    stage: "продажа: КП на руках у школы, работы не начаты",
+    date: "01.09.2026",
+    links: [
+      { label: "КП · студийный вид", href: "/kp/gagarin", kind: "doc" },
+      { label: "КП · документ", href: "/kp/gagarin/doc", kind: "doc" },
+      { label: "платформа-основа", href: "https://learn.ximi4ka.ru", kind: "live" },
+    ],
+  },
+  {
     id: "martox",
     client: "MARTOX",
     title: "Оператор вывода бизнеса в США — лендинг + страницы пакетов",
