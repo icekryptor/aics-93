@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 
-// POST /api/lead — отправка заявок с форм сайта в Telegram (бот @cntnm_clawbot).
-// Креды только в env: TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID (Vercel / .env.local).
+// POST /api/lead — отправка заявок с форм сайта в Telegram.
+// Бот берётся из env, приоритет — Тихон (клиентский контур Continuum Harness):
+//   TIHON_TG_TOKEN + TIHON_TG_CHAT   — основной канал заявок и квизов;
+//   TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID (@cntnm_clawbot) — фолбэк.
+// Отдельный воркер под каждый квиз не нужен: любой квиз шлёт сюда, ответы
+// приходят от Тихона одним потоком.
 
 export const runtime = "nodejs";
 
@@ -14,12 +18,25 @@ function fmtValue(v: unknown): string {
   return String(v);
 }
 
+/* Канал доставки: Тихон, если настроен, иначе старый бот. Оба — из env. */
+function pickBot(): { token: string; chatId: string; via: string } | null {
+  const tihonToken = process.env.TIHON_TG_TOKEN?.trim();
+  const tihonChat = process.env.TIHON_TG_CHAT?.trim();
+  if (tihonToken && tihonChat) return { token: tihonToken, chatId: tihonChat, via: "тихон" };
+
+  const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  if (token && chatId) return { token, chatId, via: "clawbot" };
+
+  return null;
+}
+
 export async function POST(req: Request) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) {
+  const bot = pickBot();
+  if (!bot) {
     return NextResponse.json({ ok: false, error: "telegram env is not configured" }, { status: 500 });
   }
+  const { token, chatId } = bot;
 
   let payload: { source?: unknown; data?: unknown; _hp?: unknown };
   try {

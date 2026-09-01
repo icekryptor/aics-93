@@ -72,3 +72,35 @@ export const DEFAULT_QUIZ_STEPS: QuizStep[] = [
   { kind: "budget", key: "бюджет", title: "Определите диапазон бюджета" },
   { kind: "contacts", key: "связь", title: "Удобный способ связи" },
 ];
+
+/* --- квиз-решение для КП (kpDecisionSteps) ---
+   Дефолтная механика финала любого КП: вместо «напишите в телеграм» клиент
+   отвечает по шагам, ответы уходят Тихоном в тот же поток заявок. Вопросы
+   про формат и сроки задаёт само КП, хвост (что уточнить + связь) общий. */
+export function kpDecisionSteps(opts: {
+  /** Что решает клиент: вариант, пакет, формат. */
+  choice: { key: string; title: string; options: string[] };
+  /** Когда стартуем — свои варианты или дефолтные. */
+  start?: { key: string; title: string; options: string[] };
+  /** Доп. шаги КП перед хвостом (например, «какие предметы»). */
+  extra?: QuizStep[];
+}): QuizStep[] {
+  const start = opts.start ?? {
+    key: "когда стартуем",
+    title: "Когда удобно начать?",
+    options: ["как можно скорее", "в течение 2 недель", "в следующем месяце", "пока только обсуждаем"],
+  };
+  return [
+    { kind: "single", other: true, ...opts.choice },
+    { kind: "single", other: true, ...start },
+    ...(opts.extra ?? []),
+    {
+      kind: "input",
+      key: "вопросы",
+      title: "Что осталось непонятным или вызывает сомнения?",
+      placeholder: "Любой вопрос по предложению — отвечу до начала работы",
+      multiline: true,
+    },
+    { kind: "contacts", key: "связь", title: "Как с вами связаться?" },
+  ];
+}
