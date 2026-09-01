@@ -1,14 +1,34 @@
 import type { Metadata } from "next";
 import QuizInline from "@/components/QuizInline";
-import RevenueBar, { type RevenueSegment } from "@/components/kp/RevenueBar";
-import { kpDecisionSteps } from "@/lib/quiz";
+import RevenueBar from "@/components/kp/RevenueBar";
+import KpViewSwitch from "@/components/kp/KpViewSwitch";
+import GagarinMark from "@/components/kp/GagarinMark";
+import {
+  KP_BASE,
+  KP_META,
+  TOC,
+  WHAT_PARAS,
+  SPEED_NOTE,
+  FEATURES,
+  PEDAGOGY,
+  COMPARE,
+  UPKEEP_NOTE,
+  SEGMENTS,
+  REVENUE_CAPTION,
+  PAYBACK,
+  PAYBACK_NOTE,
+  PRICE_NOTE,
+  PLANS,
+  STAGES,
+  NEED,
+  QUIZ,
+} from "@/lib/kp/gagarin";
 
-/* КП для школы «Гагарин» — учебная платформа на стеке learn.ximi4ka.ru
-   (noindex, вне sitemap). Аудитория — преподавательницы гуманитарных наук,
-   поэтому осознанные отступления от обычного тона КП: никакого технического
-   словаря (нет «базы данных», «развёртывания», «LMS», «SEO») и body 16.5px
-   вместо 15px ради читаемости длинных объяснений. Финал — не «напишите в
-   телеграм», а квиз-решение: ответы уходят Тихоном в общий поток заявок. */
+/* КП для школы «Гагарин» — студийный вид (тёмная сцена, канон ДС).
+   Второй вариант отображения того же предложения — /kp/gagarin/doc
+   (светлый лист, сериф). Контент общий: lib/kp/gagarin.ts.
+   Аудитория нетехническая (преподаватели-гуманитарии), поэтому
+   технический словарь запрещён, а body 16.5px вместо 15px. */
 
 export const metadata: Metadata = {
   title: "КП для школы «Гагарин» — своя учебная платформа",
@@ -21,187 +41,6 @@ const CHIP: React.CSSProperties = {
   clipPath:
     "polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px)",
 };
-
-const TOC = [
-  { id: "what", num: "01", label: "что это такое" },
-  { id: "features", num: "02", label: "что умеет платформа" },
-  { id: "pedagogy", num: "03", label: "зачем это педагогически" },
-  { id: "own", num: "04", label: "своя или аренда" },
-  { id: "revenue", num: "05", label: "сколько может приносить" },
-  { id: "payback", num: "06", label: "когда окупится" },
-  { id: "price", num: "07", label: "стоимость и оплата" },
-  { id: "plan", num: "08", label: "как пойдёт работа" },
-  { id: "need", num: "09", label: "что нужно от школы" },
-];
-
-const FEATURES: { title: string; text: string }[] = [
-  {
-    title: "Курсы и видеоуроки",
-    text: "Материал разбит на курсы и уроки: видео, тексты, картинки. Две линейки — русский и английский. Добавлять уроки может любой преподаватель, программист для этого не нужен.",
-  },
-  {
-    title: "Домашка, которая проверяет себя сама",
-    text: "Тесты, задания «соедини пары», «расставь по порядку», ввод ответа словом. Платформа сразу говорит ученику, верно или нет, — вам не нужно проверять это вручную.",
-  },
-  {
-    title: "Очки, награды и рейтинг",
-    text: "За каждое задание ученик получает очки. Есть награды за успехи и общий рейтинг школы. Для детей это игра, в которой не хочется отставать от одноклассников.",
-  },
-  {
-    title: "Личный кабинет ученика",
-    text: "Что пройдено, что впереди, сколько очков набрано. Прогресс виден и ребёнку, и вам, и родителям.",
-  },
-  {
-    title: "Вход по ссылке, без паролей",
-    text: "Ученик получает свою ссылку — нажал и сразу внутри. Никаких «я забыл пароль» и звонков администратору.",
-  },
-  {
-    title: "Кабинет школы",
-    text: "Одно место, где вы управляете всем: учениками, курсами, доступами. Плюс раздел со статьями — они помогают школе находиться в Яндексе и Google и приводят новых учеников.",
-  },
-  {
-    title: "Оплата картой на сайте",
-    text: "Ученик из другого города может сам оплатить доступ картой. Деньги приходят сразу на счёт школы.",
-  },
-  {
-    title: "Связь через Telegram",
-    text: "Ученик привязывает свой Telegram — и школа напоминает о занятиях и домашке там, где дети и так сидят.",
-  },
-];
-
-const PEDAGOGY: { lead: string; text: string }[] = [
-  {
-    lead: "Язык учится регулярностью, а не длительностью",
-    text: "Пятнадцать минут практики каждый день дают больше, чем два часа раз в неделю. Занятие в школе бывает 1–2 раза в неделю — платформа удерживает ученика в языке все остальные дни.",
-  },
-  {
-    lead: "Главная беда домашки — её не делают",
-    text: "Очки, награды и рейтинг дают ребёнку ту самую мотивацию, которой не хватает. Ученик заходит «добить очки» — и незаметно для себя повторяет материал.",
-  },
-  {
-    lead: "Ошибка видна сразу",
-    text: "Не через неделю на следующем занятии, когда всё уже забылось, а в ту же секунду. Так материал закрепляется намного быстрее.",
-  },
-  {
-    lead: "Преподаватель занимается преподаванием",
-    text: "Тесты и упражнения платформа проверяет сама. Время учителя уходит на то, что машине не доверишь: речь, разбор, живое занятие.",
-  },
-  {
-    lead: "Родитель видит, за что платит",
-    text: "Не абстрактные слова на собрании, а конкретные пройденные уроки и очки ребёнка. Семье, которая видит результат, гораздо труднее бросить школу.",
-  },
-  {
-    lead: "Каждый идёт в своём темпе",
-    text: "Сильные ученики уходят вперёд и не скучают, а тем, кому нужно время, платформа даёт спокойно повторять.",
-  },
-];
-
-const COMPARE: { row: string; own: string; rent: string }[] = [
-  { row: "Платёж", own: "80 000 ₽ один раз", rent: "от 5 000–30 000 ₽ каждый месяц, всегда" },
-  { row: "Имя", own: "Только ваше: адрес, логотип, оформление", rent: "Чужой сервис, ваш логотип сверху" },
-  { row: "Плата за учеников", own: "Нет — хоть 30, хоть 3000", rent: "Чем больше учеников, тем дороже тариф" },
-  {
-    row: "Курсы и данные",
-    own: "Ваши. Всё, что вы наполнили, принадлежит школе",
-    rent: "Живут у сервиса; уйти оттуда — большая боль",
-  },
-  {
-    row: "Очки и рейтинг",
-    own: "Встроены и проверены на настоящих школьниках",
-    rent: "Обычно нет или за доплату",
-  },
-];
-
-const SEGMENTS: RevenueSegment[] = [
-  {
-    label: "Надбавка к абонементу",
-    amount: 20_000,
-    color: "var(--color-signal)",
-    ink: "#ffffff",
-    note: "40 учеников платят на 500 ₽ в месяц больше за доступ к платформе. Для родителей это понятная ценность: ребёнок занимается и между уроками.",
-  },
-  {
-    label: "Онлайн-ученики",
-    amount: 20_000,
-    color: "#5fd9f5",
-    ink: "#0b1e33",
-    note: "10 учеников из других районов и городов платят по 2 000 ₽ в месяц. Аудитория не нужна, расписание не нужно — уроки уже записаны.",
-  },
-  {
-    label: "Интенсивы и марафоны",
-    amount: 10_000,
-    color: "#c5ff44",
-    ink: "#302055",
-    note: "Летние онлайн-курсы и марафоны перед экзаменами. Школа зарабатывает даже в мёртвый сезон, когда аудитории пустуют.",
-  },
-  {
-    label: "Удержание учеников",
-    amount: 9_000,
-    color: "var(--color-signal-cool)",
-    ink: "#302055",
-    note: "Ребёнок, который копит очки и стоит в рейтинге, реже бросает школу. Всего два не ушедших ученика — это 9 000 ₽ выручки, которая не исчезла.",
-  },
-];
-
-const PAYBACK: { when: string; month: string; back: string }[] = [
-  { when: "…только надбавка к абонементу", month: "20 000 ₽", back: "4 месяца" },
-  { when: "…только онлайн-ученики", month: "20 000 ₽", back: "4 месяца" },
-  { when: "…только удержание", month: "9 000 ₽", back: "9 месяцев" },
-  { when: "…надбавка и онлайн вместе", month: "40 000 ₽", back: "2 месяца" },
-];
-
-const STAGES: { title: string; dur: string; text: string }[] = [
-  {
-    title: "Запускаем вашу копию",
-    dur: "3–5 дней",
-    text: "Платформа открывается на вашем адресе. Убираем всё, что относилось к химии, — остаётся чистая учебная основа.",
-  },
-  {
-    title: "Настраиваем под языки",
-    dur: "4–6 дней",
-    text: "Приспосабливаем упражнения под русский и английский: проверку письменных ответов, языковые типы заданий. Настраиваем выдачу доступов ученикам.",
-  },
-  {
-    title: "Оформляем в стиле «Гагарина»",
-    dur: "3–4 дня",
-    text: "Логотип, цвета, тексты — платформа выглядит как продукт школы, а не как чужой сервис. Плюс красивая главная страница для новых учеников.",
-  },
-  {
-    title: "Подключаем оплату и обучаем",
-    dur: "3–5 дней",
-    text: "Настраиваем приём оплаты картой на счёт школы. Проводим созвон с командой: как добавлять курсы и учеников, как смотреть прогресс. Передаём все доступы и простую инструкцию.",
-  },
-];
-
-const NEED = [
-  "Логотип и фирменные цвета. Если их нет — предложим варианты.",
-  "Адрес сайта. Если у школы уже есть сайт, платформа станет его частью — например, learn.ваш-сайт.ru.",
-  "Данные для приёма оплаты картой: подключим ЮKassa или похожий сервис на счёт школы.",
-  "Курсы и видео вы добавляете сами — на обучающем созвоне покажем, как. Это сделано специально: наполнять платформу сможет любой преподаватель, без программиста и без нас.",
-];
-
-/* эмблема школы: орбита + звезда. Набросок в фирменной палитре —
-   если школа пришлёт свой логотип, меняем на него. */
-function GagarinMark() {
-  return (
-    <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden className="shrink-0">
-      <circle cx="28" cy="28" r="25" fill="none" stroke="var(--color-signal-2)" strokeWidth="1.5" />
-      <path
-        d="M 10 41 A 27 27 0 0 1 43 11"
-        fill="none"
-        stroke="var(--color-signal-cool)"
-        strokeWidth="1.5"
-        strokeDasharray="3 5"
-        opacity="0.75"
-      />
-      <path
-        d="M28 13 L31.4 24.6 L43 28 L31.4 31.4 L28 43 L24.6 31.4 L13 28 L24.6 24.6 Z"
-        fill="var(--color-signal)"
-      />
-      <circle cx="43" cy="11" r="2.8" fill="#5fd9f5" />
-    </svg>
-  );
-}
 
 export default function KpGagarinPage() {
   return (
@@ -218,28 +57,29 @@ export default function KpGagarinPage() {
             коммерческое предложение · aics-93 → школа «гагарин»
           </span>
 
-          <div className="mt-7 flex items-center gap-4">
-            <GagarinMark />
-            <div>
-              <p className="font-display text-[20px] font-semibold tracking-[0.06em] text-runtime-ink">
-                ГАГАРИН
-              </p>
-              <p className="tech-label text-[11.5px] text-runtime-ink-soft">
-                школа русского и английского языка
-              </p>
+          <div className="mt-7 flex flex-wrap items-center justify-between gap-5">
+            <div className="flex items-center gap-4">
+              <GagarinMark />
+              <div>
+                <p className="font-display text-[20px] font-semibold tracking-[0.06em] text-runtime-ink">
+                  ГАГАРИН
+                </p>
+                <p className="tech-label text-[11.5px] text-runtime-ink-soft">
+                  школа русского и английского языка
+                </p>
+              </div>
             </div>
+            <KpViewSwitch base={KP_BASE} active="studio" />
           </div>
 
           <h1 className="mt-8 max-w-3xl text-[clamp(2rem,4.6vw,3.3rem)] font-semibold leading-[1.05] tracking-tight">
             Своя учебная платформа для школы <span className="signal-text">«Гагарин»</span>
           </h1>
           <p className="mt-5 max-w-2xl text-[1.07rem] leading-relaxed text-runtime-ink-soft">
-            Сайт, где ваши ученики смотрят уроки, делают интерактивную домашку и соревнуются за
-            очки — под вашим именем и в вашей полной собственности. Один раз сделали — и он
-            работает на школу годами.
+            {KP_META.lead}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-2">
-            {["80 000 ₽ — можно частями", "2–3 недели", "френдли-прайс", "1 сентября 2026"].map((c) => (
+            {KP_META.chips.map((c) => (
               <span
                 key={c}
                 className="tech-label rounded-full border border-runtime-line bg-black/30 px-3.5 py-1.5 text-[11px] text-runtime-ink-soft"
@@ -283,23 +123,16 @@ export default function KpGagarinPage() {
           </h2>
           <div className="mt-8 grid items-start gap-8 lg:grid-cols-[1.15fr_1fr]">
             <div className="space-y-4 text-[16.5px] leading-relaxed text-runtime-ink-soft">
-              <p>
-                Вы видели платформу <span className="text-runtime-ink">learn.ximi4ka.ru</span> — на
-                ней каждый день занимаются школьники, которые готовятся к экзамену по химии. Это не
-                макет и не картинка, а живой, проверенный на настоящих учениках продукт.
-              </p>
-              <p>
-                Предложение простое: мы делаем{" "}
-                <span className="text-runtime-ink">такую же платформу для «Гагарина»</span> — со
-                своим адресом в интернете, в вашем оформлении и с вашими предметами: русским и
-                английским. Наполнять её курсами вы сможете сами, без программистов — это так же
-                просто, как написать документ в Google Docs.
-              </p>
-              <p>
-                Главное отличие от готовых сервисов «в аренду»:{" "}
-                <span className="text-runtime-ink">платформа принадлежит вам</span>. Никаких
-                ежемесячных платежей за пользование и никаких доплат за количество учеников.
-              </p>
+              {WHAT_PARAS.map((par) => {
+                const [before, after] = par.strong ? par.text.split(par.strong) : [par.text, ""];
+                return (
+                  <p key={par.text}>
+                    {before}
+                    {par.strong ? <span className="text-runtime-ink">{par.strong}</span> : null}
+                    {after}
+                  </p>
+                );
+              })}
             </div>
             <div
               className="p-5 sm:p-6"
@@ -308,15 +141,11 @@ export default function KpGagarinPage() {
               <p className="tech-label text-[0.68rem]" style={{ color: "var(--color-signal-2)" }}>
                 [ откуда берётся скорость ]
               </p>
-              <p className="mt-3 text-[15px] leading-relaxed text-runtime-ink-soft">
-                Обычно такую платформу делают с нуля полгода. Здесь основа{" "}
-                <span className="text-runtime-ink">уже построена и обкатана</span> — курсы, домашка,
-                очки, кабинеты, оплата. Мы не изобретаем механику заново, а приспосабливаем готовую
-                под русский и английский язык.
-              </p>
-              <p className="mt-3 text-[15px] leading-relaxed text-runtime-ink-soft">
-                Поэтому и срок — недели вместо месяцев, и цена — в разы ниже разработки с нуля.
-              </p>
+              {SPEED_NOTE.map((t) => (
+                <p key={t} className="mt-3 text-[15px] leading-relaxed text-runtime-ink-soft">
+                  {t}
+                </p>
+              ))}
             </div>
           </div>
         </section>
@@ -415,10 +244,7 @@ export default function KpGagarinPage() {
             </table>
           </div>
           <p className="mt-6 max-w-3xl text-[15.5px] leading-relaxed text-runtime-ink-soft">
-            Единственный постоянный расход — техническое обслуживание сайта:{" "}
-            <span className="text-runtime-ink">примерно 0–2 000 ₽ в месяц</span>, и эти деньги идут
-            напрямую техническим сервисам, без нашей наценки. Пока учеников немного, это чаще всего
-            вообще бесплатно.
+            {UPKEEP_NOTE}
           </p>
         </section>
 
@@ -436,7 +262,7 @@ export default function KpGagarinPage() {
           <div className="mt-8">
             <RevenueBar
               segments={SEGMENTS}
-              caption="Это четыре независимых источника: любой из них работает сам по себе, а вместе они складываются в общую сумму. Начать можно с одного — например, только с надбавки к абонементу."
+              caption={REVENUE_CAPTION}
             />
           </div>
         </section>
@@ -492,8 +318,7 @@ export default function KpGagarinPage() {
             </table>
           </div>
           <p className="mt-6 max-w-3xl text-[15.5px] leading-relaxed text-runtime-ink-soft">
-            Даже самый скромный вариант возвращает вложение в пределах учебного года. А платформа
-            остаётся у школы навсегда и продолжает приносить деньги без новых вложений.
+            {PAYBACK_NOTE}
           </p>
         </section>
 
@@ -519,71 +344,39 @@ export default function KpGagarinPage() {
               80 000 ₽
             </p>
             <p className="mt-5 max-w-2xl text-[16.5px] leading-relaxed text-runtime-ink-soft">
-              Это дружеская цена. Разработка такой платформы с нуля стоит на рынке{" "}
-              <span className="text-runtime-ink">400–800 тысяч рублей</span>, а аренда похожего
-              сервиса — <span className="text-runtime-ink">60–120 тысяч в год, каждый год</span>.
-              Здесь основа уже построена и проверена в работе — вы платите только за то, чтобы
-              приспособить её под вашу школу.
+              {PRICE_NOTE}
             </p>
           </div>
 
-          <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <div
-              className="p-6"
-              style={{
-                borderRadius: "20px",
-                border: "1px solid rgba(151,71,255,0.45)",
-                background: "rgba(23,16,41,0.5)",
-              }}
-            >
-              <p className="tech-label text-[11px]" style={{ color: "var(--color-signal-2)" }}>
-                [ вариант 1 ]
-              </p>
-              <h3 className="mt-3 text-[18px] font-semibold text-runtime-ink">
-                Два платежа по 40 000 ₽
-              </h3>
-              <ul className="mt-4 space-y-2.5 text-[15.5px] leading-relaxed text-runtime-ink-soft">
-                <li>
-                  <span className="font-display font-semibold text-runtime-ink">40 000 ₽</span> — когда
-                  начинаем работу
-                </li>
-                <li>
-                  <span className="font-display font-semibold text-runtime-ink">40 000 ₽</span> — когда
-                  сдаём готовую платформу
-                </li>
-              </ul>
-            </div>
-            <div
-              className="p-6"
-              style={{
-                borderRadius: "20px",
-                border: "1px solid var(--color-runtime-line)",
-                background: "rgba(23,16,41,0.4)",
-              }}
-            >
-              <p className="tech-label text-[11px] text-runtime-ink-soft">[ вариант 2 ]</p>
-              <h3 className="mt-3 text-[18px] font-semibold text-runtime-ink">
-                Четыре платежа по 20 000 ₽
-              </h3>
-              <ul className="mt-4 space-y-2.5 text-[15.5px] leading-relaxed text-runtime-ink-soft">
-                <li>
-                  <span className="font-display font-semibold text-runtime-ink">20 000 ₽</span> — когда
-                  начинаем работу
-                </li>
-                <li>
-                  <span className="font-display font-semibold text-runtime-ink">20 000 ₽</span> —
-                  платформа открылась на вашем адресе
-                </li>
-                <li>
-                  <span className="font-display font-semibold text-runtime-ink">20 000 ₽</span> —
-                  упражнения и оформление «Гагарина» готовы
-                </li>
-                <li>
-                  <span className="font-display font-semibold text-runtime-ink">20 000 ₽</span> —
-                  сдача: оплата картой работает, команда обучена
-                </li>
-              </ul>
-            </div>
+          <div className="mt-5 grid items-start gap-4 sm:grid-cols-2">
+            {PLANS.map((pl, i) => (
+              <div
+                key={pl.title}
+                className="p-6"
+                style={{
+                  borderRadius: "20px",
+                  border:
+                    i === 0 ? "1px solid rgba(151,71,255,0.45)" : "1px solid var(--color-runtime-line)",
+                  background: i === 0 ? "rgba(23,16,41,0.5)" : "rgba(23,16,41,0.4)",
+                }}
+              >
+                <p
+                  className="tech-label text-[11px]"
+                  style={i === 0 ? { color: "var(--color-signal-2)" } : undefined}
+                >
+                  [ {pl.tag} ]
+                </p>
+                <h3 className="mt-3 text-[18px] font-semibold text-runtime-ink">{pl.title}</h3>
+                <ul className="mt-4 space-y-2.5 text-[15.5px] leading-relaxed text-runtime-ink-soft">
+                  {pl.steps.map((st) => (
+                    <li key={st.text}>
+                      <span className="font-display font-semibold text-runtime-ink">{st.sum}</span> —{" "}
+                      {st.text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -658,34 +451,9 @@ export default function KpGagarinPage() {
       {/* ---------- квиз вместо формы: ответы уходят Тихоном ---------- */}
       <QuizInline
         source="kp_gagarin"
-        title="Ответьте на четыре вопроса — и я подготовлю договор"
-        text="Вместо переписки: выберите вариант оплаты и срок, задайте свои вопросы. Ответы придут мне сразу, вернусь с договором и планом в тот же день."
-        steps={kpDecisionSteps({
-          choice: {
-            key: "вариант оплаты",
-            title: "Какой вариант оплаты удобнее?",
-            options: ["два платежа по 40 000 ₽", "четыре платежа по 20 000 ₽"],
-          },
-          extra: [
-            {
-              kind: "multi",
-              key: "предметы на старте",
-              title: "С каких предметов начнём наполнение?",
-              options: ["русский язык", "английский язык", "оба сразу", "подготовка к ОГЭ / ЕГЭ"],
-            },
-            {
-              kind: "single",
-              key: "оплата учеников",
-              title: "Как ученики будут получать доступ?",
-              options: [
-                "школа выдаёт доступы сама",
-                "ученики платят онлайн на сайте",
-                "и то, и другое",
-                "пока не решили",
-              ],
-            },
-          ],
-        })}
+        title={QUIZ.title}
+        text={QUIZ.text}
+        steps={QUIZ.steps()}
       />
     </div>
   );

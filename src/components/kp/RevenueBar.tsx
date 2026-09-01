@@ -18,26 +18,46 @@ const fmt = (n: number) => new Intl.NumberFormat("ru-RU").format(n);
 export default function RevenueBar({
   segments,
   caption,
+  tone = "dark",
 }: {
   segments: RevenueSegment[];
   caption?: string;
+  /** dark — тёмная сцена (студийный вид), paper — светлый лист документа. */
+  tone?: "dark" | "paper";
 }) {
   const total = segments.reduce((s, x) => s + x.amount, 0);
+  const paper = tone === "paper";
 
-  return (
-    <div
-      className="overflow-hidden p-6 sm:p-8"
-      style={{
+  const shell: React.CSSProperties = paper
+    ? {
+        borderRadius: "10px",
+        border: "1px solid var(--paper-line)",
+        background: "var(--paper-card)",
+      }
+    : {
         borderRadius: "25px 55px 55px 5px",
         border: "1px solid var(--color-runtime-line)",
         background: "rgba(23,16,41,0.45)",
-      }}
-    >
+      };
+  const inkStrong = paper ? "text-[color:var(--paper-ink)]" : "text-runtime-ink";
+  const inkSoft = paper ? "text-[color:var(--paper-ink-soft)]" : "text-runtime-ink-soft";
+  const lineCls = paper ? "border-[color:var(--paper-line)]" : "border-runtime-line";
+
+  return (
+    <div className="overflow-hidden p-6 sm:p-8" style={shell}>
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-        <p className="tech-label text-[11px]" style={{ color: "var(--color-signal-2)" }}>
-          [ пример · доход платформы в месяц ]
-        </p>
-        <p className="font-display text-[clamp(1.6rem,4vw,2.4rem)] font-semibold leading-none text-runtime-ink">
+        {paper ? (
+          <p className="doc-eyebrow">Пример · доход платформы в месяц</p>
+        ) : (
+          <p className="tech-label text-[11px]" style={{ color: "var(--color-signal-2)" }}>
+            [ пример · доход платформы в месяц ]
+          </p>
+        )}
+        <p
+          className={`font-display text-[clamp(1.6rem,4vw,2.4rem)] font-semibold leading-none ${
+            paper ? "doc-money" : "text-runtime-ink"
+          }`}
+        >
           {fmt(total)} ₽
         </p>
       </div>
@@ -76,17 +96,24 @@ export default function RevenueBar({
               aria-hidden
             />
             <div>
-              <p className="text-[15px] font-semibold leading-snug text-runtime-ink">
-                {s.label} — <span className="font-display">{fmt(s.amount)} ₽</span>
+              <p className={`font-semibold leading-snug ${paper ? "text-[17px]" : "text-[15px]"} ${inkStrong}`}>
+                {s.label} —{" "}
+                <span className="font-display whitespace-nowrap">{fmt(s.amount)} ₽</span>
               </p>
-              <p className="mt-1.5 text-[14.5px] leading-relaxed text-runtime-ink-soft">{s.note}</p>
+              <p className={`mt-1.5 leading-relaxed ${paper ? "text-[16px]" : "text-[14.5px]"} ${inkSoft}`}>
+                {s.note}
+              </p>
             </div>
           </div>
         ))}
       </div>
 
       {caption ? (
-        <p className="mt-7 border-t border-runtime-line pt-5 text-[14.5px] leading-relaxed text-runtime-ink-soft">
+        <p
+          className={`mt-7 border-t pt-5 leading-relaxed ${lineCls} ${
+            paper ? "text-[16px]" : "text-[14.5px]"
+          } ${inkSoft}`}
+        >
           {caption}
         </p>
       ) : null}
