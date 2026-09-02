@@ -6,7 +6,13 @@ import { useEffect, useState } from "react";
 // "aics:sitestate" event the GL component dispatches on each stage change.
 const STAGES = ["данные", "прототип", "реализация"];
 
-export default function StageCaption({ className }: { className?: string }) {
+export default function StageCaption({
+  className,
+  stages = STAGES,
+}: {
+  className?: string;
+  stages?: string[];
+}) {
   const [stage, setStage] = useState(0);
 
   useEffect(() => {
@@ -24,7 +30,7 @@ export default function StageCaption({ className }: { className?: string }) {
       aria-hidden
       style={{ letterSpacing: "0.22em", fontVariantNumeric: "tabular-nums" }}
     >
-      {STAGES.map((n, i) => (
+      {stages.map((n, i) => (
         <span key={n}>
           <span
             style={{
@@ -35,7 +41,7 @@ export default function StageCaption({ className }: { className?: string }) {
           >
             {n}
           </span>
-          {i < STAGES.length - 1 ? <span style={{ opacity: 0.4 }}> · </span> : null}
+          {i < stages.length - 1 ? <span style={{ opacity: 0.4 }}> · </span> : null}
         </span>
       ))}
     </span>

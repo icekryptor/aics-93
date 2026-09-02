@@ -13,7 +13,65 @@ const CUT: React.CSSProperties = {
 
 // ACT V — the invitation. A dark "console" contact form + the Rubik cube that
 // morphs into a data network on click (the machine, playful).
-export default function ContactConsole() {
+
+/* Тексты консоли вынесены в словарь: RU-дефолты ниже, EN-страницы передают
+   свой словарь (src/lib/en/content.ts). Ключи полей лида остаются русскими —
+   так сообщения в Telegram оператору читаются одинаково с любой версии. */
+export type ContactConsoleDict = {
+  source: string;
+  eyebrow: string;
+  titlePre: string;
+  titleAccent: string;
+  titlePost: string;
+  subtitle: string;
+  doneTitlePre: string;
+  doneTitleAccent: string;
+  doneText: string;
+  step1: string;
+  step2: string;
+  projectTypes: string[];
+  aboutPlaceholder: string;
+  namePlaceholder: string;
+  phonePlaceholder: string;
+  sending: string;
+  submit: string;
+  sendError: string;
+  noFormPre: string;
+  noFormLink: string;
+  noFormPost: string;
+  nextSteps: [string, string, string];
+  hudNote: string;
+  cubeCaption: string;
+};
+
+const RU_DICT: Omit<ContactConsoleDict, "projectTypes"> = {
+  source: "контакт-консоль (главная)",
+  eyebrow: "[ контакт · установить связь ]",
+  titlePre: "Пришлите данные о проекте — ",
+  titleAccent: "обсудим",
+  titlePost: " в ближайшее время.",
+  subtitle: "Свяжусь в WhatsApp или Telegram и рассчитаю стоимость вашей задачи в течение 2 часов.",
+  doneTitlePre: "Связь ",
+  doneTitleAccent: "установлена",
+  doneText: "Сигнал получен — отвечу в течение 2 часов. Ваш проект уже в очереди на обработку системой.",
+  step1: "[ 01 · тип проекта ]",
+  step2: "[ 02 · данные ]",
+  aboutPlaceholder: "Коротко о проекте и приблизительный бюджет",
+  namePlaceholder: "Ваше имя",
+  phonePlaceholder: "Телефон или мессенджер",
+  sending: "Отправляю…",
+  submit: "Обсудить проект",
+  sendError: "не удалось отправить — попробуйте ещё раз или напишите в telegram",
+  noFormPre: "Без формы: ",
+  noFormLink: "напишите в Telegram",
+  noFormPost: " «хочу разбор» — вернусь со структурой и вилкой цены в течение 24 часов.",
+  nextSteps: ["разбор задачи", "структура и вилка цены", "план и старт"],
+  hudNote: "// данные уходят напрямую оператору · без спама",
+  cubeCaption: "[ клик — куб ⇄ сеть данных ]",
+};
+
+export default function ContactConsole({ dict }: { dict?: Partial<ContactConsoleDict> } = {}) {
+  const D: ContactConsoleDict = { projectTypes, ...RU_DICT, ...dict };
   const [done, setDone] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendErr, setSendErr] = useState(false);
@@ -32,7 +90,7 @@ export default function ContactConsole() {
     if (sending) return;
     setSending(true);
     setSendErr(false);
-    const ok = await sendLead("контакт-консоль (главная)", {
+    const ok = await sendLead(D.source, {
       "тип проекта": selected,
       "о проекте": form.about,
       имя: form.name,
@@ -62,14 +120,15 @@ export default function ContactConsole() {
         {/* header */}
         <div className="max-w-2xl">
           <p className="tech-label text-[11px] text-[color-mix(in_srgb,var(--color-signal)_80%,white)]">
-            [ контакт · установить связь ]
+            {D.eyebrow}
           </p>
           <h2 className="mt-4 text-[clamp(1.7rem,3.4vw,2.7rem)] font-medium leading-[1.06] tracking-[-0.02em] text-runtime-ink">
-            Пришлите данные о проекте — <span className="signal-text">обсудим</span> в
-            ближайшее время.
+            {D.titlePre}
+            <span className="signal-text">{D.titleAccent}</span>
+            {D.titlePost}
           </h2>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-runtime-ink-soft">
-            Свяжусь в WhatsApp или Telegram и рассчитаю стоимость вашей задачи в течение 2 часов.
+            {D.subtitle}
           </p>
         </div>
 
@@ -90,11 +149,11 @@ export default function ContactConsole() {
                     // neural link established
                   </p>
                   <p className="mt-4 font-bold text-2xl text-runtime-ink">
-                    Связь <span className="signal-text">установлена</span>.
+                    {D.doneTitlePre}
+                    <span className="signal-text">{D.doneTitleAccent}</span>.
                   </p>
                   <p className="mx-auto mt-3 max-w-sm text-sm text-runtime-ink-soft">
-                    Сигнал получен — отвечу в течение 2 часов. Ваш проект уже в очереди на
-                    обработку системой.
+                    {D.doneText}
                   </p>
                   <p className="hud mt-5 text-[10px] text-runtime-ink-soft/70">
                     packet · {selected.length || 0} modules · status 200 · delivered
@@ -103,10 +162,10 @@ export default function ContactConsole() {
               ) : (
                 <form onSubmit={submit}>
                   <p className="tech-label mb-3 text-[11px] text-runtime-ink-soft">
-                    [ 01 · тип проекта ]
+                    {D.step1}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {projectTypes.map((t) => (
+                    {D.projectTypes.map((t) => (
                       <button
                         type="button"
                         key={t}
@@ -124,26 +183,26 @@ export default function ContactConsole() {
                   </div>
 
                   <p className="tech-label mb-3 mt-7 text-[11px] text-runtime-ink-soft">
-                    [ 02 · данные ]
+                    {D.step2}
                   </p>
                   <div className="grid gap-3">
                     <textarea
                       value={form.about}
                       onChange={set("about")}
                       rows={3}
-                      aria-label="Коротко о проекте и приблизительный бюджет"
-                      placeholder="Коротко о проекте и приблизительный бюджет"
+                      aria-label={D.aboutPlaceholder}
+                      placeholder={D.aboutPlaceholder}
                       className={inputCls}
                     />
                     {/* почта не нужна; телефону/мессенджеру — больше места под подсказку */}
                     <div className="grid gap-3 sm:grid-cols-[0.8fr_1.2fr]">
-                      <input value={form.name} onChange={set("name")} aria-label="Ваше имя" placeholder="Ваше имя" className={inputCls} />
+                      <input value={form.name} onChange={set("name")} aria-label={D.namePlaceholder} placeholder={D.namePlaceholder} className={inputCls} />
                       <input
                         value={form.phone}
                         onChange={set("phone")}
                         required
-                        aria-label="Телефон или мессенджер"
-                        placeholder="Телефон или мессенджер"
+                        aria-label={D.phonePlaceholder}
+                        placeholder={D.phonePlaceholder}
                         className={inputCls}
                       />
                     </div>
@@ -156,15 +215,15 @@ export default function ContactConsole() {
                     disabled={sending}
                     className="btn-case mt-6 w-full py-4 text-sm font-semibold disabled:opacity-60 sm:w-auto sm:px-14"
                   >
-                    {sending ? "Отправляю…" : <>Обсудить проект <span aria-hidden>→</span></>}
+                    {sending ? D.sending : <>{D.submit} <span aria-hidden>→</span></>}
                   </button>
                   {sendErr && (
                     <p className="mt-3 text-[12px] text-[#ff8f73]">
-                      не удалось отправить — попробуйте ещё раз или напишите в telegram
+                      {D.sendError}
                     </p>
                   )}
                   <p className="mt-4 text-[12.5px] leading-relaxed text-runtime-ink-soft">
-                    Без формы:{" "}
+                    {D.noFormPre}
                     <a
                       href={legal.telegram}
                       target="_blank"
@@ -172,14 +231,14 @@ export default function ContactConsole() {
                       onClick={() => reachGoal("tg_click", { source: "contact_console" })}
                       className="text-[color-mix(in_srgb,var(--color-signal-cool)_85%,white)] underline decoration-dotted underline-offset-4 transition-colors hover:text-white"
                     >
-                      напишите в Telegram
-                    </a>{" "}
-                    «хочу разбор» — вернусь со структурой и вилкой цены в течение 24 часов.
+                      {D.noFormLink}
+                    </a>
+                    {D.noFormPost}
                   </p>
 
                   {/* что будет дальше — снимает тревогу после отправки */}
                   <div className="mt-5 flex flex-wrap gap-x-5 gap-y-1.5 border-t border-runtime-line/60 pt-4">
-                    {["разбор задачи", "структура и вилка цены", "план и старт"].map((step, i) => (
+                    {D.nextSteps.map((step, i) => (
                       <span key={step} className="tech-label inline-flex items-center gap-2 text-[10px] text-runtime-ink-soft">
                         <span style={{ color: "var(--color-signal-2)" }}>0{i + 1}</span>
                         {step}
@@ -189,7 +248,7 @@ export default function ContactConsole() {
                   </div>
 
                   <p className="hud mt-4 text-[9px] text-runtime-ink-soft/60">
-                    // данные уходят напрямую оператору · без спама
+                    {D.hudNote}
                   </p>
                 </form>
               )}
@@ -202,7 +261,7 @@ export default function ContactConsole() {
               <CubeMorph className="absolute inset-0 h-full w-full" />
             </div>
             <p className="tech-label mt-2 text-center text-[10px] text-runtime-ink-soft">
-              [ клик — куб ⇄ сеть данных ]
+              {D.cubeCaption}
             </p>
           </div>
         </div>

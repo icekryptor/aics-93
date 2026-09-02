@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import NeuralHero from "@/components/NeuralHero";
 import { Intro, Frameworks, Reasons, About } from "@/components/Sections";
 import AiProcess from "@/components/AiProcess";
@@ -12,6 +13,16 @@ import BlogTeaser from "@/components/BlogTeaser";
 import Footer from "@/components/Footer";
 import SignalTransition from "@/components/system/SignalTransition";
 import DnaHelix from "@/components/system/DnaHelix";
+
+// hreflang-связка с английской версией (/en); canonical и RSS дублируем из
+// корневого layout — alternates переопределяется целиком, не по полям.
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+    languages: { ru: "/", en: "/en", "x-default": "/" },
+    types: { "application/rss+xml": "/feed.xml" },
+  },
+};
 
 export default function Experience() {
   return (

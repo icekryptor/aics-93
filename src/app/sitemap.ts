@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
 import { getAllPosts } from "@/lib/blog";
 import { getAllServices } from "@/lib/services";
+import { getAllServices as getAllEnServices } from "@/lib/en/services";
 import { getAllSolutions } from "@/lib/solutions";
 import { getAllCases } from "@/lib/cases";
 
@@ -27,6 +28,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
+    // English section (/en) — key pages only, hreflang lives in page metadata
+    { url: `${SITE_URL}/en`, lastModified: new Date("2026-09-02"), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/en/services`, lastModified: new Date("2026-09-02"), changeFrequency: "monthly", priority: 0.6 },
+    ...getAllEnServices().map((s) => ({
+      url: `${SITE_URL}/en/services/${s.slug}`,
+      lastModified: new Date("2026-09-02"),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+    { url: `${SITE_URL}/en/operator`, lastModified: new Date("2026-09-02"), changeFrequency: "monthly", priority: 0.4 },
     { url: `${SITE_URL}/blog`, lastModified: newest, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/classic`, lastModified: new Date("2026-07-02"), changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/ai`, lastModified: new Date("2026-07-18"), changeFrequency: "monthly", priority: 0.3 },

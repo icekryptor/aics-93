@@ -157,7 +157,17 @@ function buildTargets(): { dna: Pt[]; cells: Pt[]; uni: Target[]; uniEdges: numb
   return { dna, cells, uni, uniEdges: nEdge };
 }
 
-export default function BrandEvolution({ className }: { className?: string }) {
+export default function BrandEvolution({
+  className,
+  stages = STAGES,
+  caption = "[ клик — следующая стадия эволюции ]",
+  ariaLabel = "Эволюция бренда: смыслы → концепция → стиль (частицы: ДНК → клетки → единорог)",
+}: {
+  className?: string;
+  stages?: readonly string[];
+  caption?: string;
+  ariaLabel?: string;
+}) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [stage, setStage] = useState(0);
@@ -353,20 +363,20 @@ export default function BrandEvolution({ className }: { className?: string }) {
         ref={canvasRef}
         className="block h-full w-full cursor-pointer"
         role="img"
-        aria-label="Эволюция бренда: смыслы → концепция → стиль (частицы: ДНК → клетки → единорог)"
+        aria-label={ariaLabel}
       />
       {/* стадии */}
       <div className="pointer-events-none absolute inset-x-0 bottom-1 z-10 flex flex-col items-center gap-1">
         <p className="text-[12px] uppercase tracking-widest text-runtime-ink">
-          {STAGES.map((s, i) => (
+          {stages.map((s, i) => (
             <span key={s} className={i === stage ? "signal-text" : "opacity-30"}>
               {s}
-              {i < STAGES.length - 1 ? " · " : ""}
+              {i < stages.length - 1 ? " · " : ""}
             </span>
           ))}
         </p>
         <p className="tech-label text-[9px] text-runtime-ink-soft/70">
-          [ клик — следующая стадия эволюции ]
+          {caption}
         </p>
       </div>
     </div>

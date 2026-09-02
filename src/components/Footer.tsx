@@ -81,9 +81,14 @@ export default function Footer() {
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/40">
           <p>© {new Date().getFullYear()} AICS-93 · Василий Аистов</p>
-          <a href="/ai" className="transition-colors hover:text-white/70">
-            Hey AI, learn about us →
-          </a>
+          <div className="flex gap-5">
+            <a href="/en" className="transition-colors hover:text-white/70">
+              English version →
+            </a>
+            <a href="/ai" className="transition-colors hover:text-white/70">
+              Hey AI, learn about us →
+            </a>
+          </div>
         </div>
       </div>
     </footer>

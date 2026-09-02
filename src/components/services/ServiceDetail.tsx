@@ -10,6 +10,72 @@ import { HOW_IT_WORKS_VIDEO } from "@/lib/media";
 /* Server-rendered service detail — dark cyber-lab layout. Content-first
    (all copy in SSR HTML for SEO/GEO). No client JS: FAQ uses <details>. */
 
+/* Подписи секций вынесены в словарь: RU-дефолты ниже, EN-версия передаёт
+   свой словарь через проп labels (см. src/lib/en/content.ts). */
+export type ServiceDetailLabels = {
+  numberLocale: string;
+  priceFrom: string;
+  priceNote: string;
+  modulesEyebrow: string;
+  modulesTitle: string;
+  valuePropsEyebrow: string;
+  valuePropsTitle: string;
+  howEyebrow: string;
+  videoAlt: string;
+  processEyebrow: string;
+  processTitle: string;
+  ganttEyebrow: string;
+  ganttTotal: (total: number) => string;
+  formatDays: (days: number) => string;
+  comparisonEyebrow: string;
+  comparisonDefaultPrefix: string;
+  comparisonClassicLabel: string;
+  deliverablesEyebrow: string;
+  deliverablesTitle: string;
+  bankEyebrow: string;
+  bizCasesEyebrow: string;
+  faqEyebrow: string;
+  faqTitle: string;
+  trainingEyebrow: string;
+  stageCaptions: string[];
+  evolutionStages: string[];
+  evolutionCaption: string;
+  evolutionAria: string;
+};
+
+const RU_LABELS: ServiceDetailLabels = {
+  numberLocale: "ru-RU",
+  priceFrom: "от ",
+  priceNote:
+    "· итоговая смета зависит от масштаба и проектных часов — фиксируется в договоре до старта. Оплата 50/50, ответственность за сроки — материальная.",
+  modulesEyebrow: "что оцифровываем",
+  modulesTitle: "Модули, из которых собирается ваша система",
+  valuePropsEyebrow: "преимущества подхода",
+  valuePropsTitle: "Почему это быстрее, дешевле и живее классической разработки",
+  howEyebrow: "как это работает",
+  videoAlt: "AI-ядро собирает интерфейсы сайта",
+  processEyebrow: "порядок работы",
+  processTitle: "От брифа до аналитического сопровождения — единый прозрачный контур",
+  ganttEyebrow: "пример сметы · гант",
+  ganttTotal: (total) => `// итого ≈ ${total} дней · этапы идут каскадом`,
+  formatDays: (d) => `${d} ${d === 1 ? "день" : d < 5 ? "дня" : "дней"}`,
+  comparisonEyebrow: "сравнение",
+  comparisonDefaultPrefix: "Классическая студия и",
+  comparisonClassicLabel: "классическая студия",
+  deliverablesEyebrow: "что вы получаете",
+  deliverablesTitle: "Не просто сайт, а работающий актив с сопровождением",
+  bankEyebrow: "банк решений",
+  bizCasesEyebrow: "бизнес-кейсы",
+  faqEyebrow: "частые вопросы",
+  faqTitle: "Отвечаю на главные вопросы",
+  trainingEyebrow: "обучение",
+  stageCaptions: ["данные", "прототип", "реализация"],
+  evolutionStages: ["смыслы", "концепция", "стиль"],
+  evolutionCaption: "[ клик — следующая стадия эволюции ]",
+  evolutionAria:
+    "Эволюция бренда: смыслы → концепция → стиль (частицы: ДНК → клетки → единорог)",
+};
+
 // 2-corner chamfer (chip language of the DS).
 const CHIP: React.CSSProperties = {
   clipPath:
@@ -30,7 +96,14 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function ServiceDetail({ service: s }: { service: Service }) {
+export default function ServiceDetail({
+  service: s,
+  labels,
+}: {
+  service: Service;
+  labels?: Partial<ServiceDetailLabels>;
+}) {
+  const L: ServiceDetailLabels = { ...RU_LABELS, ...labels };
   return (
     <div className="text-runtime-ink">
       {/* ================= HERO ================= */}
@@ -71,11 +144,10 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
               {s.pricing && (
                 <p className="mt-5 text-[13.5px] leading-relaxed text-runtime-ink-soft">
                   <span className="font-display text-[1.05rem] tracking-tight text-runtime-ink">
-                    {s.pricing.from ? "от " : ""}
-                    {s.pricing.usd.toLocaleString("ru-RU")}&nbsp;$
+                    {s.pricing.from ? L.priceFrom : ""}
+                    {s.pricing.usd.toLocaleString(L.numberLocale)}&nbsp;$
                   </span>{" "}
-                  · итоговая смета зависит от масштаба и проектных часов — фиксируется в договоре
-                  до старта. Оплата 50/50, ответственность за сроки — материальная.
+                  {L.priceNote}
                 </p>
               )}
             </div>
@@ -83,12 +155,20 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
             {/* 3D: эволюция бренда (частицы) или site-builder (клик — сменить стадию) */}
             <div className="relative h-[320px] w-full sm:h-[400px] lg:h-[560px]">
               {s.heroVisual === "evolution" ? (
-                <BrandEvolution className="h-full w-full" />
+                <BrandEvolution
+                  className="h-full w-full"
+                  stages={L.evolutionStages}
+                  caption={L.evolutionCaption}
+                  ariaLabel={L.evolutionAria}
+                />
               ) : (
                 <>
                   <SiteBuilderGL className="h-full w-full" variant={s.heroVisual ?? "site"} />
                   <div className="pointer-events-none absolute inset-x-0 bottom-1 z-10 flex items-center justify-center">
-                    <StageCaption className="tech-label text-[0.58rem] text-runtime-ink-soft/70" />
+                    <StageCaption
+                      stages={L.stageCaptions}
+                      className="tech-label text-[0.58rem] text-runtime-ink-soft/70"
+                    />
                   </div>
                 </>
               )}
@@ -127,9 +207,9 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
         <section className="relative py-16 sm:py-20">
           <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
           <div className={SHELL}>
-            <Eyebrow>{s.modules.eyebrow ?? "что оцифровываем"}</Eyebrow>
+            <Eyebrow>{s.modules.eyebrow ?? L.modulesEyebrow}</Eyebrow>
             <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
-              {s.modules.title ?? "Модули, из которых собирается ваша система"}
+              {s.modules.title ?? L.modulesTitle}
             </h2>
 
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -184,9 +264,9 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
       <section className="relative py-16 sm:py-20">
         <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
         <div className={SHELL}>
-          <Eyebrow>{s.valuePropsEyebrow ?? "преимущества подхода"}</Eyebrow>
+          <Eyebrow>{s.valuePropsEyebrow ?? L.valuePropsEyebrow}</Eyebrow>
           <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
-            {s.valuePropsTitle ?? "Почему это быстрее, дешевле и живее классической разработки"}
+            {s.valuePropsTitle ?? L.valuePropsTitle}
           </h2>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -228,7 +308,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
         <section className="relative py-16 sm:py-20">
           <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
           <div className={SHELL}>
-            <Eyebrow>как это работает</Eyebrow>
+            <Eyebrow>{L.howEyebrow}</Eyebrow>
             <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
               {s.howItWorks.lead}
             </h2>
@@ -239,7 +319,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                 src={s.howItWorks.video?.src ?? HOW_IT_WORKS_VIDEO.src}
                 poster={s.howItWorks.video?.poster ?? HOW_IT_WORKS_VIDEO.poster}
                 label={s.howItWorks.video?.label ?? "AI CORE · SITE ASSEMBLY"}
-                alt={s.howItWorks.video?.alt ?? "AI-ядро собирает интерфейсы сайта"}
+                alt={s.howItWorks.video?.alt ?? L.videoAlt}
               />
             </div>
 
@@ -271,9 +351,9 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
       <section className="relative py-16 sm:py-20">
         <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
         <div className={SHELL}>
-          <Eyebrow>порядок работы</Eyebrow>
+          <Eyebrow>{L.processEyebrow}</Eyebrow>
           <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
-            От брифа до аналитического сопровождения — единый прозрачный контур
+            {L.processTitle}
           </h2>
 
           {s.pipeline?.length ? (
@@ -299,7 +379,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
             >
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <p className="tech-label text-[0.7rem]" style={{ color: "var(--color-signal-2)" }}>
-                  пример сметы · гант
+                  {L.ganttEyebrow}
                 </p>
                 <p className="text-[0.85rem] text-runtime-ink-soft">{s.gantt.project}</p>
               </div>
@@ -309,7 +389,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                     <div className="mb-1.5 flex items-center justify-between gap-3 text-[0.88rem]">
                       <span className="font-medium text-runtime-ink">{p.name}</span>
                       <span className="shrink-0 text-runtime-ink-soft">
-                        {p.days} {p.days === 1 ? "день" : p.days < 5 ? "дня" : "дней"}
+                        {L.formatDays(p.days)}
                       </span>
                     </div>
                     <div className="h-2 w-full rounded-full bg-[rgba(151,71,255,0.1)]">
@@ -327,7 +407,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                 ))}
               </div>
               <p className="hud mt-5 text-[9px] text-runtime-ink-soft/60">
-                // итого ≈ {s.gantt.total} дней · этапы идут каскадом
+                {L.ganttTotal(s.gantt.total)}
               </p>
             </div>
           ) : null}
@@ -413,7 +493,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
         <section className="relative py-16 sm:py-20">
           <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
           <div className={SHELL}>
-            <Eyebrow>бизнес-кейсы</Eyebrow>
+            <Eyebrow>{L.bizCasesEyebrow}</Eyebrow>
             <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
               {s.bizCases.title}
             </h2>
@@ -462,12 +542,12 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
       <section className="relative py-16 sm:py-20">
         <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
         <div className={SHELL}>
-          <Eyebrow>сравнение</Eyebrow>
+          <Eyebrow>{L.comparisonEyebrow}</Eyebrow>
           <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
             {s.comparison.title ? (
               s.comparison.title.endsWith("AICS-93") ? (
                 <>
-                  {s.comparison.title.replace(/ и AICS-93$/, "")} и{" "}
+                  {s.comparison.title.slice(0, -"AICS-93".length)}
                   <span className="font-display">AICS-93</span>
                 </>
               ) : (
@@ -475,7 +555,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
               )
             ) : (
               <>
-                Классическая студия и <span className="font-display">AICS-93</span>
+                {L.comparisonDefaultPrefix} <span className="font-display">AICS-93</span>
               </>
             )}
           </h2>
@@ -486,7 +566,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
               <div className="grid grid-cols-[1.2fr_1fr_1fr] gap-3">
                 <div />
                 <div className="tech-label px-4 pb-3 text-[0.72rem] text-runtime-ink-soft">
-                  {s.comparison.classicLabel ?? "классическая студия"}
+                  {s.comparison.classicLabel ?? L.comparisonClassicLabel}
                 </div>
                 <div
                   className="tech-label rounded-t-xl px-4 pb-3 pt-3 text-[0.72rem]"
@@ -534,9 +614,9 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
       <section className="relative py-16 sm:py-20">
         <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
         <div className={SHELL}>
-          <Eyebrow>что вы получаете</Eyebrow>
+          <Eyebrow>{L.deliverablesEyebrow}</Eyebrow>
           <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
-            {s.deliverablesTitle ?? "Не просто сайт, а работающий актив с сопровождением"}
+            {s.deliverablesTitle ?? L.deliverablesTitle}
           </h2>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-2">
@@ -582,7 +662,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
                   "radial-gradient(120% 140% at 12% 0%, rgba(151,71,255,0.14), transparent 55%), rgba(23,16,41,0.55)",
               }}
             >
-              <Eyebrow>банк решений</Eyebrow>
+              <Eyebrow>{L.bankEyebrow}</Eyebrow>
               <h2 className="mt-4 max-w-2xl text-[clamp(1.4rem,3vw,2.1rem)] font-semibold leading-tight tracking-tight">
                 {s.solutionBank.title}
               </h2>
@@ -613,9 +693,9 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
       <section className="relative py-16 sm:py-20">
         <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
         <div className={SHELL}>
-          <Eyebrow>частые вопросы</Eyebrow>
+          <Eyebrow>{L.faqEyebrow}</Eyebrow>
           <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
-            Отвечаю на главные вопросы
+            {L.faqTitle}
           </h2>
 
           <div className="faq-lines mt-10 max-w-3xl">
@@ -647,7 +727,7 @@ export default function ServiceDetail({ service: s }: { service: Service }) {
         <section className="relative py-16 sm:py-20">
           <div className="signal-seam absolute inset-x-0 top-0" aria-hidden />
           <div className={SHELL}>
-            <Eyebrow>обучение</Eyebrow>
+            <Eyebrow>{L.trainingEyebrow}</Eyebrow>
             <h2 className="mt-5 max-w-3xl text-[clamp(1.5rem,3.4vw,2.4rem)] font-semibold leading-tight tracking-tight">
               {s.training.title}
             </h2>

@@ -138,6 +138,23 @@
   в любых формах. Механику производства называем **«ИИ-движок»** (клиентский слой),
   «пайплайн» и «харнесс» (технический слой). Поток генерации — «движок генерирует потоком».
 
+### 10a. Английский раздел (/en)
+
+- EN-версия (главная, /en/services + 4 детальные, /en/operator) живёт на **runtime-хроме**
+  (тёмная киберлаборатория, как у /services) — иммерсивную главную не переводим.
+- Тексты EN: `lib/en/content.ts` (главная, оператор, словари) и `lib/en/services.ts`
+  (перевод реестра услуг, EN-слаги: web-development / brand-identity / web-apps /
+  ai-integration; маппинг ruToEnSlug/enToRuSlug там же).
+- Локализация компонентов — **словарями с RU-дефолтами**, не форками: `ServiceDetail`
+  (проп `labels`), `ContactConsole` (проп `dict`), `StageCaption`/`BrandEvolution`
+  (пропы stages/caption). Новую надпись в этих компонентах сразу выноси в словарь.
+- ToV английского — тот же §10: numbers over epithets, first person («I build»),
+  честность; запретные штампы: individual approach, team of professionals, any budget.
+- Ключи полей лида остаются русскими на обеих версиях — сообщения в Telegram
+  оператору читаются одинаково; язык фиксируем в `source` («контакт-консоль (EN …)»).
+- hreflang: ru⇄en в metadata обеих сторон (+ x-default = ru); `<html lang="en">`
+  ставит клиентский `SetDocumentLang` в `app/en/layout.tsx`.
+
 ## 11. Анти-правила
 
 - Не смешивать шрифты вопреки §2; не делать pill-кнопки; не добавлять пульсирующие glow; не эмодзи (только inline-SVG иконки stroke 1.5–2px); не цветные заливки стекла; не убирать specular; не ставить backdrop в трек; не «AI-template» градиентные рамки.

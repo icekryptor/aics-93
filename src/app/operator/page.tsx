@@ -18,7 +18,10 @@ export const metadata: Metadata = {
   title: "Оператор — Василий Аистов, AICS-93",
   description:
     "Один инженер-оператор ведёт каждый проект AICS-93 от брифа до продакшена: 10 лет в дизайне и маркетинге, 250+ проектов, ИИ-движок вместо команды агентства.",
-  alternates: { canonical: "/operator" },
+  alternates: {
+    canonical: "/operator",
+    languages: { ru: "/operator", en: "/en/operator", "x-default": "/operator" },
+  },
   openGraph: {
     type: "profile",
     url: "/operator",

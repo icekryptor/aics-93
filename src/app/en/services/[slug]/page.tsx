@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllServices, getService } from "@/lib/services";
-import { ruToEnSlug } from "@/lib/en/services";
+import { getAllServices, getService, enToRuSlug } from "@/lib/en/services";
+import { EN_SERVICE_LABELS, enContactDict } from "@/lib/en/content";
 import ServiceDetail from "@/components/services/ServiceDetail";
 import ContactConsole from "@/components/ContactConsole";
-import QuizInline from "@/components/QuizInline";
-import SeeAlso from "@/components/services/SeeAlso";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
@@ -21,17 +19,18 @@ export async function generateMetadata({
   const { slug } = await params;
   const s = getService(slug);
   if (!s) return {};
-  const canonical = `/services/${s.slug}`;
-  const en = ruToEnSlug[s.slug] ? `/en/services/${ruToEnSlug[s.slug]}` : undefined;
+  const canonical = `/en/services/${s.slug}`;
+  const ru = `/services/${enToRuSlug[s.slug]}`;
   return {
     title: s.metaTitle,
     description: s.metaDescription,
     alternates: {
       canonical,
-      ...(en ? { languages: { ru: canonical, en, "x-default": canonical } } : {}),
+      languages: { ru, en: canonical, "x-default": ru },
     },
     openGraph: {
       type: "website",
+      locale: "en_US",
       url: canonical,
       siteName: SITE_NAME,
       title: s.metaTitle,
@@ -41,7 +40,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ServicePage({
+export default async function EnServicePage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -50,7 +49,7 @@ export default async function ServicePage({
   const s = getService(slug);
   if (!s) notFound();
 
-  const url = `${SITE_URL}/services/${s.slug}`;
+  const url = `${SITE_URL}/en/services/${s.slug}`;
   const jsonLd = [
     {
       "@context": "https://schema.org",
@@ -59,8 +58,8 @@ export default async function ServicePage({
       name: s.hero.h1,
       description: s.metaDescription,
       serviceType: s.nav,
-      areaServed: "RU",
-      inLanguage: "ru-RU",
+      areaServed: "Worldwide",
+      inLanguage: "en",
       url,
       provider: { "@id": `${SITE_URL}/#studio` },
       offers: {
@@ -75,15 +74,15 @@ export default async function ServicePage({
                 priceCurrency: "USD",
               },
             }
-          : { priceCurrency: "RUB" }),
+          : { priceCurrency: "USD" }),
       },
     },
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Главная", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: "Услуги", item: `${SITE_URL}/services` },
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/en` },
+        { "@type": "ListItem", position: 2, name: "Services", item: `${SITE_URL}/en/services` },
         { "@type": "ListItem", position: 3, name: s.nav, item: url },
       ],
     },
@@ -101,21 +100,8 @@ export default async function ServicePage({
   return (
     <>
       <JsonLd data={jsonLd} />
-      <ServiceDetail service={s} />
-      {s.ctaQuiz ? (
-        <QuizInline
-          source={`квиз лендинга «${s.nav}»`}
-          title={s.quiz?.title ?? "Посчитаем эффект для вашего бизнеса"}
-          text={
-            s.quiz?.text ??
-            "Пять коротких вопросов вместо длинной формы — на выходе бриф, по которому я вернусь с расчётом эффекта и планом внедрения."
-          }
-          steps={s.quiz?.steps}
-        />
-      ) : (
-        <ContactConsole />
-      )}
-      {s.seeAlso ? <SeeAlso items={s.seeAlso.items} /> : null}
+      <ServiceDetail service={s} labels={EN_SERVICE_LABELS} />
+      <ContactConsole dict={enContactDict(`контакт-консоль (EN ${s.slug})`)} />
     </>
   );
 }

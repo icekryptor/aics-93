@@ -13,7 +13,10 @@ export const metadata: Metadata = {
   title: "Услуги — разработка сайтов, брендинг, ИИ в процессах",
   description:
     "Услуги студии AICS-93: разработка сайтов за 7-14 дней с ИИ, ребрендинг, брендбук и внедрение нейроагентов в процессы. Данные, а не догадки.",
-  alternates: { canonical: "/services" },
+  alternates: {
+    canonical: "/services",
+    languages: { ru: "/services", en: "/en/services", "x-default": "/services" },
+  },
   openGraph: {
     type: "website",
     url: "/services",
