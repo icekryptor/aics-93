@@ -7,18 +7,52 @@ import GearSolid from "@/components/GearSolid";
 import { assets, legal } from "@/lib/content";
 import { reachGoal } from "@/lib/metrika";
 
-const LINKS = [
-  { label: "разум", href: "#how" },
-  { label: "процессы", href: "#ai" },
-  { label: "работы", href: "#prtf" },
-  { label: "оператор", href: "#exp" },
-  { label: "контакт", href: "#upgrade" },
-];
+/* Тексты шапки вынесены в словарь: RU-дефолты ниже, EN-страницы передают свой
+   словарь (src/lib/en/system.ts). Якоря и href'ы от языка не зависят. */
+export type SystemNavDict = {
+  links: { label: string; href: string }[];
+  logoAria: string;
+  navAria: string;
+  services: string;
+  solutions: string;
+  blog: string;
+  kp: string;
+  menuOpen: string;
+  menuClose: string;
+  /** href'ы роут-ссылок; пустая строка скрывает пункт (у EN нет решений/журнала) */
+  servicesHref: string;
+  solutionsHref: string;
+  blogHref: string;
+};
+
+const RU_DICT: SystemNavDict = {
+  links: [
+    { label: "разум", href: "#how" },
+    { label: "процессы", href: "#ai" },
+    { label: "работы", href: "#prtf" },
+    { label: "оператор", href: "#exp" },
+    { label: "контакт", href: "#upgrade" },
+  ],
+  logoAria: "AICS-93 — наверх",
+  navAria: "Навигация",
+  services: "услуги",
+  solutions: "решения",
+  blog: "журнал",
+  kp: "КП",
+  menuOpen: "Открыть меню",
+  menuClose: "Закрыть меню",
+  servicesHref: "/services",
+  solutionsHref: "/solutions",
+  blogHref: "/blog",
+};
 
 // Floating console card — a 12-col-wide instrument bar (~52px) offset 10px from
 // the top, glass over the light sections. Fades in after the hero. On mobile a
 // hamburger opens a sheet with the section links (desktop shows them inline).
-export default function SystemNav() {
+export default function SystemNav({ dict }: { dict?: Partial<SystemNavDict> } = {}) {
+  const D: SystemNavDict = { ...RU_DICT, ...dict };
+  const LINKS = D.links;
+  const hrefKey = LINKS.map((l) => l.href).join("|");
   const [shown, setShown] = useState(false);
   const [active, setActive] = useState<string>("");
   const [open, setOpen] = useState(false);
@@ -32,7 +66,7 @@ export default function SystemNav() {
   }, []);
 
   useEffect(() => {
-    const ids = LINKS.map((l) => l.href.slice(1));
+    const ids = hrefKey.split("|").map((h) => h.slice(1));
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -46,7 +80,7 @@ export default function SystemNav() {
       if (el) io.observe(el);
     });
     return () => io.disconnect();
-  }, []);
+  }, [hrefKey]);
 
   // close the mobile sheet on Escape
   useEffect(() => {
@@ -70,7 +104,7 @@ export default function SystemNav() {
           {/* блоб 1: круг-лого (крупнее капсул — выпуклость гантели) */}
           <a
             href="#top"
-            aria-label="AICS-93 — наверх"
+            aria-label={D.logoAria}
             data-magnetic
             className="z-[1] grid size-14 shrink-0 place-items-center rounded-full bg-[#17121f]"
           >
@@ -101,7 +135,7 @@ export default function SystemNav() {
 
           {/* блоб 2: капсула ссылок (desktop) */}
           <nav
-            aria-label="Навигация"
+            aria-label={D.navAria}
             className="z-[1] hidden h-12 items-center rounded-full bg-[#17121f] px-3 lg:flex"
           >
             {LINKS.map((l, i) => {
@@ -120,27 +154,39 @@ export default function SystemNav() {
                 </span>
               );
             })}
-            <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
-            <Link
-              href="/services"
-              className="tech-label rounded-[3px] px-3 py-1.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-3.5"
-            >
-              услуги
-            </Link>
-            <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
-            <Link
-              href="/solutions"
-              className="tech-label rounded-[3px] px-3 py-1.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-3.5"
-            >
-              решения
-            </Link>
-            <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
-            <Link
-              href="/blog"
-              className="tech-label rounded-[3px] px-3 py-1.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-3.5"
-            >
-              журнал
-            </Link>
+            {D.servicesHref ? (
+              <>
+                <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
+                <Link
+                  href={D.servicesHref}
+                  className="tech-label rounded-[3px] px-3 py-1.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-3.5"
+                >
+                  {D.services}
+                </Link>
+              </>
+            ) : null}
+            {D.solutionsHref ? (
+              <>
+                <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
+                <Link
+                  href={D.solutionsHref}
+                  className="tech-label rounded-[3px] px-3 py-1.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-3.5"
+                >
+                  {D.solutions}
+                </Link>
+              </>
+            ) : null}
+            {D.blogHref ? (
+              <>
+                <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
+                <Link
+                  href={D.blogHref}
+                  className="tech-label rounded-[3px] px-3 py-1.5 text-[15px] text-white/60 transition-colors hover:text-white xl:px-3.5"
+                >
+                  {D.blog}
+                </Link>
+              </>
+            ) : null}
           </nav>
 
           {/* перемычка */}
@@ -155,7 +201,7 @@ export default function SystemNav() {
               onClick={() => reachGoal("kp_click", { source: "nav" })}
               className="rounded-[3px] px-3.5 py-1.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#2b2538]"
             >
-              КП
+              {D.kp}
             </a>
             <span aria-hidden className="mx-0.5 h-4 w-px bg-white/12" />
             <a
@@ -172,7 +218,7 @@ export default function SystemNav() {
             {/* hamburger (mobile) */}
             <button
               type="button"
-              aria-label={open ? "Закрыть меню" : "Открыть меню"}
+              aria-label={open ? D.menuClose : D.menuOpen}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
               className="ml-1 grid size-10 place-items-center rounded-full text-white lg:hidden"
@@ -206,7 +252,7 @@ export default function SystemNav() {
             open ? "mt-2 grid-rows-[1fr]" : "grid-rows-[0fr]"
           }`}
         >
-          <nav aria-label="Навигация" className="min-h-0 min-w-[250px]">
+          <nav aria-label={D.navAria} className="min-h-0 min-w-[250px]">
             <ul
               className={`flex flex-col gap-1 rounded-[22px] bg-[#17121f] px-3 transition-[padding] ${
                 open ? "py-3" : "py-0"
@@ -228,33 +274,39 @@ export default function SystemNav() {
                   </li>
                 );
               })}
-              <li>
-                <Link
-                  href="/services"
-                  onClick={() => setOpen(false)}
-                  className="tech-label flex items-center gap-2 rounded-[3px] px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-[#221c2e] hover:text-white"
-                >
-                  услуги
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/solutions"
-                  onClick={() => setOpen(false)}
-                  className="tech-label flex items-center gap-2 rounded-[3px] px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-[#221c2e] hover:text-white"
-                >
-                  решения
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  onClick={() => setOpen(false)}
-                  className="tech-label flex items-center gap-2 rounded-[3px] px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-[#221c2e] hover:text-white"
-                >
-                  журнал
-                </Link>
-              </li>
+              {D.servicesHref ? (
+                <li>
+                  <Link
+                    href={D.servicesHref}
+                    onClick={() => setOpen(false)}
+                    className="tech-label flex items-center gap-2 rounded-[3px] px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-[#221c2e] hover:text-white"
+                  >
+                    {D.services}
+                  </Link>
+                </li>
+              ) : null}
+              {D.solutionsHref ? (
+                <li>
+                  <Link
+                    href={D.solutionsHref}
+                    onClick={() => setOpen(false)}
+                    className="tech-label flex items-center gap-2 rounded-[3px] px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-[#221c2e] hover:text-white"
+                  >
+                    {D.solutions}
+                  </Link>
+                </li>
+              ) : null}
+              {D.blogHref ? (
+                <li>
+                  <Link
+                    href={D.blogHref}
+                    onClick={() => setOpen(false)}
+                    className="tech-label flex items-center gap-2 rounded-[3px] px-4 py-3 text-[15px] text-white/60 transition-colors hover:bg-[#221c2e] hover:text-white"
+                  >
+                    {D.blog}
+                  </Link>
+                </li>
+              ) : null}
             </ul>
           </nav>
         </div>

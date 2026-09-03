@@ -4,6 +4,19 @@
    Серверный компонент: терминальная карточка на CSS, без канвасов.
    Тайминги фаз согласованы с Гантом лендинга сайтов (lib/services.ts). */
 
+export type EngineBlockDict = {
+  eyebrow: string;
+  titlePre: string;
+  titleAccent: string;
+  subhead: string;
+  roles: string[];
+  honestPre: string;
+  honestStrong: string;
+  honestPost: string;
+  log: { cmd?: boolean; text: string; when: string }[];
+  logFooter: string;
+};
+
 const LOG: { cmd?: boolean; text: string; when: string }[] = [
   { cmd: true, text: "pipeline.start — бриф · распаковка смыслов · аудит", when: "день 0–1" },
   { text: "исследование конкурентов и ЦА → стратегия", when: "дни 1–3" },
@@ -16,7 +29,23 @@ const LOG: { cmd?: boolean; text: string; when: string }[] = [
 
 const ROLES = ["аналитик", "копирайтер", "дизайнер", "разработчик"];
 
-export default function EngineBlock() {
+const RU_ENGINE: EngineBlockDict = {
+  eyebrow: "[ движок · механика скорости ]",
+  titlePre: "Как один инженер делает ",
+  titleAccent: "работу четверых",
+  subhead:
+    "Агенты компилируют данные брифа и маркетингового анализа, дизайн-система генерирует страницы по фирменному стилю, интеграции стыкуются через читаемые API. Поэтому 7–14 дней и бюджет до 70% ниже — это не скидка, а другая себестоимость производства.",
+  roles: ROLES,
+  honestPre: "Это не генератор шаблонов: движок собирает по вашей дизайн-системе, а ",
+  honestStrong: "каждую строку перед продакшеном проверяю я",
+  honestPost: ". Если задачу быстрее решит конструктор — скажу об этом ещё на брифе.",
+  log: LOG,
+  logFooter:
+    "ревью каждой строки — вручную · после запуска: харнесс заказчику + месяц поддержки",
+};
+
+export default function EngineBlock({ dict }: { dict?: Partial<EngineBlockDict> } = {}) {
+  const D: EngineBlockDict = { ...RU_ENGINE, ...dict };
   return (
     <section id="engine" className="runtime relative scroll-mt-24 overflow-hidden py-[50px] lg:py-[80px]">
       <div className="runtime-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
@@ -27,23 +56,20 @@ export default function EngineBlock() {
           {/* тезис */}
           <div>
             <p className="tech-label text-[11px] text-[color-mix(in_srgb,var(--color-signal)_80%,white)]">
-              [ движок · механика скорости ]
+              {D.eyebrow}
             </p>
             <h2 className="mt-4 text-[clamp(1.7rem,3.4vw,2.7rem)] font-medium leading-[1.06] tracking-[-0.02em] text-runtime-ink">
-              Как один инженер делает <span className="signal-text">работу четверых</span>
+              {D.titlePre}<span className="signal-text">{D.titleAccent}</span>
             </h2>
             <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-runtime-ink-soft">
-              Агенты компилируют данные брифа и маркетингового анализа, дизайн-система
-              генерирует страницы по фирменному стилю, интеграции стыкуются через читаемые
-              API. Поэтому 7–14 дней и бюджет до 70% ниже — это не скидка, а другая
-              себестоимость производства.
+              {D.subhead}
             </p>
 
             {/* 1 = 4: роли, которые закрывает движок */}
             <div className="mt-6 flex flex-wrap items-center gap-2">
               <span className="font-display text-[1.35rem] leading-none text-runtime-ink">1 = 4</span>
               <span aria-hidden className="mx-1 h-4 w-px bg-runtime-line" />
-              {ROLES.map((r) => (
+              {D.roles.map((r) => (
                 <span
                   key={r}
                   className="tech-label rounded-full border border-runtime-line px-3 py-1.5 text-[11px] text-runtime-ink-soft"
@@ -59,9 +85,9 @@ export default function EngineBlock() {
               style={{ borderColor: "var(--color-signal-cool)" }}
             >
               <p className="text-[13.5px] leading-relaxed text-runtime-ink-soft">
-                Это не генератор шаблонов: движок собирает по вашей дизайн-системе, а{" "}
-                <span className="text-runtime-ink">каждую строку перед продакшеном проверяю я</span>.
-                Если задачу быстрее решит конструктор — скажу об этом ещё на брифе.
+                {D.honestPre}
+                <span className="text-runtime-ink">{D.honestStrong}</span>
+                {D.honestPost}
               </p>
             </div>
           </div>
@@ -82,7 +108,7 @@ export default function EngineBlock() {
             </div>
 
             <div className="space-y-3 px-5 py-5 sm:px-6">
-              {LOG.map((l) => (
+              {D.log.map((l) => (
                 <div key={l.text} className="flex items-baseline justify-between gap-4">
                   <p
                     className="hud min-w-0 text-[11.5px] leading-relaxed"
@@ -98,7 +124,7 @@ export default function EngineBlock() {
               <div className="mt-1 border-t border-runtime-line/60 pt-3">
                 <p className="hud text-[11.5px] leading-relaxed text-runtime-ink-soft" style={{ textTransform: "none" }}>
                   <span aria-hidden className="mr-2 opacity-60">∞</span>
-                  ревью каждой строки — вручную · после запуска: харнесс заказчику + месяц поддержки
+                  {D.logFooter}
                   <span aria-hidden className="hud-dot ml-2 inline-block align-middle" />
                 </p>
               </div>

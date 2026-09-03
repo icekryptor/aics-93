@@ -17,7 +17,49 @@ const FRAME_CUT: React.CSSProperties = {
     "polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px)",
 };
 
-export default function AiProcess() {
+/* Тексты секции вынесены в словарь: RU-дефолты ниже, EN-главная передаёт
+   свой словарь (src/lib/en/home.ts) — вёрстка общая. */
+export type AiProcessDict = {
+  eyebrow: string;
+  titlePre: string;
+  titleAccent: string;
+  titlePost: string;
+  subhead: string;
+  mediaSrOnly: string;
+  posterAlt: string;
+  beforeLabel: string;
+  beforeItems: string[];
+  afterLabel: string;
+  afterItems: string[];
+  chips: { n: string; l: string }[];
+  disclaimer: string;
+};
+
+const RU_AI: AiProcessDict = {
+  eyebrow: "[ ai в ваших процессах ]",
+  titlePre: "ИИ — не инструмент. ",
+  titleAccent: "Это ядро",
+  titlePost: ", которое приводит в движение все процессы.",
+  subhead:
+    "Внедряю сеть нейроагентов в процессы компаний — от контента и аналитики до продаж и найма. Один связный контур: данные текут в ядро, решения возвращаются в каждый узел.",
+  mediaSrOnly:
+    "Анимация: центральный процессор-ядро, к которому по светящимся дорожкам сходятся периферийные узлы — маркетинг, контент, продажи, аналитика, поддержка и найм. Сигнал циркулирует между ядром и узлами.",
+  posterAlt: "Схема процессов: ядро-процессор и периферийные узлы",
+  beforeLabel: "БЫЛО",
+  beforeItems: ["ручные процессы", "разрозненные данные", "решения «на глаз»"],
+  afterLabel: "СТАЛО",
+  afterItems: ["агенты в каждом узле", "единый поток данных", "решения на данных"],
+  chips: [
+    { n: "−70%", l: "рутины" },
+    { n: "×3", l: "скорость решений" },
+    { n: "24/7", l: "агенты" },
+    { n: "1", l: "источник правды" },
+  ],
+  disclaimer: "* Показатели иллюстративны и зависят от процессов конкретной компании.",
+};
+
+export default function AiProcess({ dict }: { dict?: Partial<AiProcessDict> } = {}) {
+  const D: AiProcessDict = { ...RU_AI, ...dict };
   return (
     <section
       id="ai"
@@ -54,14 +96,14 @@ export default function AiProcess() {
               textTransform: "uppercase",
             }}
           >
-            [ ai в ваших процессах ]
+            {D.eyebrow}
           </span>
 
           <h2
             className="mt-6 text-balance text-3xl font-semibold leading-[1.08] sm:text-4xl lg:text-[3.35rem]"
             style={{ color: "var(--color-runtime-ink, #efeaff)" }}
           >
-            ИИ — не инструмент.{" "}
+            {D.titlePre}
             <span
               className="signal-text"
               style={{
@@ -72,18 +114,16 @@ export default function AiProcess() {
                 color: "transparent",
               }}
             >
-              Это ядро
+              {D.titleAccent}
             </span>
-            , которое приводит в движение все процессы.
+            {D.titlePost}
           </h2>
 
           <p
             className="mt-6 max-w-2xl text-base leading-relaxed sm:text-lg"
             style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}
           >
-            Внедряю сеть нейроагентов в процессы компаний — от контента и
-            аналитики до продаж и найма. Один связный контур: данные текут в
-            ядро, решения возвращаются в каждый узел.
+            {D.subhead}
           </p>
         </header>
 
@@ -113,12 +153,10 @@ export default function AiProcess() {
             AICS-93 / PROCESS ROUTER
           </div>
 
-          <ProcessMedia />
+          <ProcessMedia posterAlt={D.posterAlt} />
 
           <p className="sr-only">
-            Анимация: центральный процессор-ядро, к которому по светящимся
-            дорожкам сходятся периферийные узлы — маркетинг, контент, продажи,
-            аналитика, поддержка и найм. Сигнал циркулирует между ядром и узлами.
+            {D.mediaSrOnly}
           </p>
         </div>
 
@@ -141,13 +179,13 @@ export default function AiProcess() {
                 color: "var(--color-runtime-ink-soft, #a99fce)",
               }}
             >
-              БЫЛО
+              {D.beforeLabel}
             </div>
             <ul
               className="mt-4 space-y-3 text-[0.95rem] leading-relaxed"
               style={{ color: "var(--color-runtime-ink-soft, #a99fce)" }}
             >
-              {["ручные процессы", "разрозненные данные", "решения «на глаз»"].map((t) => (
+              {D.beforeItems.map((t) => (
                 <li key={t} className="flex items-start gap-3">
                   <span
                     aria-hidden="true"
@@ -178,13 +216,13 @@ export default function AiProcess() {
                 color: "var(--color-signal, #9747ff)",
               }}
             >
-              СТАЛО
+              {D.afterLabel}
             </div>
             <ul
               className="mt-4 space-y-3 text-[0.95rem] leading-relaxed"
               style={{ color: "var(--color-runtime-ink, #efeaff)" }}
             >
-              {["агенты в каждом узле", "единый поток данных", "решения на данных"].map((t) => (
+              {D.afterItems.map((t) => (
                 <li key={t} className="flex items-start gap-3">
                   <span
                     aria-hidden="true"
@@ -204,14 +242,7 @@ export default function AiProcess() {
 
         {/* ---------- OUTCOME CHIPS ---------- */}
         <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:grid-cols-4 sm:gap-4">
-          {(
-            [
-              { n: "−70%", l: "рутины" },
-              { n: "×3", l: "скорость решений" },
-              { n: "24/7", l: "агенты" },
-              { n: "1", l: "источник правды" },
-            ] as const
-          ).map((m) => (
+          {D.chips.map((m) => (
             <div
               key={m.l}
               className="rounded-xl px-4 py-5"
@@ -248,7 +279,7 @@ export default function AiProcess() {
           className="mt-5 text-[0.72rem]"
           style={{ color: "var(--color-runtime-ink-soft, #a99fce)", opacity: 0.7 }}
         >
-          * Показатели иллюстративны и зависят от процессов конкретной компании.
+          {D.disclaimer}
         </p>
       </div>
     </section>
@@ -261,7 +292,7 @@ export default function AiProcess() {
  * only). Poster image doubles as the fallback before the video loads.
  * ------------------------------------------------------------------ */
 
-function ProcessMedia() {
+function ProcessMedia({ posterAlt }: { posterAlt: string }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [reduced, setReduced] = useState(false);
 
@@ -314,7 +345,7 @@ function ProcessMedia() {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={PROCESS_VIDEO.poster}
-                alt="Схема процессов: ядро-процессор и периферийные узлы"
+                alt={posterAlt}
                 className="absolute inset-0 h-full w-full object-cover"
               />
             ) : (

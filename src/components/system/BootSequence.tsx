@@ -8,21 +8,33 @@ import {
   type CSSProperties,
 } from "react";
 
+/* Тексты оверлея вынесены в словарь: дефолты ниже (RU-версия), EN-страницы
+   передают свой словарь (src/lib/en/system.ts). Технические latin-строки
+   (SVG, keyframes, storage-key) остаются в коде. */
+export type BootSequenceDict = {
+  logLines: readonly string[];
+  skipHint: string;
+};
+
 type BootSequenceProps = {
   onDone?: () => void;
+  dict?: Partial<BootSequenceDict>;
 };
 
 type Phase = "boot" | "glitch" | "done";
 
 const STORAGE_KEY = "aics_booted";
 
-const LOG_LINES: readonly string[] = [
-  "initializing neural interface",
-  "calibrating agent mesh",
-  "linking cortex ⇄ silicon",
-  "mounting knowledge base",
-  "VASILY AISTOV // AICS-93 online",
-];
+const RU_DICT: BootSequenceDict = {
+  logLines: [
+    "initializing neural interface",
+    "calibrating agent mesh",
+    "linking cortex ⇄ silicon",
+    "mounting knowledge base",
+    "VASILY AISTOV // AICS-93 online",
+  ],
+  skipHint: "press esc / click to skip",
+};
 
 const BOOT_MS = 2600;
 const GLITCH_MS = 460;
@@ -69,7 +81,10 @@ const BOOT_CSS = `
 }
 `;
 
-export default function BootSequence({ onDone }: BootSequenceProps) {
+export default function BootSequence({ onDone, dict }: BootSequenceProps) {
+  const D: BootSequenceDict = { ...RU_DICT, ...dict };
+  const logLines = D.logLines;
+  const lineCount = logLines.length;
   const [phase, setPhase] = useState<Phase>("boot");
   const [progress, setProgress] = useState(0);
   const [visibleLines, setVisibleLines] = useState(0);
@@ -113,10 +128,10 @@ export default function BootSequence({ onDone }: BootSequenceProps) {
     if (doneCalledRef.current) return;
     clearTimers();
     setProgress(100);
-    setVisibleLines(LOG_LINES.length);
+    setVisibleLines(lineCount);
     setPhase("glitch");
     glitchTimerRef.current = setTimeout(finish, GLITCH_MS);
-  }, [clearTimers, finish]);
+  }, [clearTimers, finish, lineCount]);
 
   useEffect(() => {
     setMounted(true);
@@ -161,14 +176,14 @@ export default function BootSequence({ onDone }: BootSequenceProps) {
       setProgress(Math.round(eased * 100));
 
       const lines = Math.min(
-        LOG_LINES.length,
-        Math.floor(p * (LOG_LINES.length + 0.35)),
+        lineCount,
+        Math.floor(p * (lineCount + 0.35)),
       );
       setVisibleLines(lines);
 
       if (p >= 1) {
         setProgress(100);
-        setVisibleLines(LOG_LINES.length);
+        setVisibleLines(lineCount);
         setPhase("glitch");
         rafRef.current = null;
         glitchTimerRef.current = setTimeout(finish, GLITCH_MS);
@@ -182,7 +197,7 @@ export default function BootSequence({ onDone }: BootSequenceProps) {
     return () => {
       clearTimers();
     };
-  }, [clearTimers, finish]);
+  }, [clearTimers, finish, lineCount]);
 
   useEffect(() => {
     if (phase === "done") return;
@@ -264,9 +279,9 @@ export default function BootSequence({ onDone }: BootSequenceProps) {
         </div>
 
         <ol style={LOG_STYLE} className="hud tech-label">
-          {LOG_LINES.map((line, i) => {
+          {logLines.map((line, i) => {
             const shown = i < visibleLines;
-            const isName = i === LOG_LINES.length - 1;
+            const isName = i === lineCount - 1;
             const lit = isName && shown && nameLit;
             return (
               <li
@@ -300,7 +315,7 @@ export default function BootSequence({ onDone }: BootSequenceProps) {
         </ol>
 
         <div style={HINT_STYLE} className="tech-label">
-          press esc / click to skip
+          {D.skipHint}
         </div>
       </div>
     </div>

@@ -3,7 +3,23 @@
 import { useEffect, useRef, useState } from "react";
 import { frameworks } from "@/lib/content";
 
-const N = frameworks.length;
+/* Тексты вынесены в словарь: RU-дефолты ниже, EN-страницы передают свой
+   словарь (src/lib/en/home-about.ts). */
+export type FrameworkItem = { n: string; code: string; full: string; text: string };
+
+export type FrameworkCarouselLabels = {
+  prev: string;
+  next: string;
+  /** aria-label точки-индикатора; получает 1-based номер метода. */
+  /** префикс aria-подписи точки; номер добавляется в компоненте (строка, не функция — словарь пересекает границу server→client) */
+  dotAriaPrefix: string;
+};
+
+const RU_LABELS: FrameworkCarouselLabels = {
+  prev: "Назад",
+  next: "Вперёд",
+  dotAriaPrefix: "Метод",
+};
 
 function Corners() {
   const base = "absolute size-3 border-ink/40";
@@ -32,7 +48,17 @@ function Scale() {
   );
 }
 
-export default function FrameworkCarousel({ className = "" }: { className?: string }) {
+export default function FrameworkCarousel({
+  className = "",
+  items = frameworks,
+  labels,
+}: {
+  className?: string;
+  items?: FrameworkItem[];
+  labels?: Partial<FrameworkCarouselLabels>;
+}) {
+  const L: FrameworkCarouselLabels = { ...RU_LABELS, ...labels };
+  const N = items.length;
   const [active, setActive] = useState(0);
   const [dx, setDx] = useState(0);
   const [dragging, setDragging] = useState(false);
@@ -98,14 +124,14 @@ export default function FrameworkCarousel({ className = "" }: { className?: stri
         <div className="flex items-center gap-2">
           <button
             onClick={() => go(-1)}
-            aria-label="Назад"
+            aria-label={L.prev}
             className="grid size-10 place-items-center rounded-full border border-ink/20 transition-colors hover:bg-ink hover:text-bg"
           >
             ‹
           </button>
           <button
             onClick={() => go(1)}
-            aria-label="Вперёд"
+            aria-label={L.next}
             className="grid size-10 place-items-center rounded-full border border-ink/20 transition-colors hover:bg-ink hover:text-bg"
           >
             ›
@@ -123,7 +149,7 @@ export default function FrameworkCarousel({ className = "" }: { className?: stri
         onPointerCancel={onUp}
         onPointerLeave={onUp}
       >
-        {frameworks.map((f, i) => {
+        {items.map((f, i) => {
           const offset = wrappedDiff(i) * step + dx;
           const dist = Math.abs(offset) / step;
           const hidden = dist > 2.2;
@@ -170,11 +196,11 @@ export default function FrameworkCarousel({ className = "" }: { className?: stri
         <span className="font-mono text-[10px] text-ink-soft">00</span>
         <div className="relative h-6 flex-1">
           <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-between">
-            {frameworks.map((_, i) => (
+            {items.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActive(i)}
-                aria-label={`Метод ${i + 1}`}
+                aria-label={`${L.dotAriaPrefix} ${i + 1}`}
                 className="group flex h-6 w-4 items-center justify-center"
               >
                 <span

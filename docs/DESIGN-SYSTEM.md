@@ -140,14 +140,22 @@
 
 ### 10a. Английский раздел (/en)
 
-- EN-версия (главная, /en/services + 4 детальные, /en/operator) живёт на **runtime-хроме**
-  (тёмная киберлаборатория, как у /services) — иммерсивную главную не переводим.
-- Тексты EN: `lib/en/content.ts` (главная, оператор, словари) и `lib/en/services.ts`
-  (перевод реестра услуг, EN-слаги: web-development / brand-identity / web-apps /
-  ai-integration; маппинг ruToEnSlug/enToRuSlug там же).
-- Локализация компонентов — **словарями с RU-дефолтами**, не форками: `ServiceDetail`
-  (проп `labels`), `ContactConsole` (проп `dict`), `StageCaption`/`BrandEvolution`
-  (пропы stages/caption). Новую надпись в этих компонентах сразу выноси в словарь.
+- **Принцип: вёрстка одна, payload разный.** EN-главная (/en) — та же иммерсивная
+  композиция, что и «/», с EN-словарями (роут-группа `app/en/(experience)`, хром без
+  QuizPanel; тизеры решений и журнала не монтируются — контент RU-only). /en/services +
+  4 детальные и /en/operator — runtime-хром (`app/en/(runtime)`).
+- Тексты EN: `lib/en/home.ts` (словари иммерсивной главной), `lib/en/home-about.ts`
+  (reasons/frameworks/about), `lib/en/showcase.ts` (кейсы-витрина), `lib/en/system.ts`
+  (SystemNav/BootSequence), `lib/en/content.ts` (услуги-хром, оператор, контакт-словарь)
+  и `lib/en/services.ts` (реестр услуг, EN-слаги: web-development / brand-identity /
+  web-apps / ai-integration; маппинг ruToEnSlug/enToRuSlug там же).
+- Локализация компонентов — **словарями с RU-дефолтами**, не форками: NeuralHero /
+  AiProcess / EngineBlock / ContactConsole / SystemNav / BootSequence (проп `dict`),
+  ServiceDetail / ReasonsLedger / AboutMe / FrameworkCarousel / CaseShowcase (проп
+  `labels` + данные через `items`/`facts`/`stats`/`cases`), PricingBlock (`dict` c
+  products), ServicesTeaser (`dict`+`items`+`basePath`), Intro (`statements`),
+  Frameworks (`kicker`/`title`/`items`/`carouselLabels`), StageCaption/BrandEvolution
+  (stages/caption). Новую надпись в этих компонентах сразу выноси в словарь.
 - ToV английского — тот же §10: numbers over epithets, first person («I build»),
   честность; запретные штампы: individual approach, team of professionals, any budget.
 - Ключи полей лида остаются русскими на обеих версиях — сообщения в Telegram

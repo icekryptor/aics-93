@@ -4,7 +4,14 @@ import { useEffect, useRef } from "react";
 
 // Animated force-directed graph of business frameworks ("business puzzle solving") —
 // ported 1:1 from the author's canvas script into a React effect.
-export default function GraphCanvas({ className = "" }: { className?: string }) {
+export default function GraphCanvas({
+  className = "",
+  seedLabel = "стратегия",
+}: {
+  className?: string;
+  /** первый узел графа (единственная нелатинская подпись пула) */
+  seedLabel?: string;
+}) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -43,7 +50,7 @@ export default function GraphCanvas({ className = "" }: { className?: string }) 
     const captionText = "business puzzle solving";
     const cornerCut = 14;
     const labelPool = [
-      "стратегия", "PMF", "CustDev", "JTBD", "STP", "PDCA", "OKR", "MBO", "KPI",
+      seedLabel, "PMF", "CustDev", "JTBD", "STP", "PDCA", "OKR", "MBO", "KPI",
       "MVP", "Concept", "4P", "BMI", "PRISM", "PESTEL", "BCG", "RACE", "NPS",
       "SAT", "CAC", "CPS", "ARPU", "SWOT", "AARRR", "Lean", "OST", "TAM", "LTV",
     ];

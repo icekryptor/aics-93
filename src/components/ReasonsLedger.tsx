@@ -3,7 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import { reasons } from "@/lib/content";
 
-const N = reasons.length;
+/* Тексты вынесены в словарь: RU-дефолты ниже, EN-страницы передают свой
+   словарь (src/lib/en/home-about.ts). */
+export type ReasonItem = { tag: string; title: string; text: string };
+
+export type ReasonsLedgerLabels = {
+  eyebrow: string;
+  /** Идёт сразу за акцентной цифрой — ведущий пробел обязателен. */
+  titleRest: string;
+  countLabel: string;
+};
+
+const RU_LABELS: ReasonsLedgerLabels = {
+  eyebrow: "[ зачем это бизнесу ]",
+  titleRest: " весомых причин заняться брендингом",
+  countLabel: "причин / reasons",
+};
 
 function Corners() {
   const b = "pointer-events-none absolute size-2.5 border-ink/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100";
@@ -36,7 +51,12 @@ function useCountUp(target: number, run: boolean, duration = 700) {
   return v;
 }
 
-export default function ReasonsLedger() {
+export default function ReasonsLedger({
+  items = reasons,
+  labels,
+}: { items?: ReasonItem[]; labels?: Partial<ReasonsLedgerLabels> } = {}) {
+  const L: ReasonsLedgerLabels = { ...RU_LABELS, ...labels };
+  const N = items.length;
   const rowRefs = useRef<(HTMLLIElement | null)[]>([]);
   const secRef = useRef<HTMLElement | null>(null);
   const [active, setActive] = useState(0);
@@ -102,16 +122,16 @@ export default function ReasonsLedger() {
       {/* spec header */}
       <div className="flex items-end justify-between border-b border-line pb-5">
         <div>
-          <p className="tech-label text-[11px] text-ink-soft">[ зачем это бизнесу ]</p>
+          <p className="tech-label text-[11px] text-ink-soft">{L.eyebrow}</p>
           <h2 className="mt-3 text-[clamp(1.55rem,3.4vw,2.9rem)] font-normal leading-tight tracking-[-0.015em]">
-            <span className="font-display text-accent">6</span> весомых причин заняться брендингом
+            <span className="font-display text-accent">{N}</span>{L.titleRest}
           </h2>
         </div>
         <div className="hidden shrink-0 text-right sm:block">
           <p className="font-display text-[2rem] font-normal leading-none text-ink-soft tabular-nums">
             {String(total).padStart(2, "0")}
           </p>
-          <p className="tech-label mt-1 text-[10px] text-ink-soft">причин / reasons</p>
+          <p className="tech-label mt-1 text-[10px] text-ink-soft">{L.countLabel}</p>
         </div>
       </div>
 
@@ -139,7 +159,7 @@ export default function ReasonsLedger() {
         </div>
 
         <ol className="border-b border-line lg:pl-16">
-          {reasons.map((r, i) => {
+          {items.map((r, i) => {
             const on = active === i;
             return (
               <li

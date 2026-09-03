@@ -7,7 +7,7 @@ import AboutMe from "./AboutMe";
 import ReasonsLedger from "./ReasonsLedger";
 import { frameworks, bio, gantt } from "@/lib/content";
 
-type Seg = { t: string; hl?: boolean };
+export type Seg = { t: string; hl?: boolean };
 
 const INTRO_STATEMENTS: Seg[][] = [
   [
@@ -43,11 +43,11 @@ const INTRO_STATEMENTS: Seg[][] = [
 // inserted as extra segments inside each statement.
 const INTRO_INDENT = ["", "lg:ml-[14%]", "lg:ml-[28%]"];
 
-export function Intro() {
+export function Intro({ statements = INTRO_STATEMENTS }: { statements?: Seg[][] } = {}) {
   return (
     <section className="mx-auto max-w-7xl px-4 py-[30px] sm:px-6 lg:py-[50px]">
       <div className="space-y-9">
-        {INTRO_STATEMENTS.map((segs, i) => (
+        {statements.map((segs, i) => (
           <ScrollHighlight
             key={i}
             className={`max-w-4xl text-[clamp(1.7rem,4.1vw,3.3rem)] font-medium leading-[1.06] tracking-[-0.025em] text-[#2a2730] ${INTRO_INDENT[i] ?? ""}`}
@@ -68,24 +68,39 @@ export function Intro() {
   );
 }
 
-export function Frameworks() {
+export function Frameworks({
+  kicker = "Какие фреймворки и методологии я использую:",
+  title = "Работаю на данных, а не на догадках",
+  items,
+  carouselLabels,
+  graphSeedLabel,
+}: {
+  kicker?: string;
+  title?: string;
+  items?: typeof frameworks;
+  carouselLabels?: React.ComponentProps<typeof FrameworkCarousel>["labels"];
+  graphSeedLabel?: string;
+} = {}) {
   return (
     <section id="how" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-[30px] sm:px-6 lg:py-[50px]">
       <Reveal>
         <p className="text-[15px] tracking-tight text-ink-soft">
-          Какие фреймворки и методологии я использую:
+          {kicker}
         </p>
         <h2 className="mt-3 text-[clamp(1.6rem,3.4vw,2.5rem)] font-normal leading-tight tracking-[-0.01em]">
-          Работаю на данных, а не на догадках
+          {title}
         </h2>
       </Reveal>
 
       <div className="mt-10 grid items-center gap-10 lg:grid-cols-[1.9fr_1fr] lg:gap-12">
         <Reveal>
-          <FrameworkCarousel />
+          <FrameworkCarousel items={items} labels={carouselLabels} />
         </Reveal>
         <Reveal delay={120}>
-          <GraphCanvas className="h-[300px] w-full overflow-hidden rounded-[24px] bg-bg-soft/70 backdrop-blur-md sm:h-[420px]" />
+          <GraphCanvas
+            seedLabel={graphSeedLabel}
+            className="h-[300px] w-full overflow-hidden rounded-[24px] bg-bg-soft/70 backdrop-blur-md sm:h-[420px]"
+          />
         </Reveal>
       </div>
     </section>

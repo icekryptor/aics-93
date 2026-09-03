@@ -25,6 +25,47 @@ const DRAG_START_PX = 6;
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
+/* Тексты блока вынесены в словарь: RU-дефолты ниже, EN-страницы передают свой
+   словарь и свой массив кейсов (src/lib/en/showcase.ts). Ссылки на кейсы живут
+   в данных (lib/showcase.ts) и от языка не зависят. */
+export type CaseShowcaseLabels = {
+  /** глазок над счётчиком */
+  eyebrow: string;
+  /** aria-label секции-карусели */
+  sectionAria: string;
+  /** aria-roledescription секции */
+  carouselRole: string;
+  /** плашка на месте отсутствующего деск-скрина */
+  shotSoonDesktop: string;
+  /** плашка на месте отсутствующего моб-скрина */
+  shotSoonMobile: string;
+  /** заголовок внутренней панели со списком */
+  bulletsTitle: string;
+  /** префикс sr-only-подписи; сразу за ним идёт номер кейса */
+  srCasePrefix: string;
+  /** префиксы aria-подписей; параметры подставляются в компоненте (строки, не функции — словарь пересекает границу server→client) */
+  caseAriaPrefix: string;
+  caseLink: string;
+  caseLinkAriaPrefix: string;
+  prevAria: string;
+  nextAria: string;
+};
+
+const RU_LABELS: CaseShowcaseLabels = {
+  eyebrow: "[ кейсы · избранное ]",
+  sectionAria: "Кейсы — избранное",
+  carouselRole: "карусель",
+  shotSoonDesktop: "деск · скрин скоро",
+  shotSoonMobile: "моб · скрин скоро",
+  bulletsTitle: "что было сделано:",
+  srCasePrefix: "кейс ",
+  caseAriaPrefix: "кейс",
+  caseLink: "Смотреть кейс",
+  caseLinkAriaPrefix: "смотреть кейс",
+  prevAria: "предыдущий кейс",
+  nextAria: "следующий кейс",
+};
+
 function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
   return () => {
@@ -234,12 +275,14 @@ function ShotCell({
   seed,
   className,
   priority,
+  L,
 }: {
   shot: Shot;
   accent: string;
   seed: string;
   className?: string;
   priority?: boolean;
+  L: CaseShowcaseLabels;
 }) {
   // по Figma: радиус 10px; деск-скрины с фиолетовой рамкой, мобильные — с тенью
   const frame =
@@ -264,7 +307,7 @@ function ShotCell({
         <>
           <GenerativeCover seed={seed} accent={accent} className="absolute inset-0" />
           <span className="tech-label absolute bottom-2 right-2 rounded-md border border-white/15 bg-black/60 px-2 py-1 text-[9px] text-white/70">
-            {shot.kind === "mobile" ? "моб · скрин скоро" : "деск · скрин скоро"}
+            {shot.kind === "mobile" ? L.shotSoonMobile : L.shotSoonDesktop}
           </span>
         </>
       )}
@@ -278,12 +321,14 @@ function ShotsGrid({
   parallax,
   animate,
   priority,
+  L,
 }: {
   c: ShowcaseCase;
   idx: number;
   parallax: number;
   animate: boolean;
   priority: boolean;
+  L: CaseShowcaseLabels;
 }) {
   const shots = c.shots.slice(0, 4);
   const four = shots.length >= 4;
@@ -306,6 +351,7 @@ function ShotsGrid({
               seed={`${c.title}-${i}`}
               className={s.kind === "desktop" ? "col-span-4" : "col-span-1"}
               priority={priority && i === 0}
+              L={L}
             />
           ))}
         </div>
@@ -324,10 +370,11 @@ function ShotsGrid({
             seed={`${c.title}-0`}
             className="aspect-[16/11]"
             priority={priority}
+            L={L}
           />
         </div>
       )}
-      <span className="sr-only">кейс {pad(idx + 1)}</span>
+      <span className="sr-only">{L.srCasePrefix}{pad(idx + 1)}</span>
     </div>
   );
 }
@@ -336,8 +383,15 @@ function ShotsGrid({
 /* Слайдер                                                             */
 /* ------------------------------------------------------------------ */
 
-export default function CaseShowcase() {
-  const slides = showcaseCases;
+export default function CaseShowcase({
+  cases,
+  labels,
+}: {
+  cases?: ShowcaseCase[];
+  labels?: Partial<CaseShowcaseLabels>;
+} = {}) {
+  const L: CaseShowcaseLabels = { ...RU_LABELS, ...labels };
+  const slides = cases ?? showcaseCases;
   const total = slides.length;
   // бесшовный трек: [последний, ...слайды, первый]; 1..total — реальные,
   // 0 и total+1 — клоны, тихо перескакивающие на другой конец
@@ -479,8 +533,8 @@ export default function CaseShowcase() {
     <section
       id="prtf"
       ref={sectionRef}
-      aria-roledescription="карусель"
-      aria-label="Кейсы — избранное"
+      aria-roledescription={L.carouselRole}
+      aria-label={L.sectionAria}
       className="runtime relative flex min-h-[100svh] scroll-mt-24 flex-col overflow-hidden bg-[#120e22]"
     >
       <style>{`
@@ -499,7 +553,7 @@ export default function CaseShowcase() {
 
       {/* верх: глазок + счётчик */}
       <header className="relative z-10 flex items-center justify-between gap-4 px-6 pt-7 lg:px-14 lg:pt-8">
-        <p className="tech-label text-[#b3a8d9]">[ кейсы · избранное ]</p>
+        <p className="tech-label text-[#b3a8d9]">{L.eyebrow}</p>
         <div className="flex items-baseline gap-1.5 font-bold tabular-nums" aria-live="polite">
           <span className="text-2xl leading-none text-[#efeaff]">{pad(displayIdx + 1)}</span>
           <span className="text-sm leading-none text-white/35">/ {pad(total)}</span>
@@ -535,7 +589,7 @@ export default function CaseShowcase() {
                 key={`${c.title}-${i}`}
                 inert={!active}
                 aria-hidden={!active}
-                aria-label={`кейс ${pad(realIdx + 1)}: ${c.title}`}
+                aria-label={`${L.caseAriaPrefix} ${pad(realIdx + 1)}: ${c.title}`}
                 className={`w-[88%] min-w-[88%] shrink-0 px-2 transition-[opacity,transform] duration-700 sm:px-3 ${
                   active ? "opacity-100 scale-100" : "opacity-40 scale-[0.965]"
                 }`}
@@ -580,7 +634,7 @@ export default function CaseShowcase() {
 
                       {/* внутренняя стеклянная панель со списком */}
                       <div className="mt-6 rounded-[25px_55px_55px_5px] bg-white/[0.07] p-5 shadow-[0_1px_0_0_rgba(255,255,255,0.14)_inset] sm:p-6">
-                        <p className="text-[16px] font-normal text-white/90">что было сделано:</p>
+                        <p className="text-[16px] font-normal text-white/90">{L.bulletsTitle}</p>
                         {/* заполнение по колонкам; колонки по контенту — длинные пункты
                             второй колонки в одну строку, без переносов */}
                         <ul
@@ -613,7 +667,7 @@ export default function CaseShowcase() {
                           href={c.href}
                           target={isHttp ? "_blank" : undefined}
                           rel={isHttp ? "noopener noreferrer" : undefined}
-                          aria-label={`смотреть кейс ${c.title}`}
+                          aria-label={`${L.caseLinkAriaPrefix} ${c.title}`}
                           draggable={false}
                           className="mt-6 inline-flex h-[56px] min-h-11 cursor-pointer items-center rounded-[5px_55px_55px_25px] px-10 text-[16px] font-bold text-[#0b1e33] transition-[transform,filter] duration-200 [transition-timing-function:cubic-bezier(.34,1.56,.64,1)] hover:-translate-y-0.5 hover:brightness-110 active:translate-y-px active:scale-[0.97]"
                           style={{
@@ -622,7 +676,7 @@ export default function CaseShowcase() {
                               "0 16px 44px -12px rgba(80,215,255,0.55), 0 0 26px rgba(80,215,255,0.3)",
                           }}
                         >
-                          Смотреть кейс
+                          {L.caseLink}
                         </a>
                       )}
                     </div>
@@ -646,6 +700,7 @@ export default function CaseShowcase() {
                         parallax={shotParallax}
                         animate={!dragging && !reduced}
                         priority={i === 1}
+                        L={L}
                       />
                     </div>
                   </div>
@@ -658,10 +713,10 @@ export default function CaseShowcase() {
 
       {/* низ-право: крупные стрелки поверх угла карточки (по мокапу) */}
       <div className="absolute bottom-5 right-4 z-30 flex items-center gap-3 sm:right-8 lg:bottom-10 lg:right-12 lg:gap-4">
-        <button type="button" onClick={prev} aria-label="предыдущий кейс" className={arrowCls}>
+        <button type="button" onClick={prev} aria-label={L.prevAria} className={arrowCls}>
           ←
         </button>
-        <button type="button" onClick={next} aria-label="следующий кейс" className={arrowCls}>
+        <button type="button" onClick={next} aria-label={L.nextAria} className={arrowCls}>
           →
         </button>
       </div>

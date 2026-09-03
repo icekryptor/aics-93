@@ -4,6 +4,35 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { aboutFacts, aboutStats, aboutPhoto, aboutLogos } from "@/lib/content";
 
+/* Тексты вынесены в словарь: RU-дефолты ниже, EN-страницы передают свой
+   словарь (src/lib/en/home-about.ts). Фото и логотипы — ассеты, общие для
+   всех локалей. */
+export type AboutFact = { lead?: string; rest: string };
+
+export type AboutStat = {
+  target: number;
+  prefix?: string;
+  suffix?: string;
+  label: string;
+  sub: string;
+  deco: "rings" | "dots" | "people";
+};
+
+export type AboutMeLabels = {
+  /** Локаль для toLocaleString у счётчиков. */
+  numberLocale: string;
+  badge: string;
+  photoAlt: string;
+  logosNote: string;
+};
+
+const RU_LABELS: AboutMeLabels = {
+  numberLocale: "ru-RU",
+  badge: "КТО Я",
+  photoAlt: "Василий Аистов",
+  logosNote: "работал с брендами",
+};
+
 const CUT: React.CSSProperties = {
   clipPath:
     "polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px)",
@@ -86,7 +115,15 @@ function Deco({ kind, on }: { kind: "rings" | "dots" | "people"; on: boolean }) 
   );
 }
 
-function StatBlock({ stat, on }: { stat: (typeof aboutStats)[number]; on: boolean }) {
+function StatBlock({
+  stat,
+  on,
+  locale,
+}: {
+  stat: AboutStat;
+  on: boolean;
+  locale: string;
+}) {
   const n = useCountUp(stat.target, on);
   const prefix = "prefix" in stat && stat.prefix ? stat.prefix : "";
   const suffix = "suffix" in stat && stat.suffix ? stat.suffix : "";
@@ -94,7 +131,7 @@ function StatBlock({ stat, on }: { stat: (typeof aboutStats)[number]; on: boolea
     <div>
       <p className="font-display text-[2.7rem] font-normal leading-none tracking-tight tabular-nums">
         {prefix}
-        {n.toLocaleString("ru-RU")}
+        {n.toLocaleString(locale)}
         {suffix}
       </p>
       <p className="mt-1 text-sm text-ink-soft">{stat.label}</p>
@@ -106,7 +143,16 @@ function StatBlock({ stat, on }: { stat: (typeof aboutStats)[number]; on: boolea
   );
 }
 
-export default function AboutMe() {
+export default function AboutMe({
+  facts = aboutFacts,
+  stats = aboutStats,
+  labels,
+}: {
+  facts?: AboutFact[];
+  stats?: AboutStat[];
+  labels?: Partial<AboutMeLabels>;
+} = {}) {
+  const L: AboutMeLabels = { ...RU_LABELS, ...labels };
   const [secRef, on] = useInView<HTMLElement>(0.15);
 
   return (
@@ -126,10 +172,10 @@ export default function AboutMe() {
               <div className="grid gap-6 md:grid-cols-[1fr_0.82fr] md:gap-8">
                 <div>
                   <span className="inline-block rounded-md bg-ink px-4 py-1.5 text-sm tracking-wide text-bg">
-                    КТО Я
+                    {L.badge}
                   </span>
                   <ul className="mt-6 space-y-5">
-                    {aboutFacts.map((f, i) => (
+                    {facts.map((f, i) => (
                       <li
                         key={i}
                         className="border-l border-ink/25 pl-4 text-[15px] leading-relaxed transition-all duration-500"
@@ -149,7 +195,7 @@ export default function AboutMe() {
                 <div className="relative min-h-[260px] overflow-hidden bg-bg-soft" style={CUT}>
                   <Image
                     src={aboutPhoto}
-                    alt="Василий Аистов"
+                    alt={L.photoAlt}
                     fill
                     sizes="(max-width: 768px) 100vw, 30vw"
                     className="object-cover"
@@ -164,7 +210,7 @@ export default function AboutMe() {
             {/* connector from panel to the logo frame */}
             <span className="absolute -top-4 left-6 h-4 w-px bg-ink/25" aria-hidden />
             <div className="rounded-b-2xl rounded-tr-2xl border border-t-0 border-line bg-bg px-5 py-4 sm:px-7 sm:py-5">
-              <p className="tech-label mb-3 text-[11px] text-ink-soft">работал с брендами</p>
+              <p className="tech-label mb-3 text-[11px] text-ink-soft">{L.logosNote}</p>
               <div className="flex flex-wrap items-center gap-x-8 gap-y-4 sm:gap-x-10">
                 {aboutLogos.map((l) => (
                   <img
@@ -182,8 +228,8 @@ export default function AboutMe() {
 
         {/* Stats — 3 cols, centred */}
         <div className="flex flex-col items-center gap-9 text-center lg:col-span-3">
-          {aboutStats.map((s) => (
-            <StatBlock key={s.label} stat={s} on={on} />
+          {stats.map((s) => (
+            <StatBlock key={s.label} stat={s} on={on} locale={L.numberLocale} />
           ))}
         </div>
       </div>

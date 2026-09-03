@@ -5,14 +5,28 @@ import Link from "next/link";
    §1.5/§1.6). Формула карточки — Repina+Depot: цена «от» → состав → срок →
    от чего растёт смета. Серверный компонент, тёмная runtime-секция. */
 
-const PRODUCTS: {
+export type PricingProduct = {
   tag: string;
   title: string;
   price: string;
   term: string;
   items: string[];
   href: string;
-}[] = [
+};
+
+export type PricingBlockDict = {
+  eyebrow: string;
+  titlePre: string;
+  titleAccent: string;
+  titlePost: string;
+  subhead: string;
+  products: PricingProduct[];
+  detailsLink: string;
+  terms: string[];
+  cta: string;
+};
+
+const PRODUCTS: PricingProduct[] = [
   {
     tag: "продукт 01",
     title: "Корпоративный сайт",
@@ -69,7 +83,21 @@ const CHIP: React.CSSProperties = {
     "polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px)",
 };
 
-export default function PricingBlock() {
+const RU_PRICING: PricingBlockDict = {
+  eyebrow: "[ пакеты · цены и условия ]",
+  titlePre: "Цены — ",
+  titleAccent: "до брифа",
+  titlePost: ", а не после",
+  subhead:
+    "Итоговая смета зависит от масштаба и количества проектных часов — считаю её по составу работ и фиксирую в договоре до старта. Базовые ставки открыты:",
+  products: PRODUCTS,
+  detailsLink: "состав подробно →",
+  terms: TERMS,
+  cta: "Рассчитать смету",
+};
+
+export default function PricingBlock({ dict }: { dict?: Partial<PricingBlockDict> } = {}) {
+  const D: PricingBlockDict = { ...RU_PRICING, ...dict };
   return (
     <section id="pricing" className="runtime relative scroll-mt-24 overflow-hidden py-[50px] lg:py-[80px]">
       <div className="runtime-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
@@ -78,19 +106,18 @@ export default function PricingBlock() {
       <div className="relative mx-auto max-w-[1180px] px-4 sm:px-6">
         <div className="max-w-2xl">
           <p className="tech-label text-[11px] text-[color-mix(in_srgb,var(--color-signal)_80%,white)]">
-            [ пакеты · цены и условия ]
+            {D.eyebrow}
           </p>
           <h2 className="mt-4 text-[clamp(1.7rem,3.4vw,2.7rem)] font-medium leading-[1.06] tracking-[-0.02em] text-runtime-ink">
-            Цены — <span className="signal-text">до брифа</span>, а не после
+            {D.titlePre}<span className="signal-text">{D.titleAccent}</span>{D.titlePost}
           </h2>
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-runtime-ink-soft">
-            Итоговая смета зависит от масштаба и количества проектных часов — считаю её
-            по составу работ и фиксирую в договоре до старта. Базовые ставки открыты:
+            {D.subhead}
           </p>
         </div>
 
         <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {PRODUCTS.map((p) => (
+          {D.products.map((p) => (
             <article
               key={p.title}
               className="flex h-full flex-col p-6 sm:p-7"
@@ -129,7 +156,7 @@ export default function PricingBlock() {
                 className="tech-label mt-auto inline-flex w-fit items-center gap-1 pt-5 text-[11px] transition-colors"
                 style={{ color: "var(--color-signal-cool)" }}
               >
-                состав подробно →
+                {D.detailsLink}
               </Link>
             </article>
           ))}
@@ -137,7 +164,7 @@ export default function PricingBlock() {
 
         {/* условия работы */}
         <div className="mt-8 flex flex-wrap items-center gap-2.5">
-          {TERMS.map((t) => (
+          {D.terms.map((t) => (
             <span
               key={t}
               className="tech-label rounded-full border border-runtime-line px-4 py-2 text-[11px] text-runtime-ink-soft"
@@ -151,7 +178,7 @@ export default function PricingBlock() {
             data-cursor="route signal"
             className="btn-case ml-auto inline-flex h-11 items-center px-7 text-sm font-semibold"
           >
-            Рассчитать смету <span aria-hidden className="ml-2">→</span>
+            {D.cta} <span aria-hidden className="ml-2">→</span>
           </a>
         </div>
       </div>

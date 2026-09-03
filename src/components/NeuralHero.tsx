@@ -9,8 +9,48 @@ import { reachGoal } from "@/lib/metrika";
 
 const STATES = ["biology", "hybrid", "machine"] as const;
 
+/* Тексты хиро вынесены в словарь: RU-дефолты ниже, EN-главная передаёт свой
+   словарь (src/lib/en/home.ts) — вёрстка и механика общие для обеих версий. */
+export type NeuralHeroDict = {
+  brainHint: string;
+  eyebrow: string;
+  h1Line1: string;
+  h1Line2Pre: string;
+  h1Accent: string;
+  h1Line3: string;
+  subhead: string;
+  primaryCta: string;
+  secondaryCta: string;
+  tgPre: string;
+  tgLink: string;
+  tgPost: string;
+  studioBadge: string;
+  studioText: string;
+  stats: { big: string; text: string }[];
+};
+
+const RU_HERO: Omit<NeuralHeroDict, "stats"> = {
+  brainHint: "[ клик по мозгу — сменить состояние ]",
+  eyebrow: "[ boot · симбиоз мозга и машины ]",
+  h1Line1: "Мозг и машина —",
+  h1Line2Pre: "в ",
+  h1Accent: "симбиозе",
+  h1Line3: "для вашего бренда.",
+  subhead:
+    "Я соединяю креатив с ИИ-системами и внедряю их в процессы компаний — чтобы бренды росли на данных, а не на догадках.",
+  primaryCta: "Получить КП",
+  secondaryCta: "Смотреть работы",
+  tgPre: "Или напишите в ",
+  tgLink: "Telegram",
+  tgPost: " «хочу разбор» — вернусь со структурой и вилкой цены в течение 24 часов.",
+  studioBadge: "человек-студия",
+  studioText:
+    "Я — Василий Аистов, co-founder / CMO в Химичке. Делаю яркие бренды, запоминающиеся среди конкурентов.",
+};
+
 // BOOT / THE SYMBIOSIS — act one. Three columns: offer / living brain / telemetry.
-export default function NeuralHero() {
+export default function NeuralHero({ dict }: { dict?: Partial<NeuralHeroDict> } = {}) {
+  const D: NeuralHeroDict = { stats: heroStats, ...RU_HERO, ...dict };
   const secRef = useRef<HTMLElement | null>(null);
   const [progress, setProgress] = useState(0);
   const [brainState, setBrainState] = useState<number | null>(null);
@@ -99,7 +139,7 @@ export default function NeuralHero() {
               ))}
             </p>
             <p className="tech-label mt-2 hidden text-[9px] text-runtime-ink-soft lg:block">
-              [ клик по мозгу — сменить состояние ]
+              {D.brainHint}
             </p>
           </div>
         </div>
@@ -109,17 +149,18 @@ export default function NeuralHero() {
           {/* left: offer (three lines) + description */}
           <div>
             <p className="tech-label mb-5 text-[11px] text-[color-mix(in_srgb,var(--color-signal)_80%,white)]">
-              [ boot · симбиоз мозга и машины ]
+              {D.eyebrow}
             </p>
             <h1 className="text-[clamp(2.1rem,3.6vw,3.4rem)] font-medium leading-[1.02] tracking-[-0.028em] text-runtime-ink">
-              Мозг и машина —
-              <br />в <span className="signal-text text-glow">симбиозе</span>
+              {D.h1Line1}
               <br />
-              для вашего бренда.
+              {D.h1Line2Pre}
+              <span className="signal-text text-glow">{D.h1Accent}</span>
+              <br />
+              {D.h1Line3}
             </h1>
             <p className="mt-6 max-w-md text-[clamp(0.95rem,1.2vw,1.1rem)] leading-relaxed text-runtime-ink-soft">
-              Я соединяю креатив с ИИ-системами и внедряю их в процессы компаний —
-              чтобы бренды росли на данных, а не на догадках.
+              {D.subhead}
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -129,7 +170,7 @@ export default function NeuralHero() {
                 data-cursor="route signal"
                 className="btn-case inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold"
               >
-                Получить КП <span aria-hidden>→</span>
+                {D.primaryCta} <span aria-hidden>→</span>
               </a>
               <a
                 href="#prtf"
@@ -137,13 +178,13 @@ export default function NeuralHero() {
                 data-cursor="open node"
                 className="btn-case-glass inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-runtime-ink"
               >
-                Смотреть работы
+                {D.secondaryCta}
               </a>
             </div>
 
             {/* низкопороговый вход: TG вместо формы, SLA 24 часа */}
             <p className="mt-5 max-w-md text-[12.5px] leading-relaxed text-runtime-ink-soft">
-              Или напишите в{" "}
+              {D.tgPre}
               <a
                 href={legal.telegram}
                 target="_blank"
@@ -151,9 +192,9 @@ export default function NeuralHero() {
                 onClick={() => reachGoal("tg_click", { source: "hero" })}
                 className="text-[color-mix(in_srgb,var(--color-signal-cool)_85%,white)] underline decoration-dotted underline-offset-4 transition-colors hover:text-white"
               >
-                Telegram
-              </a>{" "}
-              «хочу разбор» — вернусь со структурой и вилкой цены в течение 24 часов.
+                {D.tgLink}
+              </a>
+              {D.tgPost}
             </p>
           </div>
 
@@ -173,7 +214,7 @@ export default function NeuralHero() {
 
           {/* right: telemetry stats + человек-студия */}
           <div className="space-y-7">
-            {heroStats.map((s) => (
+            {D.stats.map((s) => (
               <div key={s.big} className="border-t border-runtime-line pt-3">
                 <p className="font-display text-[1.5rem] leading-none tracking-tight text-runtime-ink sm:text-[1.7rem]">
                   {s.big}
@@ -185,13 +226,12 @@ export default function NeuralHero() {
             {/* человек-студия card */}
             <div className="relative pt-3">
               <span className="signal-grad absolute left-4 top-0 z-10 rounded-md px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
-                человек-студия
+                {D.studioBadge}
               </span>
               {/* гласс-подложка вместо контейнера с обводкой */}
               <div className="rounded-[20px] border border-white/[0.12] bg-white/[0.08] px-5 pb-5 pt-7 shadow-[0_1px_0_0_rgba(255,255,255,0.2)_inset,0_12px_40px_rgba(0,0,0,0.35)] [backdrop-filter:blur(20px)_saturate(180%)]">
                 <p className="text-[12.5px] leading-relaxed text-runtime-ink-soft">
-                  Я — Василий Аистов, co-founder / CMO в Химичке. Делаю яркие бренды,
-                  запоминающиеся среди конкурентов.
+                  {D.studioText}
                 </p>
                 <div className="mt-4 text-runtime-ink [&_.studio-grid]:!text-[color:var(--color-signal)]">
                   <StudioGrid className="mt-0" />
