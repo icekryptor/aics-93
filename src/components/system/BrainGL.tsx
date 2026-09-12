@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import BrainCanvas from "./BrainCanvas";
+import { decodeBrainPoints, decodeBrainFold, BRAIN_POINT_COUNT } from "./brain-points";
 
 type BrainGLProps = {
   className?: string;
@@ -14,6 +15,8 @@ type BrainGLProps = {
 const GRID_X = 24;
 const GRID_Y = 10;
 const GRID_Z = 24;
+// 5760 точек — столько же сэмплов лежит в brain-points.ts (biology-состояние
+// сэмплировано с анатомической модели human-brain.glb из evo.center)
 const POINT_COUNT = GRID_X * GRID_Y * GRID_Z; // 5760 points
 
 /** Deterministic integer hash -> [0, 1). Same output on every load. */
@@ -34,17 +37,6 @@ function clampN(v: number, lo: number, hi: number): number {
 function smoothstepN(e0: number, e1: number, x: number): number {
   const t = clampN((x - e0) / (e1 - e0), 0, 1);
   return t * t * (3 - 2 * t);
-}
-
-/** Layered deterministic value-noise-ish sin products for gyri wrinkles. */
-function wrinkle(x: number, y: number, z: number): number {
-  return (
-    Math.sin(x * 6.3 + Math.sin(z * 4.7 + 1.3)) *
-      Math.sin(y * 5.1 + Math.sin(x * 3.9 + 0.7)) *
-      0.55 +
-    Math.sin(x * 11.4 + z * 9.2) * Math.sin(y * 10.3 + x * 7.6) * 0.3 +
-    Math.sin(z * 16.2 + y * 13.7 + x * 5.5) * 0.15
-  );
 }
 
 type Geometry = {
@@ -71,36 +63,33 @@ function buildGeometry(): Geometry {
   const shade = new Float32Array(n);
   const Q = 0.16; // hybrid quantization cell
 
+  /* --- state 0: BIOLOGY — точки с поверхности анатомической модели
+     (human-brain.glb, evo.center): извилины настоящие, а не синтезированные.
+     Данные хранят длину мозга по z — на экран выводим профиль (длина → x),
+     чтобы силуэт читался как мозг. Плотность резче старой: кортекс почти
+     весь на поверхности (r = w^0.07), редкое тусклое ядро внутри. */
+  const surf = decodeBrainPoints(); // BRAIN_POINT_COUNT === POINT_COUNT
+  const foldArr = decodeBrainFold();
+  const shellArr = new Float32Array(n); // для отбора кортекса под синапсы
+  const count = Math.min(n, BRAIN_POINT_COUNT);
+
   for (let i = 0; i < n; i++) {
     seed[i] = hash01(i * 7 + 5);
 
-    /* --- state 0: BIOLOGY --- */
-    const u = hash01(i * 7 + 1);
-    const v = hash01(i * 7 + 2);
+    // как в evo: ~88% точек лежат на самой поверхности (лёгкий джиттер),
+    // остальные — редкое тусклое ядро, дающее объёму глубину
     const w = hash01(i * 7 + 3);
-    const cosT = 2 * u - 1;
-    const sinT = Math.sqrt(Math.max(0, 1 - cosT * cosT));
-    const ph = 2 * Math.PI * v;
-    const dx = sinT * Math.cos(ph);
-    const dy = cosT;
-    const dz = sinT * Math.sin(ph);
-    // Almost all density on the cortex shell — readable surface, sparse core.
-    const r = Math.pow(w, 0.11);
-    const shell = smoothstepN(0.55, 1, r);
-    shade[i] = 0.28 + 0.72 * shell;
-    // gyri: banded folds wrapping the surface + finer wrinkle detail
-    const fold =
-      Math.sin(dx * 5.2 + dz * 8.8 + Math.sin(dy * 6.1) * 1.5) * 0.62 +
-      Math.sin(dy * 11.3 + dx * 7.4 + dz * 3.1) * 0.38;
-    const rr = r * (1 + shell * (0.105 * wrinkle(dx, dy, dz) + 0.08 * fold));
-    let x = dx * rr * 0.8;
-    let y = dy * rr * 0.72;
-    const z = dz * rr * 1.02;
-    if (y < 0) y *= 0.74; // flatter base
-    x *= 1 - 0.16 * Math.max(0, z); // frontal taper
-    const side = x >= 0 ? 1 : -1;
-    x = side * (Math.abs(x) * 0.94 + 0.05); // sagittal gap between lobes
-    y += 0.05;
+    const onSurface = w > 0.12;
+    const r = onSurface ? 0.985 + 0.015 * hash01(i * 7 + 4) : 0.5 + 0.4 * (w / 0.12);
+    const shell = onSurface ? 1 : smoothstepN(0.55, 1, r) * 0.6;
+    shellArr[i] = shell;
+    const si = i < count ? i : i % count;
+    // рельеф: гребни извилин ярче, борозды глубже — fold с поверхности модели
+    const fold = foldArr[si];
+    shade[i] = (0.28 + 0.72 * shell) * (0.32 + 0.68 * fold);
+    const x = surf[si * 3 + 2] * r; // длина мозга — горизонталь экрана
+    const y = surf[si * 3 + 1] * r + 0.05;
+    const z = surf[si * 3] * r; // ширина — в глубину
     p0[i * 3] = x;
     p0[i * 3 + 1] = y;
     p0[i * 3 + 2] = z;
@@ -154,7 +143,7 @@ function buildGeometry(): Geometry {
   const keyOf = (x: number, y: number, z: number) =>
     Math.floor(x / CELLC) + "," + Math.floor(y / CELLC) + "," + Math.floor(z / CELLC);
   for (let i = 0; i < n; i++) {
-    if (shade[i] < 0.82) continue; // cortex only
+    if (shellArr[i] < 0.75) continue; // cortex only (эквивалент старого shade≥0.82)
     const k = keyOf(p0[i * 3], p0[i * 3 + 1], p0[i * 3 + 2]);
     let arr = buckets.get(k);
     if (!arr) {
