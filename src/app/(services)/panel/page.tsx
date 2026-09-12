@@ -33,13 +33,22 @@ export default async function PanelPage() {
           Проекты <span className="signal-text">в работе</span>
         </h1>
         {authed ? (
-          <Link
-            href="/kp"
-            className="tech-label mt-4 inline-flex text-[11px] transition-colors hover:text-runtime-ink"
-            style={{ color: "var(--color-signal-2)" }}
-          >
-            индекс готовых КП →
-          </Link>
+          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1">
+            <Link
+              href="/kp"
+              className="tech-label inline-flex text-[11px] transition-colors hover:text-runtime-ink"
+              style={{ color: "var(--color-signal-2)" }}
+            >
+              индекс готовых КП →
+            </Link>
+            <Link
+              href="/panel/hero"
+              className="tech-label inline-flex text-[11px] transition-colors hover:text-runtime-ink"
+              style={{ color: "var(--color-signal-2)" }}
+            >
+              стенд мозга хиро →
+            </Link>
+          </div>
         ) : null}
 
         {!authed ? (

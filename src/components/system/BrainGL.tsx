@@ -3,6 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import BrainCanvas from "./BrainCanvas";
 import { decodeBrainPoints, decodeBrainFold, BRAIN_POINT_COUNT } from "./brain-points";
+import {
+  DEFAULT_BRAIN_CONFIG,
+  BRAIN_CONFIG_EVENT,
+  clampBrainConfig,
+  type BrainConfig,
+} from "./brain-config";
+
+/* Активный конфиг визуала. Прод-значения — из src/lib/brain-config.json;
+   стенд /panel/hero шлёт BRAIN_CONFIG_EVENT — сцена пересобирается. */
+let activeConfig: BrainConfig = DEFAULT_BRAIN_CONFIG;
 
 type BrainGLProps = {
   className?: string;
@@ -76,17 +86,23 @@ function buildGeometry(): Geometry {
   for (let i = 0; i < n; i++) {
     seed[i] = hash01(i * 7 + 5);
 
-    // как в evo: ~88% точек лежат на самой поверхности (лёгкий джиттер),
+    // как в evo: большинство точек лежит на самой поверхности (лёгкий джиттер),
     // остальные — редкое тусклое ядро, дающее объёму глубину
+    const cfg = activeConfig;
+    const coreShare = 1 - cfg.surfaceShare;
     const w = hash01(i * 7 + 3);
-    const onSurface = w > 0.12;
-    const r = onSurface ? 0.985 + 0.015 * hash01(i * 7 + 4) : 0.5 + 0.4 * (w / 0.12);
+    const onSurface = w > coreShare;
+    const r = onSurface
+      ? 0.985 + 0.015 * hash01(i * 7 + 4)
+      : 0.5 + 0.4 * (coreShare > 0 ? w / coreShare : 0);
     const shell = onSurface ? 1 : smoothstepN(0.55, 1, r) * 0.6;
     shellArr[i] = shell;
     const si = i < count ? i : i % count;
     // рельеф: гребни извилин ярче, борозды глубже — fold с поверхности модели
     const fold = foldArr[si];
-    shade[i] = (0.28 + 0.72 * shell) * (0.32 + 0.68 * fold);
+    shade[i] =
+      (cfg.coreDim + (1 - cfg.coreDim) * shell) *
+      (1 - cfg.foldContrast + cfg.foldContrast * fold);
     const x = surf[si * 3 + 2] * r; // длина мозга — горизонталь экрана
     const y = surf[si * 3 + 1] * r + 0.05;
     const z = surf[si * 3] * r; // ширина — в глубину
@@ -218,7 +234,10 @@ function getGeometry(): Geometry {
 /* Shaders                                                              */
 /* ------------------------------------------------------------------ */
 
-const VERT_SRC = `
+// float-литерал для вставки в GLSL (программа пересобирается при смене конфига)
+const f = (n: number) => n.toFixed(4);
+
+const VERT_SRC = (c: BrainConfig) => `
 attribute vec3 a_pos0;
 attribute vec3 a_pos1;
 attribute vec3 a_pos2;
@@ -253,7 +272,7 @@ void main() {
   float rim = pow(1.0 - abs(nrm.z), 3.0) * a_shade;
   v_rim = rim * (1.0 - u_m12);
   gl_Position = u_proj * vec4(q.x, q.y, q.z - 3.0, 1.0);
-  gl_PointSize = clamp(u_dpr * mix(2.2, 5.5, near) * mix(0.75, 1.12, sh) * (1.0 + v_rim * 0.35), 1.0, 60.0);
+  gl_PointSize = clamp(u_dpr * mix(${f(c.pointMin)}, ${f(c.pointMax)}, near) * mix(0.75, 1.12, sh) * (1.0 + v_rim * 0.35), 1.0, 60.0);
   v_near = near;
   v_seed = a_seed;
   v_shade = sh;
@@ -261,7 +280,7 @@ void main() {
 }
 `;
 
-const FRAG_SRC = `
+const FRAG_SRC = (c: BrainConfig) => `
 precision mediump float;
 varying float v_near;
 varying float v_seed;
@@ -294,7 +313,7 @@ void main() {
   // dim core / bright cortex (uniform in machine state via v_shade→1)
   a *= mix(0.35, 1.0, v_shade);
   // glowing silhouette outline — makes the brain contour read instantly
-  a *= 1.0 + v_rim * 1.1;
+  a *= 1.0 + v_rim * ${f(c.rimBoost)};
   col = mix(col, soft, clamp(v_rim, 0.0, 1.0) * 0.5);
   // MACHINE: lattice points blink like chip registers
   float reg = fract(v_seed * 61.7);
@@ -304,7 +323,7 @@ void main() {
   // the hottest registers flash constructive lime
   col = mix(col, lime, v_machine * step(0.94, reg) * blinkOn * 0.85);
   a *= fall * (1.0 + 0.3 * u_pointer);
-  a *= 0.74; // global dim — the brain should glow, not blind
+  a *= ${f(c.alpha)}; // global dim — the brain should glow, not blind
   gl_FragColor = vec4(col * a, a);
 }
 `;
@@ -337,7 +356,7 @@ void main() {
 }
 `;
 
-const LINE_FRAG_SRC = `
+const LINE_FRAG_SRC = (c: BrainConfig) => `
 precision mediump float;
 varying float v_near;
 varying float v_machine;
@@ -345,7 +364,7 @@ void main() {
   vec3 deep = vec3(0.592, 0.278, 1.0);
   vec3 soft = vec3(0.788, 0.714, 1.0);
   vec3 col = mix(deep, soft, v_near);
-  float a = (0.04 + 0.09 * v_near) * (1.0 - v_machine * 0.7);
+  float a = (0.04 + 0.09 * v_near) * (1.0 - v_machine * 0.7) * ${f(c.lineAlpha)};
   gl_FragColor = vec4(col * a, a);
 }
 `;
@@ -404,6 +423,17 @@ export default function BrainGL({ className }: BrainGLProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [failed, setFailed] = useState(false);
   const [epoch, setEpoch] = useState(0);
+
+  // стенд /panel/hero: живое обновление конфига — пересборка сцены
+  useEffect(() => {
+    const onCfg = (e: Event) => {
+      activeConfig = clampBrainConfig((e as CustomEvent).detail);
+      geometryCache = null;
+      setEpoch((p) => p + 1);
+    };
+    window.addEventListener(BRAIN_CONFIG_EVENT, onCfg);
+    return () => window.removeEventListener(BRAIN_CONFIG_EVENT, onCfg);
+  }, []);
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -554,7 +584,7 @@ export default function BrainGL({ className }: BrainGLProps) {
     };
 
     const init = (): UniformLocs | null => {
-      const prog = makeProgram(VERT_SRC, FRAG_SRC);
+      const prog = makeProgram(VERT_SRC(activeConfig), FRAG_SRC(activeConfig));
       if (!prog) return null;
       program = prog;
       ctx.useProgram(prog);
@@ -571,7 +601,7 @@ export default function BrainGL({ className }: BrainGLProps) {
       }
 
       // synapse line program (optional — points still render if it fails)
-      const lp = makeProgram(LINE_VERT_SRC, LINE_FRAG_SRC);
+      const lp = makeProgram(LINE_VERT_SRC, LINE_FRAG_SRC(activeConfig));
       if (lp) {
         const okLines =
           makeAttrib(lp, "a_p0", geo.lineP0, 3, lineBindings) &&
@@ -850,9 +880,9 @@ export default function BrainGL({ className }: BrainGLProps) {
       pointerS += (pointerTarget - pointerS) * 0.16;
 
       // machine state settles: rotation slows to a near-stop
-      rot += dt * 0.05 * (1 - m12 * 0.72);
-      const breathe = 1 + 0.018 * Math.sin(t * 0.85);
-      draw(rot + yawOff, -0.18 + pitchOff, breathe * 0.92);
+      rot += dt * activeConfig.rotSpeed * (1 - m12 * 0.72);
+      const breathe = 1 + activeConfig.breathe * Math.sin(t * 0.85);
+      draw(rot + yawOff, activeConfig.pitch + pitchOff, breathe * activeConfig.scale);
 
       raf = requestAnimationFrame(frame);
     };

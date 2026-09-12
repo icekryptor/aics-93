@@ -1,0 +1,14 @@
+{
+  "surfaceShare": 0.88,
+  "coreDim": 0.28,
+  "foldContrast": 0.68,
+  "pointMin": 2.2,
+  "pointMax": 5.5,
+  "alpha": 0.74,
+  "rimBoost": 1.1,
+  "lineAlpha": 1,
+  "rotSpeed": 0.05,
+  "breathe": 0.018,
+  "scale": 0.92,
+  "pitch": -0.18
+}
