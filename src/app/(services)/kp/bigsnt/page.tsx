@@ -57,7 +57,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 }
 function H2({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mt-4 max-w-3xl text-[clamp(1.5rem,3vw,2.2rem)] font-semibold leading-tight tracking-tight">{children}</h2>
+    <h2 className="mt-4 max-w-4xl text-[clamp(1.5rem,3vw,2.2rem)] font-semibold leading-tight tracking-tight">{children}</h2>
   );
 }
 function Check() {
@@ -76,7 +76,7 @@ export default function KpBigsntPage() {
       {/* ---------- hero ---------- */}
       <div className="relative overflow-hidden">
         <div className="runtime-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
-        <div className="relative mx-auto w-full max-w-6xl px-5 pb-14 pt-20 sm:px-8 sm:pt-28">
+        <div className="relative mx-auto w-full max-w-7xl px-5 pb-14 pt-20 sm:px-8 sm:pt-28">
           <div className="flex flex-wrap items-center justify-between gap-5">
             <span className="tech-label inline-flex items-center gap-2 text-[0.72rem]" style={{ color: "var(--color-signal-2)", letterSpacing: "0.22em" }}>
               <span className="hud-dot" style={{ display: "inline-block" }} />
@@ -85,8 +85,8 @@ export default function KpBigsntPage() {
             <KpViewSwitch base={KP_BASE} active="studio" />
           </div>
 
-          <h1 className="mt-8 max-w-4xl text-[clamp(2rem,4.6vw,3.3rem)] font-semibold leading-[1.05] tracking-tight">{KP_META.h1}</h1>
-          <p className="mt-5 max-w-3xl text-[1.07rem] leading-relaxed text-runtime-ink-soft">{KP_META.lead}</p>
+          <h1 className="mt-8 max-w-5xl text-[clamp(2rem,4.6vw,3.3rem)] font-semibold leading-[1.05] tracking-tight">{KP_META.h1}</h1>
+          <p className="mt-5 max-w-4xl text-[1.07rem] leading-relaxed text-runtime-ink-soft">{KP_META.lead}</p>
           <div className="mt-6 flex flex-wrap items-center gap-2">
             {KP_META.chips.map((c) => (
               <span key={c} className="tech-label rounded-full border border-runtime-line bg-black/30 px-3.5 py-1.5 text-[11px] text-runtime-ink-soft">{c}</span>
@@ -96,7 +96,7 @@ export default function KpBigsntPage() {
             {KP_META.date} · действительно до {KP_META.validUntil} · Василий Аистов
           </p>
 
-          <nav aria-label="Содержание" className="mt-10 max-w-4xl">
+          <nav aria-label="Содержание" className="mt-10 max-w-5xl">
             <p className="tech-label text-[0.68rem] text-runtime-ink-soft">[ содержание ]</p>
             <div className="mt-3 grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">
               {TOC.map((t) => (
@@ -110,7 +110,7 @@ export default function KpBigsntPage() {
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-6xl px-5 pb-20 sm:px-8">
+      <div className="mx-auto w-full max-w-7xl px-5 pb-20 sm:px-8">
         {/* ---------- 01 что увидел ---------- */}
         <section id="task" className="scroll-mt-28 pt-14">
           <Eyebrow>01 · что увидел · 05.09.2026</Eyebrow>
@@ -123,7 +123,7 @@ export default function KpBigsntPage() {
               </div>
             ))}
           </div>
-          <div className="mt-8 max-w-3xl space-y-4 text-[16.5px] leading-relaxed text-runtime-ink-soft">
+          <div className="mt-8 max-w-4xl space-y-4 text-[16.5px] leading-relaxed text-runtime-ink-soft">
             {TASK_PARAS.map((p) => {
               const [a, b] = p.strong ? p.text.split(p.strong) : [p.text, ""];
               return (
@@ -141,8 +141,8 @@ export default function KpBigsntPage() {
         <section id="audit" className="scroll-mt-28 pt-16">
           <Eyebrow>02 · аудит сайта · путь покупателя</Eyebrow>
           <H2>Что видит человек, который кликнул по вашему объявлению</H2>
-          <p className="mt-5 max-w-3xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{AUDIT_LEAD}</p>
-          <blockquote className="mt-6 max-w-3xl border-l-2 pl-5" style={{ borderColor: "#ff7050" }}>
+          <p className="mt-5 max-w-4xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{AUDIT_LEAD}</p>
+          <blockquote className="mt-6 max-w-4xl border-l-2 pl-5" style={{ borderColor: "#ff7050" }}>
             <p className="text-[18px] leading-snug text-runtime-ink">«{AUDIT_QUOTE.text}»</p>
             <p className="hud mt-2 text-[10.5px] text-runtime-ink-soft">{AUDIT_QUOTE.meta}</p>
           </blockquote>
@@ -182,7 +182,7 @@ export default function KpBigsntPage() {
         <section id="unit" className="scroll-mt-28 pt-16">
           <Eyebrow>03 · экономика заказа · маркетплейс против своего сайта</Eyebrow>
           <H2>Куда уходит каждый рубль с продажи одной банки</H2>
-          <p className="mt-5 max-w-3xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{UNIT_LEAD}</p>
+          <p className="mt-5 max-w-4xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{UNIT_LEAD}</p>
           <div className="mt-8"><BigsntUnitEconomics /></div>
           <div className="mt-6 p-5 sm:p-6" style={{ ...CHIP, border: "1px solid var(--color-signal-cool)", background: "rgba(151,71,255,0.07)" }}>
             <Eyebrow>что из этого следует</Eyebrow>
@@ -194,7 +194,7 @@ export default function KpBigsntPage() {
         <section id="direct" className="scroll-mt-28 pt-16">
           <Eyebrow>04 · яндекс директ · сейчас и после</Eyebrow>
           <H2>Тот же бюджет — другое количество заказов</H2>
-          <p className="mt-5 max-w-3xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{DIRECT_LEAD}</p>
+          <p className="mt-5 max-w-4xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{DIRECT_LEAD}</p>
           <div className="mt-8"><BigsntDirect /></div>
         </section>
 
@@ -202,7 +202,7 @@ export default function KpBigsntPage() {
         <section id="offer" className="scroll-mt-28 pt-16">
           <Eyebrow>05 · три объёма работ</Eyebrow>
           <H2>Что предлагаю сделать</H2>
-          <p className="mt-5 max-w-3xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{OFFER_LEAD}</p>
+          <p className="mt-5 max-w-4xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{OFFER_LEAD}</p>
           <div className="mt-8 grid gap-4 lg:grid-cols-3">
             {TIERS.map((t) => (
               <article key={t.key} className="relative flex flex-col p-5 sm:p-6" style={t.rec ? { ...CARD, border: "1px solid var(--color-signal-cool)" } : CARD}>
@@ -232,7 +232,7 @@ export default function KpBigsntPage() {
         <section id="plan" className="scroll-mt-28 pt-16">
           <Eyebrow>06 · план работ · пять этапов, параллельные дорожки</Eyebrow>
           <H2>Как пройдут эти недели</H2>
-          <p className="mt-5 max-w-3xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{PLAN_LEAD}</p>
+          <p className="mt-5 max-w-4xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{PLAN_LEAD}</p>
           <div className="mt-8"><BigsntPlan /></div>
           <p className="mt-4 max-w-4xl text-[14.5px] leading-relaxed text-runtime-ink-soft">{PLAN_CAPTION}</p>
         </section>
@@ -243,7 +243,7 @@ export default function KpBigsntPage() {
           <H2>
             <span className="font-display">320 / 500 / 750</span> тысяч рублей — по объёму, без сюрпризов
           </H2>
-          <p className="mt-5 max-w-3xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{PRICE_LEAD}</p>
+          <p className="mt-5 max-w-4xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{PRICE_LEAD}</p>
           <div className="mt-8 grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
             {PRICE_TERMS.map((t) => (
               <div key={t.t} className="border-l-2 pl-5" style={{ borderColor: "var(--color-signal)" }}>
@@ -276,7 +276,7 @@ export default function KpBigsntPage() {
         <section id="studio" className="scroll-mt-28 pt-16">
           <Eyebrow>08 · кто делает</Eyebrow>
           <H2><span className="font-display">AICS-93</span> · Василий Аистов</H2>
-          <p className="mt-5 max-w-3xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{STUDIO_LEAD}</p>
+          <p className="mt-5 max-w-4xl text-[16.5px] leading-relaxed text-runtime-ink-soft">{STUDIO_LEAD}</p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {CASES.map((c) => (
               <Link key={c.name} href={c.href} className="group flex flex-col overflow-hidden transition-colors hover:border-[color:var(--color-signal-cool)]" style={CARD}>
@@ -306,7 +306,7 @@ export default function KpBigsntPage() {
         <section id="faq" className="scroll-mt-28 pt-16">
           <Eyebrow>09 · вопросы и источники</Eyebrow>
           <H2>Что обычно спрашивают</H2>
-          <div className="mt-8 max-w-4xl">
+          <div className="mt-8 max-w-5xl">
             {FAQ.map((f) => (
               <details key={f.q} className="faq-acc border-b border-runtime-line">
                 <summary className="cursor-pointer py-4 text-[16.5px] font-semibold text-runtime-ink">{f.q}</summary>
@@ -314,7 +314,7 @@ export default function KpBigsntPage() {
               </details>
             ))}
           </div>
-          <div className="mt-8 max-w-4xl p-5 sm:p-6" style={PANEL}>
+          <div className="mt-8 max-w-5xl p-5 sm:p-6" style={PANEL}>
             <p className="tech-label text-[0.68rem] text-runtime-ink-soft">[ данные и источники ]</p>
             <ul className="mt-3 grid gap-1.5">
               {SOURCES.map((s) => (
