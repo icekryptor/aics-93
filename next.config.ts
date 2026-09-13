@@ -17,6 +17,12 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // студийный вид КП bigsnt убран — документ стал единственным видом
+      {
+        source: "/kp/bigsnt/doc",
+        destination: "/kp/bigsnt",
+        permanent: false,
+      },
       // «конвейер» выведен из лексикона (минус-фраза) — статья переименована
       {
         source: "/blog/kak-ii-konvejer-sobiraet-sajt",

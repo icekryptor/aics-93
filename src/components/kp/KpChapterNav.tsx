@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-/* KpChapterNav — липкая навигация по разделам КП (по мотиву ChapterNav
-   кейсов). Слева сверху, только desktop. Подписи видны всегда (фидбек
-   Василия 13.09.2026: полоса одних номеров — «непонятно что и зачем»);
-   чтобы колонка не наезжала на контент на ноутбучных ширинах, шеллы
-   КП-страниц отдают ей левое поле (xl:pl-[220px] до ~1600px).
+/* KpChapterNav — липкая навигация по разделам КП слева сверху, только desktop.
+   Чистый текст без номеров, тиков и рамок (фидбек Василия 13.09.2026:
+   «убираем лишние элементы — только текст»); активный раздел — цветом.
+   `visibleFrom` — готовые tailwind-классы видимости от вызывающей страницы:
+   колонка показывается только там, где влезает в поле рядом с контентом.
 
    Активный раздел считается по геометрии, а не через IntersectionObserver:
    разделы КП высокие, в полосу наблюдения попадают сразу несколько, и в
@@ -17,8 +17,10 @@ import { useEffect, useState } from "react";
 
 export default function KpChapterNav({
   items,
+  visibleFrom = "hidden xl:block",
 }: {
   items: { id: string; num: string; label: string }[];
+  visibleFrom?: string;
 }) {
   const [active, setActive] = useState<string>(items[0]?.id ?? "");
 
@@ -63,47 +65,28 @@ export default function KpChapterNav({
   return (
     <nav
       aria-label="Разделы предложения"
-      className="pointer-events-none fixed left-4 top-24 z-30 hidden xl:block 2xl:left-10"
+      className={`fixed left-5 top-24 z-30 ${visibleFrom} 2xl:left-10`}
     >
-      {/* подложка: без неё подписи ложатся прямо на контент страницы.
-          Стекло по §5 канона — специальный блик обязателен; backdrop здесь
-          безопасен: контейнер не анимируется трансформом. */}
-      <div className="pointer-events-auto flex flex-col gap-0.5 rounded-[14px] border border-runtime-line bg-white/[0.06] p-1.5 shadow-[0_1px_0_0_rgba(255,255,255,0.2)_inset] backdrop-blur-[20px] backdrop-saturate-[180%]">
+      <ul className="flex flex-col gap-1.5">
         {items.map((it) => {
           const on = active === it.id;
           return (
-            <a
-              key={it.id}
-              href={`#${it.id}`}
-              aria-current={on ? "true" : undefined}
-              className="flex items-center gap-2.5 rounded-[3px] py-1 pl-1 pr-2 transition-colors hover:bg-white/[0.05]"
-            >
-              {/* тик: длиннее и ярче у активного — читается и в свёрнутом виде */}
-              <span
-                className="h-[2px] shrink-0 rounded-full transition-all duration-300"
+            <li key={it.id}>
+              <a
+                href={`#${it.id}`}
+                aria-current={on ? "true" : undefined}
+                className="block whitespace-nowrap text-[12.5px] leading-snug transition-colors"
                 style={{
-                  width: on ? 20 : 10,
-                  background: on ? "var(--color-signal)" : "var(--color-runtime-line)",
+                  color: on ? "var(--color-signal-2)" : "var(--color-runtime-ink-soft)",
+                  fontWeight: on ? 600 : 400,
                 }}
-                aria-hidden
-              />
-              <span
-                className="hud shrink-0 text-[10px] transition-colors"
-                style={{ color: on ? "var(--color-signal-2)" : "var(--color-runtime-ink-soft)" }}
-              >
-                {it.num}
-              </span>
-              <span
-                className={`whitespace-nowrap text-[11.5px] leading-snug transition-colors ${
-                  on ? "text-runtime-ink" : "text-runtime-ink-soft"
-                }`}
               >
                 {it.label}
-              </span>
-            </a>
+              </a>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </nav>
   );
 }
