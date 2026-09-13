@@ -51,7 +51,7 @@ export default function KpGagarinPage() {
       {/* ---------- hero ---------- */}
       <div className="relative overflow-hidden">
         <div className="runtime-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
-        <div className="relative mx-auto w-full max-w-6xl px-5 pb-14 pt-20 sm:px-8 sm:pt-28">
+        <div className="relative mx-auto w-full max-w-6xl px-5 pb-14 pt-20 sm:px-8 sm:pt-28 xl:pl-[220px] min-[1600px]:pl-8">
           <span
             className="tech-label inline-flex items-center gap-2 text-[0.72rem]"
             style={{ color: "var(--color-signal-2)", letterSpacing: "0.22em" }}
@@ -115,7 +115,7 @@ export default function KpGagarinPage() {
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-6xl px-5 pb-20 sm:px-8">
+      <div className="mx-auto w-full max-w-6xl px-5 pb-20 sm:px-8 xl:pl-[220px] min-[1600px]:pl-8">
         {/* ---------- 01 что это ---------- */}
         <section id="what" className="scroll-mt-28 pt-14">
           <p className="tech-label text-[11px]" style={{ color: "var(--color-signal-2)" }}>

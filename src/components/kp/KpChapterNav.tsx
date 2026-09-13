@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 
 /* KpChapterNav — липкая навигация по разделам КП (по мотиву ChapterNav
-   кейсов). Слева сверху, только desktop. Свёрнутая — узкая полоса номеров
-   (влезает в поля даже на 1280), по ховеру уезжают наружу подписи: полная
-   колонка с подписями на ноутбучных ширинах наехала бы на текст.
+   кейсов). Слева сверху, только desktop. Подписи видны всегда (фидбек
+   Василия 13.09.2026: полоса одних номеров — «непонятно что и зачем»);
+   чтобы колонка не наезжала на контент на ноутбучных ширинах, шеллы
+   КП-страниц отдают ей левое поле (xl:pl-[220px] до ~1600px).
 
    Активный раздел считается по геометрии, а не через IntersectionObserver:
    разделы КП высокие, в полосу наблюдения попадают сразу несколько, и в
@@ -62,12 +63,12 @@ export default function KpChapterNav({
   return (
     <nav
       aria-label="Разделы предложения"
-      className="group pointer-events-none fixed left-4 top-24 z-30 hidden xl:block 2xl:left-10"
+      className="pointer-events-none fixed left-4 top-24 z-30 hidden xl:block 2xl:left-10"
     >
-      {/* подложка: без неё раскрытые подписи ложатся прямо на текст страницы.
+      {/* подложка: без неё подписи ложатся прямо на контент страницы.
           Стекло по §5 канона — специальный блик обязателен; backdrop здесь
           безопасен: контейнер не анимируется трансформом. */}
-      <div className="pointer-events-auto flex flex-col gap-0.5 rounded-[14px] border border-transparent p-1.5 transition-[background-color,border-color,box-shadow] duration-300 group-hover:border-runtime-line group-hover:bg-white/[0.06] group-hover:shadow-[0_1px_0_0_rgba(255,255,255,0.2)_inset] group-hover:backdrop-blur-[20px] group-hover:backdrop-saturate-[180%]">
+      <div className="pointer-events-auto flex flex-col gap-0.5 rounded-[14px] border border-runtime-line bg-white/[0.06] p-1.5 shadow-[0_1px_0_0_rgba(255,255,255,0.2)_inset] backdrop-blur-[20px] backdrop-saturate-[180%]">
         {items.map((it) => {
           const on = active === it.id;
           return (
@@ -92,9 +93,8 @@ export default function KpChapterNav({
               >
                 {it.num}
               </span>
-              {/* подпись: появляется по ховеру всей навигации */}
               <span
-                className={`max-w-0 overflow-hidden whitespace-nowrap text-[12px] leading-snug opacity-0 transition-all duration-300 group-hover:max-w-[190px] group-hover:opacity-100 ${
+                className={`whitespace-nowrap text-[11.5px] leading-snug transition-colors ${
                   on ? "text-runtime-ink" : "text-runtime-ink-soft"
                 }`}
               >

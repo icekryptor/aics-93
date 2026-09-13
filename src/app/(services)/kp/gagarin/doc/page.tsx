@@ -65,7 +65,7 @@ function Rule({ children }: { children: React.ReactNode }) {
 
 export default function KpGagarinDocPage() {
   return (
-    <div className={`${playfair.variable} ${lora.variable} px-4 py-10 sm:px-6 sm:py-14`}>
+    <div className={`${playfair.variable} ${lora.variable} px-4 py-10 sm:px-6 sm:py-14 xl:pl-[220px] min-[1400px]:pl-6`}>
       <KpChapterNav items={TOC.map((t) => ({ ...t, id: `doc-${t.id}` }))} />
 
       {/* лист бумаги на тёмной сцене студии */}

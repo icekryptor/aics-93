@@ -54,7 +54,7 @@ const TD = "border-b px-4 py-3 align-top";
 
 export default function KpBrokerDocPage() {
   return (
-    <div className={`${playfair.variable} ${lora.variable} px-4 py-10 sm:px-6 sm:py-14`}>
+    <div className={`${playfair.variable} ${lora.variable} px-4 py-10 sm:px-6 sm:py-14 xl:pl-[220px] min-[1400px]:pl-6`}>
       <KpChapterNav items={TOC.map((t) => ({ ...t, id: `doc-${t.id}` }))} />
 
       <article className="kp-doc mx-auto w-full max-w-[900px] overflow-hidden rounded-[14px] px-6 py-12 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] sm:px-14 sm:py-16">

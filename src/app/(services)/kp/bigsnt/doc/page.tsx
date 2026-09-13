@@ -45,10 +45,10 @@ const TAG_COLOR: Record<string, string> = {
 
 export default function KpBigsntDocPage() {
   return (
-    <div className={`${playfair.variable} ${lora.variable} px-4 py-10 sm:px-6 sm:py-14`}>
+    <div className={`${playfair.variable} ${lora.variable} px-4 py-10 sm:px-6 sm:py-14 xl:pl-[220px] min-[1600px]:pl-6`}>
       <KpChapterNav items={TOC.map((t) => ({ ...t, id: `doc-${t.id}` }))} />
 
-      <article className="kp-doc mx-auto w-full max-w-[900px] overflow-hidden rounded-[14px] px-6 py-12 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] sm:px-14 sm:py-16">
+      <article className="kp-doc mx-auto w-full max-w-[1140px] overflow-hidden rounded-[14px] px-6 py-12 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.7)] sm:px-14 sm:py-16">
         {/* ---------- шапка ---------- */}
         <header className="border-b-2 pb-8" style={{ borderColor: "var(--paper-ink)" }}>
           <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
@@ -59,7 +59,7 @@ export default function KpBigsntDocPage() {
             <KpViewSwitch base={KP_BASE} active="doc" tone="paper" />
           </div>
           <h1 className="text-[clamp(1.9rem,4vw,2.9rem)] leading-[1.08]">{KP_META.h1}</h1>
-          <p className="doc-soft mt-5 text-[1.02rem] leading-[1.6]">{KP_META.lead}</p>
+          <p className="doc-soft mt-5 max-w-[50rem] text-[1.02rem] leading-[1.6]">{KP_META.lead}</p>
           <div className="mt-6 flex flex-wrap gap-2">
             {KP_META.chips.map((c) => (
               <span key={c} className="doc-soft rounded-full border px-3.5 py-1.5 text-[12.5px]" style={{ borderColor: "var(--paper-line)" }}>{c}</span>
@@ -83,7 +83,7 @@ export default function KpBigsntDocPage() {
         <section id="doc-task" className="scroll-mt-8 pt-12">
           <Rule>01 · что увидел · 05.09.2026</Rule>
           <h2 className="text-[1.7rem] leading-tight">Сайт есть, но он не продаёт — он отправляет на Wildberries</h2>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {FACTS.map((f) => (
               <div key={f.v} className="doc-card p-4">
                 <p className="font-display text-[1.4rem] leading-none" style={{ color: f.tone === "warm" ? "#b4450f" : "var(--paper-accent)" }}>{f.v}</p>
@@ -91,7 +91,7 @@ export default function KpBigsntDocPage() {
               </div>
             ))}
           </div>
-          <div className="mt-6 space-y-4 text-[1.02rem] leading-[1.6]">
+          <div className="mt-6 max-w-[50rem] space-y-4 text-[1.02rem] leading-[1.6]">
             {TASK_PARAS.map((p) => {
               const [a, b] = p.strong ? p.text.split(p.strong) : [p.text, ""];
               return (
@@ -109,8 +109,8 @@ export default function KpBigsntDocPage() {
         <section id="doc-audit" className="scroll-mt-8 pt-12">
           <Rule>02 · аудит сайта</Rule>
           <h2 className="text-[1.7rem] leading-tight">Что видит человек, который кликнул по вашему объявлению</h2>
-          <p className="doc-soft mt-5 text-[1.02rem] leading-[1.6]">{AUDIT_LEAD}</p>
-          <blockquote className="mt-6 border-l-[3px] pl-5" style={{ borderColor: "#b4450f" }}>
+          <p className="doc-soft mt-5 max-w-[50rem] text-[1.02rem] leading-[1.6]">{AUDIT_LEAD}</p>
+          <blockquote className="mt-6 max-w-[50rem] border-l-[3px] pl-5" style={{ borderColor: "#b4450f" }}>
             <p className="text-[1.1rem] italic leading-snug">«{AUDIT_QUOTE.text}»</p>
             <p className="doc-soft mt-2 text-[13px]">{AUDIT_QUOTE.meta}</p>
           </blockquote>
@@ -138,9 +138,9 @@ export default function KpBigsntDocPage() {
         <section id="doc-unit" className="scroll-mt-8 pt-12">
           <Rule>03 · экономика заказа</Rule>
           <h2 className="text-[1.7rem] leading-tight">Куда уходит каждый рубль с продажи одной банки</h2>
-          <p className="doc-soft mt-5 text-[1.02rem] leading-[1.6]">{UNIT_LEAD}</p>
+          <p className="doc-soft mt-5 max-w-[50rem] text-[1.02rem] leading-[1.6]">{UNIT_LEAD}</p>
           <div className="mt-7"><BigsntUnitEconomics tone="paper" /></div>
-          <div className="mt-6 rounded-[10px] border-l-[3px] p-5" style={{ borderColor: "var(--paper-accent)", background: "rgba(128,56,232,0.05)" }}>
+          <div className="mt-6 max-w-[50rem] rounded-[10px] border-l-[3px] p-5" style={{ borderColor: "var(--paper-accent)", background: "rgba(128,56,232,0.05)" }}>
             <p className="doc-eyebrow">что из этого следует</p>
             <p className="doc-soft mt-2.5 text-[15.5px] leading-[1.6]">{UNIT_NOTE}</p>
           </div>
@@ -150,7 +150,7 @@ export default function KpBigsntDocPage() {
         <section id="doc-direct" className="scroll-mt-8 pt-12">
           <Rule>04 · яндекс директ</Rule>
           <h2 className="text-[1.7rem] leading-tight">Тот же бюджет — другое количество заказов</h2>
-          <p className="doc-soft mt-5 text-[1.02rem] leading-[1.6]">{DIRECT_LEAD}</p>
+          <p className="doc-soft mt-5 max-w-[50rem] text-[1.02rem] leading-[1.6]">{DIRECT_LEAD}</p>
           <div className="mt-7"><BigsntDirect tone="paper" /></div>
         </section>
 
@@ -158,7 +158,7 @@ export default function KpBigsntDocPage() {
         <section id="doc-offer" className="scroll-mt-8 pt-12">
           <Rule>05 · три объёма работ</Rule>
           <h2 className="text-[1.7rem] leading-tight">Что предлагаю сделать</h2>
-          <p className="doc-soft mt-5 text-[1.02rem] leading-[1.6]">{OFFER_LEAD}</p>
+          <p className="doc-soft mt-5 max-w-[50rem] text-[1.02rem] leading-[1.6]">{OFFER_LEAD}</p>
           <div className="mt-7 grid gap-5">
             {TIERS.map((t) => (
               <article key={t.key} className="doc-card p-5 sm:p-6" style={t.rec ? { borderColor: "var(--paper-accent)", borderWidth: 2 } : undefined}>
@@ -186,23 +186,23 @@ export default function KpBigsntDocPage() {
               </article>
             ))}
           </div>
-          <p className="doc-soft mt-6 text-[15.5px] leading-[1.6]">{OFFER_NOTE}</p>
+          <p className="doc-soft mt-6 max-w-[50rem] text-[15.5px] leading-[1.6]">{OFFER_NOTE}</p>
         </section>
 
         {/* ---------- 06 ---------- */}
         <section id="doc-plan" className="scroll-mt-8 pt-12">
           <Rule>06 · план работ</Rule>
           <h2 className="text-[1.7rem] leading-tight">Как пройдут эти недели</h2>
-          <p className="doc-soft mt-5 text-[1.02rem] leading-[1.6]">{PLAN_LEAD}</p>
+          <p className="doc-soft mt-5 max-w-[50rem] text-[1.02rem] leading-[1.6]">{PLAN_LEAD}</p>
           <div className="mt-7"><BigsntPlan tone="paper" /></div>
-          <p className="doc-soft mt-4 text-[15px] leading-[1.55]">{PLAN_CAPTION}</p>
+          <p className="doc-soft mt-4 max-w-[50rem] text-[15px] leading-[1.55]">{PLAN_CAPTION}</p>
         </section>
 
         {/* ---------- 07 ---------- */}
         <section id="doc-price" className="scroll-mt-8 pt-12">
           <Rule>07 · стоимость и условия</Rule>
           <h2 className="text-[1.7rem] leading-tight"><span className="font-display">320 / 500 / 750</span> тысяч рублей — по объёму, без сюрпризов</h2>
-          <p className="doc-soft mt-5 text-[1.02rem] leading-[1.6]">{PRICE_LEAD}</p>
+          <p className="doc-soft mt-5 max-w-[50rem] text-[1.02rem] leading-[1.6]">{PRICE_LEAD}</p>
           <dl className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
             {PRICE_TERMS.map((t) => (
               <div key={t.t}>
@@ -231,8 +231,8 @@ export default function KpBigsntDocPage() {
         <section id="doc-studio" className="scroll-mt-8 pt-12">
           <Rule>08 · кто делает</Rule>
           <h2 className="text-[1.7rem] leading-tight"><span className="font-display">AICS-93</span> · Василий Аистов</h2>
-          <p className="doc-soft mt-5 text-[1.02rem] leading-[1.6]">{STUDIO_LEAD}</p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <p className="doc-soft mt-5 max-w-[50rem] text-[1.02rem] leading-[1.6]">{STUDIO_LEAD}</p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {CASES.map((c) => (
               <Link key={c.name} href={c.href} className="doc-card block overflow-hidden transition-colors hover:border-[color:var(--paper-accent)]">
                 {c.shot ? (
@@ -255,7 +255,7 @@ export default function KpBigsntDocPage() {
         <section id="doc-faq" className="scroll-mt-8 pt-12">
           <Rule>09 · вопросы и источники</Rule>
           <h2 className="text-[1.7rem] leading-tight">Что обычно спрашивают</h2>
-          <div className="mt-5">
+          <div className="mt-5 max-w-[50rem]">
             {FAQ.map((f) => (
               <div key={f.q} className="border-b py-4" style={{ borderColor: "var(--paper-line)" }}>
                 <p className="text-[1.02rem] font-semibold">{f.q}</p>
@@ -263,7 +263,7 @@ export default function KpBigsntDocPage() {
               </div>
             ))}
           </div>
-          <div className="doc-card mt-7 p-5">
+          <div className="doc-card mt-7 max-w-[50rem] p-5">
             <p className="doc-eyebrow">данные и источники</p>
             <ol className="mt-3 grid gap-1.5 pl-5 text-[14px] leading-[1.55]">
               {SOURCES.map((s) => (
@@ -277,7 +277,7 @@ export default function KpBigsntDocPage() {
         </section>
       </article>
 
-      <div className="mx-auto mt-10 max-w-[900px]">
+      <div className="mx-auto mt-10 max-w-[1140px]">
         <QuizInline source="kp_bigsnt_doc" title={QUIZ.title} text={QUIZ.text} steps={QUIZ.steps()} />
       </div>
     </div>
