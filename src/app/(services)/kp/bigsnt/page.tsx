@@ -133,7 +133,7 @@ export default function KpBigsntPage() {
         {/* ---------- 03 ---------- */}
         <section id="unit" className="scroll-mt-8 pt-12">
           <Rule>03 · экономика заказа</Rule>
-          <h2 className="text-[1.7rem] leading-tight">Куда уходит каждый рубль с продажи одной банки</h2>
+          <h2 className="text-[1.7rem] leading-tight">Куда уходит каждый рубль из среднего чека</h2>
           <p className="doc-soft mt-5 max-w-[50rem] text-[1.02rem] leading-[1.6]">{UNIT_LEAD}</p>
           <div className="mt-7"><BigsntUnitEconomics tone="paper" /></div>
           <div className="mt-6 max-w-[50rem] rounded-[10px] border-l-[3px] p-5" style={{ borderColor: "var(--paper-accent)", background: "rgba(128,56,232,0.05)" }}>

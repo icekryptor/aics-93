@@ -50,8 +50,8 @@ const SEG = {
 };
 
 const PRODUCT_FIELDS: Field[] = [
-  { key: "price", label: "Цена для покупателя", hint: "одна и та же на площадке и на сайте", min: 500, max: 4000, step: 10, fmt: rub },
-  { key: "cogs", label: "Себестоимость единицы", min: 150, max: 2500, step: 10, fmt: rub },
+  { key: "price", label: "Средний чек заказа", hint: "средняя сумма заказа — одна и та же на площадке и на сайте", min: 500, max: 6000, step: 10, fmt: rub },
+  { key: "cogsPct", label: "Себестоимость, % от чека", hint: "доля закупки и производства в среднем чеке", min: 10, max: 80, step: 0.5, fmt: pct },
   { key: "orders", label: "Заказов в месяц", min: 100, max: 5000, step: 50, fmt: (v) => `${v.toLocaleString("ru-RU")} шт` },
   { key: "cycle", label: "Цикл повторной покупки", min: 2, max: 12, step: 1, fmt: (v) => `${v} нед` },
 ];
@@ -77,7 +77,7 @@ const TIER_NAMES = ["01 · Магазин", "02 · Магазин + рефреш
 const tierName = (i: number) => TIER_NAMES[i] ?? `Объём ${i + 1}`;
 
 export function computeUnit(v: UnitVals) {
-  const P = v.price, C = v.cogs, N = Math.max(1, v.orders);
+  const P = v.price, C = (v.price * v.cogsPct) / 100, N = Math.max(1, v.orders);
   const spp = Math.min(v.spp, 95) / 100;
   const Ps = P / (1 - spp);
   const sppAmt = Ps - P;
@@ -302,7 +302,7 @@ export default function BigsntUnitEconomics({ tone }: { tone?: "dark" | "paper" 
       <Card className="px-5 py-5">
         <p className="tech-label text-[10.5px]" style={{ color: ACCENT }}>[ товар · общие вводные ]</p>
         <p className="mt-1.5 text-[0.85rem]" style={{ color: SOFT }}>
-          Эти четыре числа общие для обоих каналов: покупатель платит одну и ту же цену, банка стоит одинаково, объём и цикл повтора одни и те же.
+          Эти четыре числа общие для обоих каналов: средний чек и себестоимость (доля от чека) одинаковы, объём и цикл повтора одни и те же.
         </p>
         <div className="mt-4 grid gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
           {PRODUCT_FIELDS.map((f) => (
