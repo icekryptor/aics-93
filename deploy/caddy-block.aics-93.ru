@@ -2,7 +2,7 @@
 #   /opt/supabase-src/docker/volumes/proxy/caddy/Caddyfile
 # Применение (из /opt/supabase-src/docker):
 #   docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile
-aics-93.ru, www.aics-93.ru {
+aics-93.ru {
     encode zstd gzip
 
     reverse_proxy aics93-web:3000 {
