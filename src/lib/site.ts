@@ -2,7 +2,7 @@
 // robots, sitemap, JSON-LD structured data, RSS and llms.txt.
 import { legal } from "./content";
 
-export const SITE_URL = "https://aics-93.ru";
+export const SITE_URL = "https://web.aics-93.ru";
 export const SITE_NAME = "AICS-93 · Василий Аистов";
 export const SITE_TITLE = "AICS-93 — сайты, фирменный стиль и ИИ-сервисы под ключ за 7–14 дней";
 export const SITE_DESCRIPTION =
