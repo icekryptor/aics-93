@@ -1,0 +1,29 @@
+# Сайт AICS-93 на своём VPS. Сеть shared (= supabase_default) нужна,
+# чтобы общий supabase-caddy видел контейнер по имени aics93-web.
+name: aics93
+
+services:
+  aics93-web:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: aics93-web
+    restart: unless-stopped
+    env_file:
+      - ./app.env
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/robots.txt').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    networks: [shared]
+
+networks:
+  shared:
+    external: true
+    name: supabase_default

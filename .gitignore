@@ -42,3 +42,6 @@ next-env.d.ts
 
 # graphify
 graphify-out/
+
+# деплой на свой VPS: секреты не в гит
+deploy/app.env

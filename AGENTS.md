@@ -7,7 +7,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 # aistov-space — AICS-93
 
 Иммерсивный сайт-портфолио/агентство Василия Аистова. Next.js 16 (App Router) +
-React 19 + Tailwind v4 → Vercel (aistov.space). Язык UI — русский.
+React 19 + Tailwind v4 → Vercel (web.aics-93.ru). Язык UI — русский.
 
 ## Правило №1
 Перед любой работой над UI прочитай **`docs/DESIGN-SYSTEM.md`** — канон
@@ -21,4 +21,8 @@ React 19 + Tailwind v4 → Vercel (aistov.space). Язык UI — русский
 - `backdrop-filter` запрещён внутри анимируемых transform-контейнеров (глючит) — см. DESIGN-SYSTEM §5.
 - Прод-проверка: `npm run build && npx next start -p 3020`; скриншоты анимаций — headless Chrome с `--virtual-time-budget`.
 - Figma: файл AICS-93, fileKey `r2o8qS0qIkCakbzqlRuDjl`.
+- Домен: сайт живёт на `web.aics-93.ru` (Vercel, `SITE_URL` в `src/lib/site.ts` —
+  единственный источник для метаданных, sitemap, robots, RSS, llms.txt). Apex
+  `aics-93.ru` отдан своему VPS (201.34.149.163) и сайтом не обслуживается.
+  Прежний домен `aistov.space` больше не используется.
 - Пуш в main → автодеплой Vercel. Пушить с retry-циклом (сеть рвётся).
