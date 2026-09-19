@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         source: "/kp/broker",
         destination: "/kp/broker.html",
       },
+      {
+        source: "/kp/cooleso",
+        destination: "/kp/cooleso.html",
+      },
     ];
   },
   async redirects() {
