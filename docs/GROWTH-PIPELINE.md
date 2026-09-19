@@ -1,4 +1,4 @@
-# GROWTH-PIPELINE — пайплайн развития aistov.space
+# GROWTH-PIPELINE — пайплайн развития aics-93.ru
 
 Продвижение + развитие пользы. Собрано 2026-07-24 на базе графа проекта
 (graphify-out/), стратегии (SITE-STRATEGY.md) и ядра (SEO-CORE.md).

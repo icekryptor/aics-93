@@ -38,6 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     })),
     { url: `${SITE_URL}/en/operator`, lastModified: new Date("2026-09-02"), changeFrequency: "monthly", priority: 0.4 },
+    { url: `${SITE_URL}/svoy-sayt`, lastModified: new Date("2026-09-19"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${SITE_URL}/blog`, lastModified: newest, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/classic`, lastModified: new Date("2026-07-02"), changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/ai`, lastModified: new Date("2026-07-18"), changeFrequency: "monthly", priority: 0.3 },

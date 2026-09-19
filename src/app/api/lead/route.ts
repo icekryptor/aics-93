@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     .slice(0, 24)
     .map(([k, v]) => `<b>${esc(k)}:</b> ${esc(fmtValue(v)).slice(0, 800)}`);
 
-  const text = [`🟣 <b>Заявка · aistov.space</b>`, `<b>источник:</b> ${esc(source)}`, "", ...lines].join("\n");
+  const text = [`🟣 <b>Заявка · aics-93.ru</b>`, `<b>источник:</b> ${esc(source)}`, "", ...lines].join("\n");
 
   try {
     const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
