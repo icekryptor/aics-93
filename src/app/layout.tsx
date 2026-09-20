@@ -65,8 +65,9 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
     types: { "application/rss+xml": `${SITE_URL}/feed.xml` },
   },
-  // Яндекс.Вебмастер: дублирует файл public/yandex_<код>.html
-  verification: { yandex: "eadb398db5a37afd" },
+  // Яндекс.Вебмастер: дублирует файлы public/yandex_<код>.html.
+  // Первый код — основной домен aics-93.ru, второй — www (если поднимем).
+  verification: { yandex: ["8a94912f658b3223", "eadb398db5a37afd"] },
   robots: {
     index: true,
     follow: true,
