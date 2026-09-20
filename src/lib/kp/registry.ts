@@ -31,6 +31,21 @@ export const KP_STATE_COLOR: Record<KpEntry["state"], string> = {
 
 export const kpEntries: KpEntry[] = [
   {
+    id: "uniqdoc",
+    client: "Uniqdoc · медодежда для США",
+    subject:
+      "Продвижение магазина: таргет FB/IG, Google Ads и SEO (15 статей в месяц) с калькулятором пакетов; техсопровождение сайта и UX-аудит по аналитике входят в любой пакет",
+    price: "1 400 → 1 100 $/мес",
+    priceNote: "пакет из трёх каналов, −30% · по одному от 500 $ · аудит-вход 600 $",
+    term: "старт за 2 недели",
+    sent: "20.09.2026",
+    status: "Черновик собран 20.09.2026. Реклама включается только после открытия магазина — сейчас витрина за паролем и варианты в Sold out.",
+    state: "draft",
+    variants: [
+      { label: "КП · документ", href: "/kp/uniqdoc", note: "светлый лист, сериф; калькулятор пакетов, таймлайн первого месяца" },
+    ],
+  },
+  {
     id: "cooleso",
     client: "cooleso.ru",
     subject:
